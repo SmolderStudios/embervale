@@ -2227,7 +2227,7 @@ header h1 .flame{color:var(--ember)}
   <div class="mm-btns">
     <button class="mm-btn mm-primary" id="mmPlay">▶ Play</button>
   </div>
-  <div class="mm-ver">v1.0.1</div>
+  <div class="mm-ver">v1.0.2</div>
 </div>
 
 <!-- ===== CHARACTER SELECT (added) ===== -->
@@ -3873,30 +3873,13 @@ const SKILLS={
     {id:'cr_t5_cape',  name:'Cobalt Cape',     cat:'cape',  lvl:65,ms:15500,xp:880, spdMult:0.745, minMs:2170, inp:{cobalt_bar:1,frost_log:2},         out:{cobalt_cape:1}},
     {id:'cr_t6_cape',  name:'Runite Cape',     cat:'cape',  lvl:80,ms:18500,xp:1395,spdMult:0.775, minMs:2590, inp:{runite_bar:1,shadow_log:2},        out:{runite_cape:1}},
     {id:'cr_t7_cape',  name:'Starsteel Cape',  cat:'cape',  lvl:90,ms:21500,xp:1800,spdMult:0.790, minMs:3010, inp:{starsteel_bar:1,ancient_log:2},    out:{starsteel_cape:1}},
-    /* ─── Themed combat-drop weapons (1.0.95) ─────────────────────────────────
-       Each one is forged from monster drops. Slotted between standard tiers in
-       both level and stat budget — a craftable boss-weapon path that rewards
-       grinding the source zone. Subcat routes them into the right Weapons tab. */
-    {id:'cr_th_plague_fang',name:'Plague Fang Dagger', cat:'weapon',lvl:12,ms:5500, xp:280, spdMult:0.555,minMs:750,  inp:{iron_bar:1,rat_fang:4,rat_tail:6},                subcat:'dagger',out:{plague_fang_dagger:1}},
-    {id:'cr_th_chitin_maul',name:'Chitin Maul',        cat:'weapon',lvl:22,ms:8000, xp:500, spdMult:0.620,minMs:1150, inp:{iron_bar:2,chitin_shard:3,spinneret:1},           subcat:'hammer',out:{chitin_maul:1}},
-    {id:'cr_th_warcleaver', name:'Warcleaver',         cat:'weapon',lvl:32,ms:11000,xp:900, spdMult:0.670,minMs:1530, inp:{steel_bar:2,crude_cleaver:2,tanned_hide:3},        subcat:'sword', out:{warcleaver:1}},
-    {id:'cr_th_bone_reaper',name:'Bone Reaper',        cat:'weapon',lvl:42,ms:13500,xp:1450,spdMult:0.700,minMs:1750, inp:{mithril_bar:2,rib_plate:2,ancient_bone:4},         subcat:'sword', out:{bone_reaper:1}},
-    {id:'cr_th_soulbinder', name:'Soulbinder Hammer',  cat:'weapon',lvl:48,ms:14000,xp:1700,spdMult:0.720,minMs:1950, inp:{mithril_bar:2,soul_shard:1,ancient_bone:3},        subcat:'hammer',out:{soulbinder_hammer:1}},
-    {id:'cr_th_ironfang',   name:'Ironfang Claws',     cat:'weapon',lvl:58,ms:16500,xp:2400,spdMult:0.745,minMs:2170, inp:{cobalt_bar:2,alpha_claw:2,wolf_fang:4},            subcat:'dagger',out:{ironfang_claws:1}},
-    /* ─── Themed capes (1.0.96) — one per zone, monster-drop materials ──────
-       Lv requirements scale with the source zone. Stat budget is between base
-       tier capes; the recipe makes use of drops that were otherwise sitting idle. */
-    {id:'cr_th_ratskin_cape',   name:'Ratskin Cape',       cat:'cape',  lvl:10,ms:5500, xp:200, spdMult:0.555,minMs:750,  inp:{bronze_bar:1,rat_tail:4,gnawed_bone:3},            out:{ratskin_cape:1}},
-    {id:'cr_th_silkwoven_cape', name:'Silkwoven Cape',     cat:'cape',  lvl:20,ms:8000, xp:420, spdMult:0.620,minMs:1150, inp:{iron_bar:1,spider_silk:4,venom_sac:2},             out:{silkwoven_cape:1}},
-    {id:'cr_th_warband_cape',   name:'Warband Cape',       cat:'cape',  lvl:30,ms:11000,xp:760, spdMult:0.670,minMs:1530, inp:{steel_bar:1,tanned_hide:3,tribal_fetish:2},        out:{warband_cape:1}},
-    {id:'cr_th_wraithweave',    name:'Wraithweave Cape',   cat:'cape',  lvl:40,ms:13500,xp:1240,spdMult:0.700,minMs:1750, inp:{mithril_bar:1,ectoplasm:2,cursed_dust:4},          out:{wraithweave_cape:1}},
-    {id:'cr_th_pack_alpha',     name:'Pack Alpha Cape',    cat:'cape',  lvl:55,ms:16500,xp:2050,spdMult:0.745,minMs:2170, inp:{cobalt_bar:1,wolf_pelt:3,frostfur:2},              out:{pack_alpha_cape:1}},
-    /* ─── Themed chestplates (1.0.96) — one per zone, set-piece body armor ─ */
-    {id:'cr_th_ratskin_tunic',  name:'Ratskin Tunic',      cat:'chest', lvl:12,ms:5500, xp:340, spdMult:0.555,minMs:750,  inp:{bronze_bar:2,rat_tail:6,gnawed_bone:4},            out:{ratskin_tunic:1}},
-    {id:'cr_th_chitin_plate',   name:'Chitin Plate',       cat:'chest', lvl:22,ms:8000, xp:680, spdMult:0.620,minMs:1150, inp:{iron_bar:2,chitin_shard:6,spider_silk:4},          out:{chitin_plate:1}},
-    {id:'cr_th_warband_armor',  name:'Warband Hide Armor', cat:'chest', lvl:32,ms:11000,xp:1180,spdMult:0.670,minMs:1530, inp:{steel_bar:2,tanned_hide:5,bone_charm:2},           out:{warband_armor:1}},
-    {id:'cr_th_bone_plate',     name:'Bone Plate Cuirass', cat:'chest', lvl:42,ms:13500,xp:1860,spdMult:0.700,minMs:1750, inp:{mithril_bar:2,rib_plate:4,ancient_bone:6},         out:{bone_plate_cuirass:1}},
-    {id:'cr_th_pack_leader',    name:'Pack Leader Vest',   cat:'chest', lvl:55,ms:16500,xp:3050,spdMult:0.745,minMs:2170, inp:{cobalt_bar:2,wolf_pelt:4,howling_horn:1},          out:{pack_leader_vest:1}},
+    /* ─── Themed combat-drop gear — converted to direct drops (1.0.2) ─────────
+       The 16 cr_th_* weapon/armor/cape recipes were removed. Each finished piece
+       now drops directly (rare) from the monster that used to give its signature
+       material — see MONSTER_DROPS. Items, stats, and icons are unchanged; only
+       the acquisition path moved from crafting to looting. The source mats keep
+       dropping (sellable / future use). Potions are unaffected (they brew from
+       foraged herbs, never monster drops). */
     /* ─── Skilling tools (v1.0.47) ─────────────────────────────────────────────
        Tools used to be sold in the Shop; now they're crafted here. Each tool
        is a one-time unlock — grantItem (in [JS-22]) pushes a tool:true item
@@ -15160,18 +15143,21 @@ const MONSTER_DROPS={
                {id:'gnawed_bone', chance:0.13},   // was 0.18
                {id:'beast_sinew', chance:0.0010},   // ~1 in 1000
                {id:'shade_ember', chance:0.00010}], // ~1 in 10000
-  plague_rat: [{id:'rat_tail',    chance:0.30},   // was 0.50
+  plague_rat: [{id:'ratskin_cape',chance:0.008}/*gear drop 1.0.2*/,
+               {id:'rat_tail',    chance:0.30},   // was 0.50
                {id:'ratskin',     chance:0.18},   // was 0.25
                {id:'gnawed_bone', chance:0.11},   // was 0.15
                {id:'beast_sinew', chance:0.0020},
                {id:'shade_ember', chance:0.00025}],
-  dire_rat:   [{id:'ratskin',     chance:0.24},   // was 0.40
+  dire_rat:   [{id:'plague_fang_dagger',chance:0.008}/*gear drop 1.0.2*/,
+               {id:'ratskin',     chance:0.24},   // was 0.40
                {id:'rat_fang',    chance:0.11},   // was 0.15
                {id:'gnawed_bone', chance:0.15},   // was 0.22
                {id:'rat_tail',    chance:0.18},   // was 0.30
                {id:'beast_sinew', chance:0.0040},
                {id:'shade_ember', chance:0.00060}],
-  brood_rat:  [{id:'ratskin',     chance:0.30},   // was 0.50
+  brood_rat:  [{id:'ratskin_tunic',chance:0.007}/*gear drop 1.0.2*/,
+               {id:'ratskin',     chance:0.30},   // was 0.50
                {id:'rat_fang',    chance:0.21},   // was 0.35
                {id:'gnawed_bone', chance:0.18},   // was 0.30
                {id:'royal_rat_sigil', chance:0.015},   // ← key drop · ~1 per 67 kills
@@ -15191,18 +15177,21 @@ const MONSTER_DROPS={
                      {id:'chitin_shard', chance:0.11},  // was 0.15
                      {id:'beast_sinew',  chance:0.0040},
                      {id:'shade_ember',  chance:0.00060}],
-  web_weaver:       [{id:'spider_silk',  chance:0.33},  // was 0.55
+  web_weaver:       [{id:'silkwoven_cape',chance:0.008}/*gear drop 1.0.2*/,
+                     {id:'spider_silk',  chance:0.33},  // was 0.55
                      {id:'chitin_shard', chance:0.18},  // was 0.25
                      {id:'venom_sac',    chance:0.07},  // was 0.10
                      {id:'beast_sinew',  chance:0.0080},
                      {id:'shade_ember',  chance:0.0012}],
-  venomfang:        [{id:'spider_silk',  chance:0.21},  // was 0.35
+  venomfang:        [{id:'chitin_maul',chance:0.007}/*gear drop 1.0.2*/,
+                     {id:'spider_silk',  chance:0.21},  // was 0.35
                      {id:'chitin_shard', chance:0.21},  // was 0.35
                      {id:'venom_sac',    chance:0.18},  // was 0.30
                      {id:'spinneret',    chance:0.05},  // was 0.06
                      {id:'beast_sinew',  chance:0.012},
                      {id:'shade_ember',  chance:0.0020}],
-  brood_matron:     [{id:'chitin_shard', chance:0.30},  // was 0.50
+  brood_matron:     [{id:'chitin_plate',chance:0.006}/*gear drop 1.0.2*/,
+                     {id:'chitin_shard', chance:0.30},  // was 0.50
                      {id:'venom_sac',    chance:0.21},  // was 0.35
                      {id:'spinneret',    chance:0.08},  // was 0.12
                      {id:'silken_sigil', chance:0.015},  // ← key drop · ~1 per 67 kills
@@ -15226,20 +15215,23 @@ const MONSTER_DROPS={
                      {id:'rusted_blade',   chance:0.06},
                      {id:'beast_sinew',    chance:0.0060},
                      {id:'shade_ember',    chance:0.0010}],
-  goblin_archer:    [{id:'goblin_ear',     chance:0.30},
+  goblin_archer:    [{id:'warband_armor',chance:0.007}/*gear drop 1.0.2*/,
+                     {id:'goblin_ear',     chance:0.30},
                      {id:'goblin_tooth',   chance:0.18},
                      {id:'tanned_hide',    chance:0.10},
                      {id:'rusted_blade',   chance:0.08},
                      {id:'beast_sinew',    chance:0.010},
                      {id:'shade_ember',    chance:0.0018}],
-  goblin_brute:     [{id:'tanned_hide',    chance:0.20},
+  goblin_brute:     [{id:'warcleaver',chance:0.007}/*gear drop 1.0.2*/,
+                     {id:'tanned_hide',    chance:0.20},
                      {id:'goblin_tooth',   chance:0.16},
                      {id:'rusted_blade',   chance:0.10},
                      {id:'crude_cleaver',  chance:0.08},
                      {id:'bone_charm',     chance:0.04},
                      {id:'beast_sinew',    chance:0.018},
                      {id:'shade_ember',    chance:0.0030}],
-  goblin_shaman:    [{id:'tribal_fetish',  chance:0.22},
+  goblin_shaman:    [{id:'warband_cape',chance:0.006}/*gear drop 1.0.2*/,
+                     {id:'tribal_fetish',  chance:0.22},
                      {id:'goblin_tooth',   chance:0.16},
                      {id:'bone_charm',     chance:0.10},
                      {id:'shaman_tooth',   chance:0.05},
@@ -15270,13 +15262,17 @@ const MONSTER_DROPS={
                     {id:'rib_plate',       chance:0.05},
                     {id:'beast_sinew',     chance:0.018},
                     {id:'shade_ember',     chance:0.0030}],
-  crypt_wight:     [{id:'cursed_dust',     chance:0.26},
+  crypt_wight:     [{id:'soulbinder_hammer',chance:0.005}/*gear drop 1.0.2*/,
+                    {id:'wraithweave_cape',chance:0.006}/*gear drop 1.0.2*/,
+                    {id:'cursed_dust',     chance:0.26},
                     {id:'ectoplasm',       chance:0.18},
                     {id:'ancient_bone',    chance:0.16},
                     {id:'soul_shard',      chance:0.03},
                     {id:'beast_sinew',     chance:0.024},
                     {id:'shade_ember',     chance:0.0045}],
-  bone_knight:     [{id:'rib_plate',       chance:0.22},
+  bone_knight:     [{id:'bone_reaper',chance:0.006}/*gear drop 1.0.2*/,
+                    {id:'bone_plate_cuirass',chance:0.005}/*gear drop 1.0.2*/,
+                    {id:'rib_plate',       chance:0.22},
                     {id:'ancient_bone',    chance:0.20},
                     {id:'cursed_dust',     chance:0.14},
                     {id:'soul_shard',      chance:0.06},
@@ -15302,19 +15298,22 @@ const MONSTER_DROPS={
                     {id:'gnawed_bone',     chance:0.12},
                     {id:'beast_sinew',     chance:0.022},
                     {id:'shade_ember',     chance:0.0040}],
-  frost_wolf:      [{id:'wolf_pelt',       chance:0.28},
+  frost_wolf:      [{id:'pack_alpha_cape',chance:0.006}/*gear drop 1.0.2*/,
+                    {id:'wolf_pelt',       chance:0.28},
                     {id:'frostfur',        chance:0.16},
                     {id:'wolf_fang',       chance:0.14},
                     {id:'beast_sinew',     chance:0.030},
                     {id:'shade_ember',     chance:0.0055}],
-  alpha_wolf:      [{id:'wolf_pelt',       chance:0.22},
+  alpha_wolf:      [{id:'ironfang_claws',chance:0.005}/*gear drop 1.0.2*/,
+                    {id:'wolf_pelt',       chance:0.22},
                     {id:'alpha_claw',      chance:0.10},
                     {id:'frostfur',        chance:0.18},
                     {id:'wolf_fang',       chance:0.20},
                     {id:'howling_horn',    chance:0.08},
                     {id:'beast_sinew',     chance:0.040},
                     {id:'shade_ember',     chance:0.0080}],
-  pack_hunter:     [{id:'alpha_claw',      chance:0.18},
+  pack_hunter:     [{id:'pack_leader_vest',chance:0.005}/*gear drop 1.0.2*/,
+                    {id:'alpha_claw',      chance:0.18},
                     {id:'wolf_pelt',       chance:0.20},
                     {id:'howling_horn',    chance:0.14},
                     {id:'pack_eye',        chance:0.04},
