@@ -948,7 +948,7 @@ header h1 .flame{color:var(--ember)}
   display:block;text-align:center;font-family:inherit;transition:all .12s;
   flex-direction:initial;align-items:initial;gap:0;box-shadow:none;transform:none}
 .cmb-zicons .cmb-zone-tile:hover:not(:disabled){background:#231811;border-color:var(--trim-d);
-  transform:none;box-shadow:none}
+  transform:none;box-shadow:none;z-index:600}
 .cmb-zicons .cmb-zone-tile.sel{background:linear-gradient(180deg,#3a2814,#1a0e04);
   border-color:#c8a868;box-shadow:none}
 .cmb-zicons .cmb-zone-tile.sel::before{content:'';position:absolute;left:-3px;top:20%;bottom:20%;
@@ -960,7 +960,7 @@ header h1 .flame{color:var(--ember)}
    on hover even though the icon itself reads as muted. */
 .cmb-zicons .cmb-zone-tile.locked{cursor:not-allowed;opacity:1}
 .cmb-zicons .cmb-zone-tile.locked > .ztl-ic{opacity:.4;filter:grayscale(.7)}
-.cmb-zicons .cmb-zone-tile.locked:hover{background:#231811;border-color:var(--trim-d)}
+.cmb-zicons .cmb-zone-tile.locked:hover{background:#231811;border-color:var(--trim-d);z-index:600}
 .cmb-zicons .cmb-zone-tile .ztl-ic{font-size:20px;line-height:1;display:block;
   filter:drop-shadow(0 1px 1px rgba(0,0,0,.7))}
 .cmb-zicons .cmb-zone-tile .ztl-ic svg{width:20px;height:20px}
@@ -969,7 +969,7 @@ header h1 .flame{color:var(--ember)}
 /* Tooltip stays fully visible regardless of locked state (it's a child of the
    tile, so without the opacity fix above its rendering would inherit the dim). */
 .cmb-zicons .cmb-zone-tip{position:absolute;top:50%;left:100%;transform:translate(8px,-50%);
-  z-index:300;margin-top:0;opacity:0;pointer-events:none;transition:opacity .12s}
+  z-index:1000;margin-top:0;opacity:0;pointer-events:none;transition:opacity .12s}
 .cmb-zicons .cmb-zone-tile:hover .cmb-zone-tip{opacity:1}
 .cmb-zright{flex:1 1 0;min-width:0;display:flex;flex-direction:column}
 .cmb-zright .cmb-zone-strip{margin-top:0;margin-bottom:5px;padding:5px 10px;
@@ -2227,7 +2227,7 @@ header h1 .flame{color:var(--ember)}
   <div class="mm-btns">
     <button class="mm-btn mm-primary" id="mmPlay">▶ Play</button>
   </div>
-  <div class="mm-ver">v1.0.7</div>
+  <div class="mm-ver">v1.0.8</div>
 </div>
 
 <!-- ===== CHARACTER SELECT (added) ===== -->
@@ -9347,7 +9347,7 @@ function defaultState(){
     // Auto-heal — if enabled, the combat tick drinks the lowest-waste heal
     // potion when HP drops to/below `thresholdPct` of max. Disabled by default
     // so new players don't accidentally burn early brews.
-    autoHeal:{enabled:false, thresholdPct:30},
+    autoHeal:{enabled:false, thresholdPct:30, itemId:''},
     // Combat Mastery (v1.0.69) — separate from the activity-card mastery system.
     //   cmast            — {nodeId: rank} allocated ranks on combat mastery nodes
     //   cmastGranted     — running total of points granted (combat lvl + milestones + bosses + zones)
@@ -9505,11 +9505,12 @@ function normalizeState(){
   if(!state.discovered||typeof state.discovered!=='object'||Array.isArray(state.discovered)) state.discovered={};
   // Auto-heal config default for older saves (1.0.63 introduced this field).
   if(!state.autoHeal||typeof state.autoHeal!=='object'){
-    state.autoHeal={enabled:false, thresholdPct:30};
+    state.autoHeal={enabled:false, thresholdPct:30, itemId:''};
   } else {
     if(typeof state.autoHeal.enabled!=='boolean') state.autoHeal.enabled=false;
     const t=+state.autoHeal.thresholdPct;
     if(!isFinite(t)||t<5||t>95) state.autoHeal.thresholdPct=30;
+    if(typeof state.autoHeal.itemId!=='string') state.autoHeal.itemId=''; // auto-eat pick (1.0.8)
   }
   if(!state.newlyDiscovered||typeof state.newlyDiscovered!=='object'||Array.isArray(state.newlyDiscovered)) state.newlyDiscovered={};
   if(state.action!==null&&typeof state.action!=='object') state.action=null;
@@ -11131,6 +11132,20 @@ function potionPowerMult(){
    combat or at full HP is a waste; both paths reject with a toast so the
    player doesn't lose a brew. Called directly from usePotion's heal branch
    and from autoUseHealPotion (auto-drink at low HP). */
+/* All owned combat-heal consumables — draughts, cooked food, poultices: any
+   item with potion.heal and no buff duration. Smallest heal first. (1.0.8) */
+function combatHealItems(){
+  const out=[];
+  for(const id in ITEMS){
+    const it=ITEMS[id]; if(!it||!it.potion) continue;
+    const heal=it.potion.heal||0;
+    if(heal<=0||it.potion.dur) continue;            // instant heals only
+    const cnt=(state.items&&state.items[id])||0;
+    if(cnt>0) out.push({id,it,cnt,heal});
+  }
+  out.sort((a,b)=>a.heal-b.heal);
+  return out;
+}
 function useHealPotion(itemId){
   if(!(state.items[itemId]>0)) return false;
   const it=ITEMS[itemId];
@@ -11170,21 +11185,14 @@ function autoUseHealPotion(){
   if(typeof combat==='undefined'||!combat.active) return false;
   const missing=(combat.youMaxHp||0)-(combat.youHp||0);
   if(missing<=0) return false;
-  const HEAL_IDS=['heal_draught_1','heal_draught_2','heal_draught_3','heal_draught_4'];
-  const avail=[];
-  for(const id of HEAL_IDS){
-    const cnt=state.items[id]||0;
-    if(cnt<=0) continue;
-    const heal=(ITEMS[id]&&ITEMS[id].potion&&ITEMS[id].potion.heal)||0;
-    if(heal<=0) continue;
-    avail.push({id,heal,cnt});
-  }
+  const avail=combatHealItems();   // draughts + cooked food + poultices (1.0.8)
   if(!avail.length) return false;
-  avail.sort((a,b)=>a.heal-b.heal);
-  // Largest brew whose heal fits in the missing-HP gap (no waste).
+  // Player-picked auto-eat item wins if they still own it.
+  const sel=state.autoHeal&&state.autoHeal.itemId;
+  if(sel){ const s=avail.find(a=>a.id===sel); if(s) return useHealPotion(s.id); }
+  // Otherwise: largest heal that fits the missing-HP gap (no waste); else smallest.
   let pick=null;
   for(const p of avail){ if(p.heal<=missing) pick=p; }
-  // All available brews overheal — use the smallest (least waste).
   if(!pick) pick=avail[0];
   return useHealPotion(pick.id);
 }
@@ -19903,12 +19911,9 @@ function renderCombat(){
   // an empty string when nothing's brewed. Buttons keep the existing
   // `.cmb-pot-btn[data-heal]` selector so the same event handler fires.
   const healSlotsHTML=(function(){
-    const HEAL_IDS=['heal_draught_1','heal_draught_2','heal_draught_3','heal_draught_4'];
-    const owned=HEAL_IDS.map(id=>{
-      const it=ITEMS[id]; if(!it) return null;
-      const cnt=state.items[id]||0;
-      return {id, it, cnt, heal:(it.potion&&it.potion.heal)||0};
-    }).filter(x=>x&&x.cnt>0);
+    // Dynamic (1.0.8): every owned heal — draughts, cooked food, poultices —
+    // not just the 4 draughts. Biggest heal first so strongest is leftmost.
+    const owned=combatHealItems().sort((a,b)=>b.heal-a.heal);
     if(!owned.length) return '';
     const buttons=owned.map(o=>{
       const disabled=!active;
@@ -19930,12 +19935,19 @@ function renderCombat(){
     const thresholdSelect='<select id="cmbAutoHealThresh" class="cmb-pot-sel">'
       +thresholdOpts.map(t=>`<option value="${t}"${t===ah.thresholdPct?' selected':''}>≤ ${t}%</option>`).join('')
       +'</select>';
-    return `<div class="cmb-slot cmb-auto${ah.enabled?' on':''}" data-tip="Auto-drink heal potions at the selected threshold">
+    // Which heal to auto-eat — "Smart" (least-waste) or a specific food/potion. (1.0.8)
+    const heals=combatHealItems();
+    const itemSelect='<select id="cmbAutoHealItem" class="cmb-pot-sel">'
+      +`<option value=""${!ah.itemId?' selected':''}>Smart</option>`
+      +heals.map(h=>`<option value="${h.id}"${h.id===ah.itemId?' selected':''}>${h.it.name} (${h.heal})</option>`).join('')
+      +'</select>';
+    return `<div class="cmb-slot cmb-auto${ah.enabled?' on':''}" data-tip="Auto-eat the chosen food/potion when HP hits the threshold">
       <label class="cmb-pot-toggle">
         <input type="checkbox" id="cmbAutoHealChk"${ah.enabled?' checked':''}/>
         <span class="lbltxt">Auto</span>
         <span class="dot"></span>
       </label>
+      ${itemSelect}
       ${thresholdSelect}
     </div>`;
   })();
@@ -20171,6 +20183,14 @@ function renderCombat(){
   if(ahSel) ahSel.addEventListener('change',function(){
     if(!state.autoHeal) state.autoHeal={enabled:false,thresholdPct:30};
     state.autoHeal.thresholdPct=+ahSel.value||30;
+    saveGame();
+  });
+  const ahItem=$('cmbAutoHealItem');
+  if(ahItem) ahItem.addEventListener('change',function(){
+    if(!state.autoHeal) state.autoHeal={enabled:false,thresholdPct:30};
+    state.autoHeal.itemId=ahItem.value||'';
+    const it=ITEMS[ahItem.value];
+    toast(ahItem.value?('🍖 Auto-eating '+(it?it.name:ahItem.value)+'.'):'🩸 Auto-heal set to Smart.');
     saveGame();
   });
 
