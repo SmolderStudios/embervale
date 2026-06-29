@@ -2018,11 +2018,12 @@ header h1 .flame{color:var(--ember)}
 .cmast-h-src .src b{color:var(--ember);font-family:'Courier New',monospace;margin-left:3px}
 
 /* Tree headers (MELEE / RANGED / MAGIC labels under the tree) */
-.cmast-headers{display:grid;grid-template-columns:1fr 1fr 1fr;padding:4px 0 12px;border-bottom:1px solid var(--trim-d);margin-bottom:12px}
-.cmast-tree-h{text-align:center;font-size:12px;letter-spacing:2px;font-weight:bold}
+.cmast-headers{display:grid;grid-template-columns:1fr 1fr 1fr;padding:4px 0 8px;border-bottom:1px solid var(--trim-d);margin-bottom:8px}
+.cmast-soon-note{text-align:center;font-size:11px;color:var(--muted);font-style:italic;line-height:1.4;margin:0 auto 12px;max-width:560px}
+.cmast-tree-h{text-align:center;font-size:12px;letter-spacing:1.5px;font-weight:bold}
 .cmast-tree-h.melee{color:#c44a25}
-.cmast-tree-h.ranged{color:#d4a04a}
-.cmast-tree-h.magic{color:#8c5fd9}
+.cmast-tree-h.ranged{color:#7e94a8}
+.cmast-tree-h.magic{color:#d4a04a}
 
 /* SVG canvas */
 .cmast-canvas{background:#0e0a08;border:1px solid var(--trim-d);border-radius:6px;padding:6px 4px 4px;margin:0 auto 12px;max-width:760px}
@@ -2065,10 +2066,10 @@ header h1 .flame{color:var(--ember)}
 .cmast-d-head{display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap}
 .cmast-d-swatch{display:inline-block;width:10px;height:10px;border-radius:2px}
 .cmast-d-swatch.melee{background:#c44a25}
-.cmast-d-swatch.ranged{background:#d4a04a}
-.cmast-d-swatch.magic{background:#8c5fd9}
-.cmast-d-swatch.mr{background:#a87a3a}
-.cmast-d-swatch.rm{background:#8a5fb5}
+.cmast-d-swatch.ranged{background:#6e8296}
+.cmast-d-swatch.magic{background:#d4a04a}
+.cmast-d-swatch.mr{background:#9d7868}
+.cmast-d-swatch.rm{background:#a39668}
 .cmast-d-name{font-size:15px;color:var(--ember);font-weight:bold;letter-spacing:0.5px}
 .cmast-d-tag{font-size:11px;background:var(--raised-s);border:1px solid var(--trim-d);padding:2px 6px;border-radius:3px;letter-spacing:1px;color:var(--muted)}
 .cmast-d-tag.weapon{color:#8a7a5a;border-color:#5a4a38}
@@ -2286,7 +2287,7 @@ header h1 .flame{color:var(--ember)}
   <div class="mm-btns">
     <button class="mm-btn mm-primary" id="mmPlay">▶ Play</button>
   </div>
-  <div class="mm-ver">v1.0.21</div>
+  <div class="mm-ver">v1.0.22</div>
 </div>
 
 <!-- ===== CHARACTER SELECT (added) ===== -->
@@ -9863,12 +9864,22 @@ function normalizeState(){
           }
         }
       }
-      // Spill any excess past 98 into shards.
-      if(state.cmastGranted>98){
-        state.cmastShards=(state.cmastShards||0)+(state.cmastGranted-98);
+      // Spill any excess past the cap into shards.
+      if(state.cmastGranted>CMAST_CAP){
+        state.cmastShards=(state.cmastShards||0)+(state.cmastGranted-CMAST_CAP);
       }
     }
   }
+  // ── Mastery rebuild migration (1.0.22) — the tree is Melee-only now.
+  //   (1) Refund points sunk into the removed Ranged/Magic/Hybrid nodes by
+  //       dropping their now-orphaned keys (returns them to the pool).
+  //   (2) Re-derive the shard bank against the (smaller) CMAST_CAP so banked
+  //       surplus stays consistent. Idempotent — safe every load, and
+  //       self-corrects upward if a future cap raise re-admits the points.
+  if(state.cmast && typeof state.cmast==='object'){
+    for(const id in state.cmast){ if(typeof CMAST_BY_ID!=='undefined' && !CMAST_BY_ID[id]) delete state.cmast[id]; }
+  }
+  if(typeof CMAST_CAP!=='undefined') state.cmastShards=Math.max(0, (state.cmastGranted||0) - CMAST_CAP);
 }
 
 let selectedSkill='woodcutting';
@@ -15307,51 +15318,57 @@ function bossUnlocked(mon){
      weaponLocked? — string weapon class; node visible but blocked until weapon exists
      effect   — { key: value-per-rank } — applied via masteryBonusesAll() when wired
 */
+// Combat Mastery is a MELEE-only tree (1.0.22) split into three disciplines.
+// The internal `tree` keys (melee / ranged / magic / mr / rm) are LAYOUT slots
+// inherited from the old three-tree engine — they no longer mean ranged/magic.
+// Column map: melee = ONSLAUGHT (offense), ranged = BULWARK (survival),
+// magic = WARFARE (tactics/rewards); mr/rm are the cross-discipline bridges.
+// Effects remain deferred (allocations persist but don't yet alter formulas).
 const CMAST_NODES=[
-  // ───────── MELEE TREE (30 pts) ─────────
+  // ───────── ONSLAUGHT — raw offense (30 pts) ─────────
   {id:'m_t1', tree:'melee', tier:1, branch:'c', max:4, name:'Iron Discipline', desc:'+4% combat XP per rank.', effect:{combatXp:0.04}},
   {id:'m_t2_l', tree:'melee', tier:2, branch:'l', max:5, name:'Brutal Strikes', desc:'+3% melee damage per rank.', prereq:['m_t1:1'], effect:{meleeDmg:0.03}},
-  {id:'m_t2_r', tree:'melee', tier:2, branch:'r', max:5, name:'Thick Skin', desc:'+3 max HP per rank.', prereq:['m_t1:1'], effect:{maxHp:3}},
+  {id:'m_t2_r', tree:'melee', tier:2, branch:'r', max:5, name:'Battle Honed', desc:'+2% crit chance per rank.', prereq:['m_t1:1'], effect:{critChance:0.02}},
   {id:'m_t3_l', tree:'melee', tier:3, branch:'l', max:1, name:'Bleeder', desc:'Crits cause bleed — 3 ticks of 25% crit damage over 3 seconds.', prereq:['m_t2_l:3'], unique:true},
-  {id:'m_t3_r', tree:'melee', tier:3, branch:'r', max:1, name:'Berserker', desc:'+15% damage while below 30% HP. Takes +5% damage in exchange.', prereq:['m_t2_r:3'], unique:true},
-  {id:'m_t4_l', tree:'melee', tier:4, branch:'l', max:5, name:'Iron Resolve', desc:'+2% damage reduction at full HP, per rank. Drops on the next hit; refreshes after 8s without taking damage.', prereq:['m_t3_l:1','m_t3_r:1'], effect:{dmgReduce:0.02}},
-  {id:'m_t4_r', tree:'melee', tier:4, branch:'r', max:5, name:'Battle Honed', desc:'+2% crit chance per rank.', prereq:['m_t3_l:1','m_t3_r:1'], effect:{critChance:0.02}},
+  {id:'m_t3_r', tree:'melee', tier:3, branch:'r', max:1, name:'Rending Blows', desc:'+20% critical damage.', prereq:['m_t2_r:3'], unique:true},
+  {id:'m_t4_l', tree:'melee', tier:4, branch:'l', max:5, name:'Savage Edge', desc:'+2% damage vs enemies above 80% HP, per rank (opener bonus).', prereq:['m_t3_l:1','m_t3_r:1'], effect:{savageEdge:0.02}},
+  {id:'m_t4_r', tree:'melee', tier:4, branch:'r', max:5, name:'Frenzy', desc:'+1% attack speed per rank.', prereq:['m_t3_l:1','m_t3_r:1'], effect:{atkSpeed:0.01}},
   {id:'m_t5_l', tree:'melee', tier:5, branch:'l', max:1, name:'Executioner', desc:'+25% damage vs enemies under 25% HP.', prereq:['m_t4_l:3'], unique:true},
   {id:'m_t5_m', tree:'melee', tier:5, branch:'m', max:1, name:'Cleaving Edge', desc:'Melee strikes have an 8% chance to hit twice. Both rolls evaluate crit + on-hit effects independently.', prereq:['m_t4_l:3','m_t4_r:3'], unique:true, powerful:true},
-  {id:'m_t5_r', tree:'melee', tier:5, branch:'r', max:1, name:'Dagger Finesse', desc:'Dagger crits deal +15% damage. Each crit applies a stacking bleed (up to 3 stacks).', prereq:['m_t4_r:3'], weaponLocked:'dagger', unique:true},
+  {id:'m_t5_r', tree:'melee', tier:5, branch:'r', max:1, name:'Dagger Finesse', desc:'While wielding a dagger: crits deal +15% damage and apply a stacking bleed (up to 3 stacks).', prereq:['m_t4_r:3'], unique:true},
   {id:'m_cap', tree:'melee', tier:6, branch:'c', max:1, name:'Ember Wrath', desc:'On killing blow, your next attack within 5s is a guaranteed crit.', prereq:['m_t5_m:1'], capstone:true},
 
-  // ───────── RANGED TREE (30 pts) ─────────
-  {id:'r_t1', tree:'ranged', tier:1, branch:'c', max:4, name:'Steady Aim', desc:'+4% combat XP per rank.', effect:{combatXp:0.04}},
-  {id:'r_t2_l', tree:'ranged', tier:2, branch:'l', max:5, name:'Eagle Eye', desc:'+1% crit chance per rank.', prereq:['r_t1:1'], effect:{critChance:0.01}},
-  {id:'r_t2_r', tree:'ranged', tier:2, branch:'r', max:5, name:'Quick Hands', desc:'+1% attack speed per rank.', prereq:['r_t1:1'], effect:{atkSpeed:0.01}},
-  {id:'r_t3_l', tree:'ranged', tier:3, branch:'l', max:1, name:"Marked Quarry", desc:'The first hit you land in any combat is always a crit.', prereq:['r_t2_l:3'], unique:true},
-  {id:'r_t3_r', tree:'ranged', tier:3, branch:'r', max:1, name:"Forager's Eye", desc:'+5% chance to find Beast Sinew on monster kills.', prereq:['r_t2_r:3'], unique:true},
-  {id:'r_t4_l', tree:'ranged', tier:4, branch:'l', max:5, name:'Trail Marker', desc:'Kills grant 2% of their XP to Foraging, per rank.', prereq:['r_t3_l:1','r_t3_r:1'], effect:{trailMarker:0.02}},
-  {id:'r_t4_r', tree:'ranged', tier:4, branch:'r', max:5, name:"Hunter's Focus", desc:'+1% rare drop chance per rank.', prereq:['r_t3_l:1','r_t3_r:1'], effect:{rareDrop:0.01}},
-  {id:'r_t5_l', tree:'ranged', tier:5, branch:'l', max:1, name:'Trophy Hunter', desc:'Bosses are guaranteed to drop their unique item on first kill.', prereq:['r_t4_r:3'], unique:true},
-  {id:'r_t5_m', tree:'ranged', tier:5, branch:'m', max:1, name:"Hunter's Instinct", desc:'+3% rare drop chance from all monsters.', prereq:['r_t4_l:3','r_t4_r:3'], unique:true, powerful:true},
-  {id:'r_t5_r', tree:'ranged', tier:5, branch:'r', max:1, name:'Bow Precision', desc:'Bows: +10% crit chance, and +5% damage at full HP.', prereq:['r_t4_r:3'], weaponLocked:'bow', unique:true},
-  {id:'r_cap', tree:'ranged', tier:6, branch:'c', max:1, name:'Hawk-Eyed', desc:'Crits deal +50% extra damage.', prereq:['r_t5_m:1'], capstone:true},
+  // ───────── BULWARK — survival & defence (30 pts) ─────────
+  {id:'r_t1', tree:'ranged', tier:1, branch:'c', max:4, name:'Hardened', desc:'+3 max HP per rank.', effect:{maxHp:3}},
+  {id:'r_t2_l', tree:'ranged', tier:2, branch:'l', max:5, name:'Ironhide', desc:'+2% damage reduction per rank.', prereq:['r_t1:1'], effect:{dmgReduce:0.02}},
+  {id:'r_t2_r', tree:'ranged', tier:2, branch:'r', max:5, name:'Vigor', desc:'+4 max HP per rank.', prereq:['r_t1:1'], effect:{maxHp:4}},
+  {id:'r_t3_l', tree:'ranged', tier:3, branch:'l', max:1, name:'Second Wind', desc:'Once per fight, dropping below 25% HP instantly heals you for 15% of max HP.', prereq:['r_t2_l:3'], unique:true},
+  {id:'r_t3_r', tree:'ranged', tier:3, branch:'r', max:1, name:'Berserker', desc:'+15% damage while below 30% HP. Takes +5% damage in exchange.', prereq:['r_t2_r:3'], unique:true},
+  {id:'r_t4_l', tree:'ranged', tier:4, branch:'l', max:5, name:'Stonewall', desc:'+2% damage reduction at full HP, per rank. Drops on the next hit; refreshes after 8s without taking damage.', prereq:['r_t3_l:1','r_t3_r:1'], effect:{dmgReduce:0.02}},
+  {id:'r_t4_r', tree:'ranged', tier:4, branch:'r', max:5, name:'Lifeblood', desc:'Heal 1% of damage dealt per rank (capped at max HP).', prereq:['r_t3_l:1','r_t3_r:1'], effect:{lifesteal:0.01}},
+  {id:'r_t5_l', tree:'ranged', tier:5, branch:'l', max:1, name:'Retribution', desc:'Reflect 20% of damage taken back at the attacker.', prereq:['r_t4_l:3'], unique:true},
+  {id:'r_t5_m', tree:'ranged', tier:5, branch:'m', max:1, name:'Last Stand', desc:'Once per fight, a blow that would kill you instead leaves you at 1 HP.', prereq:['r_t4_l:3','r_t4_r:3'], unique:true, powerful:true},
+  {id:'r_t5_r', tree:'ranged', tier:5, branch:'r', max:1, name:'Shield Wall', desc:'+10% damage reduction while a shield is equipped.', prereq:['r_t4_r:3'], unique:true},
+  {id:'r_cap', tree:'ranged', tier:6, branch:'c', max:1, name:'Undying', desc:'While below 20% HP, gain +30% damage reduction.', prereq:['r_t5_m:1'], capstone:true},
 
-  // ───────── MAGIC TREE (30 pts) ─────────
-  {id:'g_t1', tree:'magic', tier:1, branch:'c', max:4, name:'Arcane Insight', desc:'+4% combat XP per rank.', effect:{combatXp:0.04}},
-  {id:'g_t2_l', tree:'magic', tier:2, branch:'l', max:5, name:'Shade Affinity', desc:'+3% damage vs undead / shadow / spider-kin foes per rank.', prereq:['g_t1:1']},
-  {id:'g_t2_r', tree:'magic', tier:2, branch:'r', max:5, name:'Mana Veins', desc:'+5 Ember Dust capacity per rank.', prereq:['g_t1:1']},
-  {id:'g_t3_l', tree:'magic', tier:3, branch:'l', max:1, name:'Voidsight', desc:'+5% chance to find Shade Ember on monster kills.', prereq:['g_t2_l:3'], unique:true},
-  {id:'g_t3_r', tree:'magic', tier:3, branch:'r', max:1, name:'Lifedrain', desc:'Melee hits heal 2% of damage dealt, capped at max HP.', prereq:['g_t2_r:3'], unique:true},
-  {id:'g_t4_l', tree:'magic', tier:4, branch:'l', max:5, name:'Crimson Harvest', desc:'Kills grant 2% of their XP to Farming, per rank.', prereq:['g_t3_l:1','g_t3_r:1'], effect:{crimsonHarvest:0.02}},
-  {id:'g_t4_r', tree:'magic', tier:4, branch:'r', max:5, name:'Ember Reclaim', desc:'1% chance per rank kills drop a piece of Ember Dust.', prereq:['g_t3_l:1','g_t3_r:1'], effect:{emberReclaim:0.01}},
-  {id:'g_t5_l', tree:'magic', tier:5, branch:'l', max:1, name:'Echo Cast', desc:'Hits have a 5% chance to repeat at 50% damage.', prereq:['g_t4_l:3'], unique:true},
-  {id:'g_t5_m', tree:'magic', tier:5, branch:'m', max:1, name:'Bone Picker', desc:'Kills have a 3% chance to drop a gnawed bone (feeds future monster-drop crafting).', prereq:['g_t4_l:3','g_t4_r:3'], unique:true, powerful:true},
-  {id:'g_t5_r', tree:'magic', tier:5, branch:'r', max:1, name:'Staff Channeling', desc:'Staff hits have a 5% chance to cast a free secondary strike at 50% damage.', prereq:['g_t4_r:3'], weaponLocked:'staff', unique:true},
-  {id:'g_cap', tree:'magic', tier:6, branch:'c', max:1, name:'Voidtouched', desc:'2% chance a killing blow drops a Voidheart (T5 gating material).', prereq:['g_t5_m:1'], capstone:true},
+  // ───────── WARFARE — tactics & spoils (30 pts) ─────────
+  {id:'g_t1', tree:'magic', tier:1, branch:'c', max:4, name:'Veteran', desc:'+4% combat XP per rank.', effect:{combatXp:0.04}},
+  {id:'g_t2_l', tree:'magic', tier:2, branch:'l', max:5, name:'Spoils of War', desc:'+3% combat gold per rank.', prereq:['g_t1:1'], effect:{gp:0.03}},
+  {id:'g_t2_r', tree:'magic', tier:2, branch:'r', max:5, name:'Keen Senses', desc:'+1% rare drop chance per rank.', prereq:['g_t1:1'], effect:{rareDrop:0.01}},
+  {id:'g_t3_l', tree:'magic', tier:3, branch:'l', max:1, name:'Trophy Hunter', desc:'Bosses are guaranteed to drop their unique item on first kill.', prereq:['g_t2_l:3'], unique:true},
+  {id:'g_t3_r', tree:'magic', tier:3, branch:'r', max:1, name:'Scavenger', desc:'+25% consolation gold from kills that drop nothing.', prereq:['g_t2_r:3'], unique:true},
+  {id:'g_t4_l', tree:'magic', tier:4, branch:'l', max:5, name:'Warmonger', desc:'+2% damage for 10s after a kill, per rank — stacks as you chain kills.', prereq:['g_t3_l:1','g_t3_r:1'], effect:{warmonger:0.02}},
+  {id:'g_t4_r', tree:'magic', tier:4, branch:'r', max:5, name:'Plunder', desc:'+1% chance to double item drops from kills, per rank.', prereq:['g_t3_l:1','g_t3_r:1'], effect:{doubleDrop:0.01}},
+  {id:'g_t5_l', tree:'magic', tier:5, branch:'l', max:1, name:'Headhunter', desc:'+3% rare drop chance from all monsters.', prereq:['g_t4_l:3'], unique:true},
+  {id:'g_t5_m', tree:'magic', tier:5, branch:'m', max:1, name:'War Banner', desc:'+10% combat XP and +10% combat gold.', prereq:['g_t4_l:3','g_t4_r:3'], unique:true, powerful:true},
+  {id:'g_t5_r', tree:'magic', tier:5, branch:'r', max:1, name:'Giant Slayer', desc:'+20% damage vs bosses.', prereq:['g_t4_r:3'], unique:true},
+  {id:'g_cap', tree:'magic', tier:6, branch:'c', max:1, name:'Conqueror', desc:'+5% to all combat stats (Attack, Strength, Defence).', prereq:['g_t5_m:1'], capstone:true},
 
-  // ───────── HYBRID BRIDGES (8 pts) ─────────
-  {id:'mr_t3', tree:'mr', tier:3, branch:'h', max:3, name:'Warrior-Hunter', desc:'+5% physical damage per rank (melee + ranged sources).', prereq:['m_t3_r:1','r_t3_l:1'], hybrid:true},
-  {id:'mr_t4', tree:'mr', tier:4, branch:'h', max:1, name:'Battle Scout', desc:'+5% chance to detect rare monster spawns in any zone.', prereq:['m_t4_r:3','r_t4_l:3'], hybrid:true, unique:true},
-  {id:'rm_t3', tree:'rm', tier:3, branch:'h', max:3, name:'Spellbow', desc:'+1% crit chance per rank (all sources).', prereq:['r_t3_r:1','g_t3_l:1'], hybrid:true},
-  {id:'rm_t4', tree:'rm', tier:4, branch:'h', max:1, name:'Mystic Sight', desc:'+1% chance to double item drops from kills.', prereq:['r_t4_r:3','g_t4_l:3'], hybrid:true, unique:true},
+  // ───────── BRIDGES — cross-discipline (8 pts) ─────────
+  {id:'mr_t3', tree:'mr', tier:3, branch:'h', max:3, name:'Duelist', desc:'+5% melee damage per rank.', prereq:['m_t3_r:1','r_t3_l:1'], hybrid:true, effect:{meleeDmg:0.05}},
+  {id:'mr_t4', tree:'mr', tier:4, branch:'h', max:1, name:'Warlord', desc:'+8% damage while above 80% HP.', prereq:['m_t4_r:3','r_t4_l:3'], hybrid:true, unique:true},
+  {id:'rm_t3', tree:'rm', tier:3, branch:'h', max:3, name:'Tactician', desc:'+1% crit chance per rank.', prereq:['r_t3_r:1','g_t3_l:1'], hybrid:true, effect:{critChance:0.01}},
+  {id:'rm_t4', tree:'rm', tier:4, branch:'h', max:1, name:'Champion', desc:'+5% damage and +5% damage reduction.', prereq:['r_t4_r:3','g_t4_l:3'], hybrid:true, unique:true},
 ];
 
 /* Cached lookup — node by id. Built once. */
@@ -15362,27 +15379,27 @@ const CMAST_BY_ID=(function(){ const m={}; for(const n of CMAST_NODES) m[n.id]=n
    in every state. Rank progress shows as "n/m" text BELOW the node, so the
    icon is always your visual anchor for what the node does. */
 const CMAST_ICONS={
-  // Melee
-  m_t1:'sword',   m_t2_l:'twin_blades', m_t2_r:'shield',
+  // Onslaught (offense)
+  m_t1:'sword',   m_t2_l:'twin_blades', m_t2_r:'bolt',
   m_t3_l:'blood', m_t3_r:'flame',
-  m_t4_l:'stone', m_t4_r:'bolt',
-  m_t5_l:'skull', m_t5_m:'cross_blades', m_t5_r:'dagger',
+  m_t4_l:'cross_blades', m_t4_r:'dash',
+  m_t5_l:'skull', m_t5_m:'star',  m_t5_r:'dagger',
   m_cap:'crown',
-  // Ranged
-  r_t1:'target',  r_t2_l:'eye',     r_t2_r:'dash',
-  r_t3_l:'crosshair', r_t3_r:'leaf',
-  r_t4_l:'trail', r_t4_r:'antler',
-  r_t5_l:'trophy', r_t5_m:'wing',   r_t5_r:'bow',
-  r_cap:'star',
-  // Magic
-  g_t1:'orb',     g_t2_l:'moon',    g_t2_r:'gem',
-  g_t3_l:'eye',   g_t3_r:'heart',
-  g_t4_l:'wheat', g_t4_r:'spark',
-  g_t5_l:'cycle', g_t5_m:'bone',    g_t5_r:'wand',
-  g_cap:'void',
-  // Hybrids
-  mr_t3:'sword',  mr_t4:'lens',
-  rm_t3:'bow',    rm_t4:'eye',
+  // Bulwark (survival)
+  r_t1:'heart',   r_t2_l:'shield', r_t2_r:'gem',
+  r_t3_l:'cycle', r_t3_r:'flame',
+  r_t4_l:'stone', r_t4_r:'blood',
+  r_t5_l:'bolt',  r_t5_m:'wing',  r_t5_r:'shield',
+  r_cap:'void',
+  // Warfare (tactics & spoils)
+  g_t1:'star',    g_t2_l:'gem',   g_t2_r:'eye',
+  g_t3_l:'trophy',g_t3_r:'leaf',
+  g_t4_l:'spark', g_t4_r:'orb',
+  g_t5_l:'crosshair', g_t5_m:'antler', g_t5_r:'skull',
+  g_cap:'crown',
+  // Bridges
+  mr_t3:'twin_blades', mr_t4:'cross_blades',
+  rm_t3:'target',      rm_t4:'lens',
 };
 
 /* SVG icon library — each entry is the inner markup for a 16×16 icon coord
@@ -15431,16 +15448,10 @@ const CMAST_ICON_SVG={
   lens:         '<circle cx="7" cy="7" r="3.8" fill="none" stroke-width="1.5"/><path d="M9.8 9.8 L13.5 13.5" stroke-width="1.8" fill="none"/>',
 };
 
-/* Validation: invariant check — total max ranks must equal 98 (matches skill-tree
-   discipline). Warns to console only if divergence — passing is silent so we
-   don't spam the console on every load. Failing this is a bug — adjust ranks
-   until the sum is 98. */
-(function(){
-  const total=CMAST_NODES.reduce((s,n)=>s+n.max,0);
-  if(total!==98){
-    console.warn('[MASTERY] Point invariant broken: total='+total+' expected=98');
-  }
-})();
+/* Spendable cap = the sum of every node's max rank. Currently the Melee tree
+   only (30). When the Ranged/Magic trees return this grows automatically, and
+   shard banking (grantCmastPoints) re-derives against the larger cap. */
+const CMAST_CAP=CMAST_NODES.reduce((s,n)=>s+n.max,0);
 
 /* ── Mastery state helpers ─────────────────────────────────────────────────────── */
 
@@ -15478,21 +15489,22 @@ function cmastSpent(){
   return s;
 }
 
-/* Total pool of points granted to date — capped at 98 for spendable. Anything
-   beyond rolls into state.cmastShards (refund credits, displayed only for now). */
-function cmastPtsGranted(){ return Math.min(98, (state.cmastGranted||0)); }
+/* Total pool of points granted to date — capped at CMAST_CAP for spendable.
+   Anything beyond rolls into state.cmastShards (refund credits, displayed only
+   for now; reclaimed when the Ranged/Magic trees raise the cap). */
+function cmastPtsGranted(){ return Math.min(CMAST_CAP, (state.cmastGranted||0)); }
 
 /* Spendable points = granted minus already-allocated. */
 function cmastPtsAvail(){ return Math.max(0, cmastPtsGranted()-cmastSpent()); }
 
-/* Grant N mastery points. If over the 98 cap, spillover goes to shards. Source
+/* Grant N mastery points. If over the cap, spillover goes to shards. Source
    string is used for the toast and for the source-breakdown ribbon. */
 function grantCmastPoints(n, source){
   if(!n||n<=0) return;
   const before=(state.cmastGranted||0);
   state.cmastGranted=before+n;
-  const overcap=Math.max(0, state.cmastGranted-98);
-  const newOver=Math.max(0, overcap-Math.max(0, before-98));
+  const overcap=Math.max(0, state.cmastGranted-CMAST_CAP);
+  const newOver=Math.max(0, overcap-Math.max(0, before-CMAST_CAP));
   if(newOver>0){
     state.cmastShards=(state.cmastShards||0)+newOver;
   }
@@ -19549,18 +19561,21 @@ let _cmastSelected=null;
    leave room below each node for the "rank/max" text. Combined with
    .cmast-canvas max-width keeping the SVG from over-stretching horizontally,
    the whole tree fits in a viewport-friendly slab. */
+// Layout slots: Onslaught | (bridge) | Bulwark | (bridge) | Warfare — all melee.
 const _CMAST_TREE_X={ melee:110, mr:215, ranged:320, rm:425, magic:530 };
 const _CMAST_TIER_Y={ 1:32, 2:82, 3:132, 4:182, 5:232 };
 const _CMAST_CAP_Y=307;
 
 /* Per-tree colour ramp — bright = active stroke, dim = inactive prereq line.
    Mirrors the mockup palette. Hybrids picked as a mid-mix tone. */
+// Discipline palettes: Onslaught=ember red, Bulwark=steel, Warfare=gold.
+// Bridges blend their two neighbours.
 const _CMAST_COLOR={
   melee:{ alloc:'#c44a25', stroke:'#c44a25', dim:'#5a2812', light:'#e8c87c' },
-  ranged:{ alloc:'#d4a04a', stroke:'#d4a04a', dim:'#7a5a25', light:'#e8c87c' },
-  magic:{ alloc:'#8c5fd9', stroke:'#8c5fd9', dim:'#3a285a', light:'#c9a8ff' },
-  mr:{ alloc:'#d97842', stroke:'#a87a3a', dim:'#5a4020', light:'#e8c87c' },
-  rm:{ alloc:'#a87ad9', stroke:'#8a5fb5', dim:'#4a3870', light:'#c9a8ff' },
+  ranged:{ alloc:'#6e8296', stroke:'#6e8296', dim:'#33414d', light:'#cfe0ee' },
+  magic:{ alloc:'#d4a04a', stroke:'#d4a04a', dim:'#7a5a25', light:'#f0d59a' },
+  mr:{ alloc:'#9d7868', stroke:'#8a6a5a', dim:'#46342c', light:'#e0d0c0' },
+  rm:{ alloc:'#a39668', stroke:'#8c8055', dim:'#46402a', light:'#e8dcb0' },
 };
 
 /* Compute the x coordinate for a node based on tree + branch.
@@ -19613,7 +19628,7 @@ function _cmastNodeSVG(node){
   else if(isMaxed){ fill=col.alloc; stroke=col.light; sw=1.5; op=1; }
   else if(isPartial){
     // Partial — fill a darker shade of tree colour, border bright
-    fill = tree==='melee'?'#7a2e15' : tree==='ranged'?'#7a5a25' : tree==='magic'?'#3a285a' : '#5a3a20';
+    fill = tree==='melee'?'#7a2e15' : tree==='ranged'?'#2c3a45' : tree==='magic'?'#5a4420' : '#4a4030';
     stroke=col.alloc; sw=1.5; op=1;
   }
   else if(isAvail){ fill='#1a0f08'; stroke=col.stroke; sw=2; op=1; }
@@ -19734,7 +19749,7 @@ function _cmastConnectionsSVG(){
     parts.push(`<line x1="50" y1="${y}" x2="630" y2="${y}" stroke="#1a130d" stroke-width="0.5" stroke-dasharray="2 4"/>`);
   });
   parts.push(`<line x1="50" y1="${_CMAST_CAP_Y}" x2="630" y2="${_CMAST_CAP_Y}" stroke="#1a130d" stroke-width="0.5" stroke-dasharray="2 4"/>`);
-  // Per-tree main connections — T1→T2, T2→T3, T3→T4, T4→T5 (with cross-paths), T5m→Cap
+  // Per-discipline connections — Onslaught (m), Bulwark (r), Warfare (g).
   const treeKeys=[['melee','m'],['ranged','r'],['magic','g']];
   for(const [tk,prefix] of treeKeys){
     line(prefix+'_t1', prefix+'_t2_l', tk);
@@ -19751,11 +19766,10 @@ function _cmastConnectionsSVG(){
     // Capstone gate — only middle node feeds it
     line(prefix+'_t5_m', prefix+'_cap', tk);
   }
-  // Hybrid bridges — dashed, from main tree T3R/T4R out to hybrid, then into next tree's T3L/T4L
-  // M/R bridges
+  // Cross-discipline bridges — dashed, from one column's T3R/T4R out to the
+  // bridge node, then into the next column's T3L/T4L.
   line('m_t3_r', 'mr_t3', 'mr', true); line('mr_t3', 'r_t3_l', 'mr', true);
   line('m_t4_r', 'mr_t4', 'mr', true); line('mr_t4', 'r_t4_l', 'mr', true);
-  // R/M bridges
   line('r_t3_r', 'rm_t3', 'rm', true); line('rm_t3', 'g_t3_l', 'rm', true);
   line('r_t4_r', 'rm_t4', 'rm', true); line('rm_t4', 'g_t4_l', 'rm', true);
   return parts.join('');
@@ -19772,7 +19786,7 @@ function _cmastDetailHTML(){
   const rank=cmastRank(id);
   const max=n.max;
   const tree=n.tree;
-  const treeName=tree==='melee'?'Melee':tree==='ranged'?'Ranged':tree==='magic'?'Magic':tree==='mr'?'Hybrid M/R':'Hybrid R/M';
+  const treeName=tree==='melee'?'Onslaught':tree==='ranged'?'Bulwark':tree==='magic'?'Warfare':tree==='mr'?'Bridge':'Bridge';
   // Tag chips
   const tags=[];
   if(n.capstone) tags.push(`<span class="cmast-d-tag cap">CAPSTONE</span>`);
@@ -19866,7 +19880,7 @@ function buildCmastViewHTML(){
       <div class="cmast-head">
         <span class="cmast-h-lbl">MASTERY POINTS</span>
         <span class="cmast-h-val">${avail} / ${granted}</span>
-        <span class="cmast-h-sub">${spent} allocated · cap 98</span>
+        <span class="cmast-h-sub">${spent} allocated · cap ${CMAST_CAP}</span>
         ${srcHTML}
       </div>
       <div class="cmast-canvas">
@@ -19878,10 +19892,11 @@ function buildCmastViewHTML(){
         </svg>
       </div>
       <div class="cmast-headers">
-        <div class="cmast-tree-h melee">MELEE</div>
-        <div class="cmast-tree-h ranged">RANGED</div>
-        <div class="cmast-tree-h magic">MAGIC</div>
+        <div class="cmast-tree-h melee">⚔ ONSLAUGHT</div>
+        <div class="cmast-tree-h ranged">🛡 BULWARK</div>
+        <div class="cmast-tree-h magic">⚑ WARFARE</div>
       </div>
+      <div class="cmast-soon-note">A melee mastery tree of three disciplines. Ranged &amp; Magic combat styles — and their own trees — arrive later; surplus points bank as Mastery Shards.</div>
       <div class="cmast-detail">
         ${_cmastDetailHTML()}
       </div>
@@ -19889,8 +19904,7 @@ function buildCmastViewHTML(){
         <span class="li"><span class="sw alloc"></span>allocated</span>
         <span class="li"><span class="sw avail"></span>available</span>
         <span class="li"><span class="sw locked"></span>locked</span>
-        <span class="li"><span class="sw wlock"></span>weapon-locked</span>
-        <span class="li"><span class="sw hyb"></span>hybrid</span>
+        <span class="li"><span class="sw hyb"></span>bridge</span>
         <span class="li"><span class="sw cap"></span>capstone</span>
       </div>
       <div class="cmast-tip" id="cmastTip"></div>
@@ -20513,7 +20527,7 @@ function renderCombat(){
         const id=g.getAttribute('data-node');
         const n=CMAST_BY_ID[id]; if(!n) return;
         const rank=cmastRank(id);
-        const treeLbl=n.tree==='melee'?'Melee':n.tree==='ranged'?'Ranged':n.tree==='magic'?'Magic':n.tree==='mr'?'Hybrid M/R':'Hybrid R/M';
+        const treeLbl=n.tree==='melee'?'Onslaught':n.tree==='ranged'?'Bulwark':n.tree==='magic'?'Warfare':'Bridge';
         const tags=[];
         if(n.capstone) tags.push('<span class="tt-tag cap">CAPSTONE</span>');
         if(n.powerful) tags.push('<span class="tt-tag uniq">POWERFUL</span>');
