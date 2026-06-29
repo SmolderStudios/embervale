@@ -1436,6 +1436,9 @@ header h1 .flame{color:var(--ember)}
   letter-spacing:2px;margin-bottom:10px}
 .offline-rate-box{font-size:14px;color:var(--muted);margin-top:8px;padding:8px 10px;
   background:var(--raised);border-radius:5px;min-height:36px;line-height:1.6}
+/* Offline tree laid out as a compact 2-col grid so it doesn't run off-screen (1.0.12) */
+.offline-tree-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(232px,1fr));gap:6px}
+.offline-tree-grid .node{margin:0}
 /* Offline skill row in left panel */
 .skill-row.offline-skill{border-top:1px solid var(--trim-d);margin-top:6px}
 .skill-row.offline-skill .xp-bar i{background:var(--blue)}
@@ -2239,7 +2242,7 @@ header h1 .flame{color:var(--ember)}
   <div class="mm-btns">
     <button class="mm-btn mm-primary" id="mmPlay">▶ Play</button>
   </div>
-  <div class="mm-ver">v1.0.11</div>
+  <div class="mm-ver">v1.0.12</div>
 </div>
 
 <!-- ===== CHARACTER SELECT (added) ===== -->
@@ -10090,49 +10093,49 @@ function offlineLevelFromXp(xp){
 const OFFLINE_TREE=[
   // ── Base tier ──
   {id:'of_rate',   name:'Night Owl',      max:10,req:0,
-    desc:r=>`Efficiency +${r*5}% (base 40%)`,     next:r=>`+5% → ${40+r*5}%`,
+    desc:r=>`Efficiency +${r*4}% (base 30%)`,     next:r=>`+4% → ${30+r*4}%`,
     tip:'Efficiency is how fast your chosen skill trains while offline, as a % of its normal online speed. Higher efficiency = more actions completed per hour away.'},
   {id:'of_cap',    name:'Extended Rest',  max:8, req:0,
-    desc:r=>`Offline cap +${r*3}h (base 24h)`,    next:r=>`+3h → ${24+r*3}h`,
+    desc:r=>`Offline cap +${r*2}h (base 24h)`,    next:r=>`+2h → ${24+r*2}h`,
     tip:'The maximum amount of time the game keeps banking offline progress. Time spent away beyond the cap earns nothing, so raise this if you log in less often.'},
   {id:'of_xp',     name:'Dream Study',   max:8, req:0,
-    desc:r=>`Offline XP rate +${r*10}%`,           next:r=>`+10% → ${r*10}%`,
+    desc:r=>`Offline XP rate +${r*8}%`,            next:r=>`+8% → ${r*8}%`,
     tip:'Increases the XP earned by the Offline skill itself (the 🌙 skill) while you are away. Does not affect your chosen training skill.'},
   // ── Mid tier ──
   {id:'of_multi',  name:'Restless Mind', max:8, req:8,
-    desc:r=>`All-skill XP trickle +${r*3}% while away`, next:r=>`+3% → ${r*3}%`,
+    desc:r=>`All-skill XP trickle +${r*2}% while away`, next:r=>`+2% → ${r*2}%`,
     tip:'Every OTHER skill (not the one you are actively training offline) gains a small passive XP trickle based on its current total XP. Rewards a broadly-leveled account.'},
   {id:'of_loot',   name:'Scavenger',     max:6, req:12,
-    desc:r=>`Gathering output while offline +${r*10}%`, next:r=>`+10% → ${r*10}%`,
+    desc:r=>`Gathering output while offline +${r*8}%`, next:r=>`+8% → ${r*8}%`,
     tip:'Boosts the quantity of items produced by gathering skills (mining, woodcutting, fishing, foraging) during offline training. Does not affect XP, only item yield.'},
   // ── Master nodes ──
   {id:'of_master1',name:'Lucid Dreamer', max:1, req:18,
-    desc:r=>r?'Efficiency always ≥ 60% — bad sleep not wasted':'Floor offline efficiency at 60%',
-    next:()=>'Efficiency floor: 60%',
-    tip:'Guarantees your offline efficiency never drops below 60%, even without other efficiency perks. A safety net for short or infrequent sessions.'},
+    desc:r=>r?'Efficiency always ≥ 48% — bad sleep not wasted':'Floor offline efficiency at 48%',
+    next:()=>'Efficiency floor: 48%',
+    tip:'Guarantees your offline efficiency never drops below 48%, even without other efficiency perks. A safety net for short or infrequent sessions.'},
   {id:'of_master2',name:'Time Bender',   max:1, req:28,
-    desc:r=>r?'Offline cap raised to 72h':'Extend cap to 72h',
-    next:()=>'Cap: 72h',
-    tip:'Raises the offline banking cap to 72 hours (3 full days). Stacks with Extended Rest to push the ceiling even higher. Great for weekend-long absences.'},
+    desc:r=>r?'Offline cap raised to 48h':'Extend cap to 48h',
+    next:()=>'Cap: 48h',
+    tip:'Raises the offline banking cap to 48 hours (2 full days). Stacks with Extended Rest to push the ceiling even higher. Great for weekend-long absences.'},
   {id:'of_master3',name:'Phantom Worker',max:1, req:36,
     desc:r=>r?'A second skill also trains offline at 50% of normal offline rate':'Second skill trains offline simultaneously',
     next:()=>'2 skills train offline',
     tip:'A randomly-chosen second skill trains alongside your main offline skill, at 50% of the normal offline rate. Doubles up your time away across two skills.'},
   // ── Grandmaster tier (deep investment, still capped below 100%) ──
   {id:'of_gm_rate',name:'Apex Sleeper',  max:5, req:34, gm:true,
-    desc:r=>`Efficiency +${r*4}% (grandmaster bonus)`, next:r=>`+4% → extra ${r*4}%`,
+    desc:r=>`Efficiency +${r*3}% (grandmaster bonus)`, next:r=>`+3% → extra ${r*3}%`,
     tip:'Grandmaster efficiency boost that stacks on top of Night Owl. Pushes your offline training speed closer to the maximum ceiling.'},
   {id:'of_gm_xp',  name:'Subconscious',  max:5, req:38, gm:true,
-    desc:r=>`Offline XP rate +${r*15}% (grandmaster)`, next:r=>`+15% → ${r*15}%`,
+    desc:r=>`Offline XP rate +${r*12}% (grandmaster)`, next:r=>`+12% → ${r*12}%`,
     tip:'Grandmaster boost to the Offline skill XP rate, stacking with Dream Study. Levels the 🌙 skill faster so you earn offline perk points sooner.'},
   {id:'of_gm_cap', name:'Eternal Rest',  max:1, req:42, gm:true,
-    desc:r=>r?'Offline cap: 96h (nearly 4 full days)':'Cap extended to 96h — almost a workweek',
-    next:()=>'Cap: 96h',
-    tip:'The highest possible offline cap: 96 hours (4 days). Overrides lower caps. For players who check in only a couple of times a week.'},
+    desc:r=>r?'Offline cap: 60h (2.5 days)':'Cap extended to 60h',
+    next:()=>'Cap: 60h',
+    tip:'The highest possible offline cap: 60 hours (2.5 days). Overrides lower caps. For players who check in only a couple of times a week.'},
   {id:'of_gm_peak',name:'Deep Slumber',  max:1, req:45, gm:true,
-    desc:r=>r?'Efficiency ceiling raised to 85% — the absolute maximum offline rate':'Raises the efficiency ceiling from 80% to 85%',
-    next:()=>'Ceiling: 85% — max possible (cannot reach 100%)',
-    tip:'Raises the hard ceiling on offline efficiency from 80% to 85%. Offline training can never reach 100% of online speed — this is the closest you can get.'},
+    desc:r=>r?'Efficiency ceiling raised to 65% — the absolute maximum offline rate':'Raises the efficiency ceiling from 60% to 65%',
+    next:()=>'Ceiling: 65% — max possible (cannot reach 100%)',
+    tip:'Raises the hard ceiling on offline efficiency from 60% to 65%. Offline training can never reach 100% of online speed — this is the closest you can get.'},
 ];
 
 function offlineTreeRank(id){ return (state.tree._offline||{})[id]||0; }
@@ -17794,6 +17797,7 @@ function openOfflineOverlay(){
   treeSec.appendChild(respecBtn);
 
   const spent=offlineSpentPoints();
+  const treeGrid=document.createElement('div'); treeGrid.className='offline-tree-grid';
   for(const node of OFFLINE_TREE){
     const rank=offlineTreeRank(node.id);
     const maxed=rank>=node.max;
@@ -17818,8 +17822,9 @@ function openOfflineOverlay(){
       saveGame(); overlay.remove(); openOfflineOverlay();
     });
     row.appendChild(buy);
-    treeSec.appendChild(row);
+    treeGrid.appendChild(row);
   }
+  treeSec.appendChild(treeGrid);
   panel.appendChild(treeSec);
 
   overlay.appendChild(panel);
