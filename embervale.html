@@ -2286,7 +2286,7 @@ header h1 .flame{color:var(--ember)}
   <div class="mm-btns">
     <button class="mm-btn mm-primary" id="mmPlay">▶ Play</button>
   </div>
-  <div class="mm-ver">v1.0.19</div>
+  <div class="mm-ver">v1.0.20</div>
 </div>
 
 <!-- ===== CHARACTER SELECT (added) ===== -->
@@ -2756,16 +2756,12 @@ const ITEMS={
   starsteel_bar: {name:'Starsteel Bar',    icon:'✨',sell:3025},
   // Potions (consumable) — values tuned down so buffs are meaningful but not dominant
   swiftness_i:   {name:'Swiftness Potion I',   icon:'⚗️',sell:330,  potion:{speed:0.05,dur:120}},
-  swiftness_ii:  {name:'Swiftness Potion II',  icon:'⚗️',sell:1100, potion:{speed:0.10,dur:180}},
   swiftness_iii: {name:'Swiftness Potion III', icon:'⚗️',sell:3190, potion:{speed:0.16,dur:300}},
   wisdom_i:      {name:'Wisdom Potion I',      icon:'📘',sell:462, potion:{xp:0.06,dur:150}},
-  wisdom_ii:     {name:'Wisdom Potion II',     icon:'📘',sell:1045, potion:{xp:0.11,dur:270}},
   wisdom_iii:    {name:'Wisdom Potion III',    icon:'📘',sell:3190, potion:{xp:0.18,dur:420}},
   bountiful_i:   {name:'Bountiful Potion I',   icon:'🌿',sell:495, potion:{doubleChance:0.07,dur:180}},
-  bountiful_ii:  {name:'Bountiful Potion II',  icon:'🌿',sell:1210, potion:{doubleChance:0.13,dur:300}},
   bountiful_iii: {name:'Bountiful Potion III', icon:'🌿',sell:3190, potion:{doubleChance:0.20,dur:480}},
   vitality:      {name:'Vitality Elixir',      icon:'🌟',sell:2640, potion:{speed:0.08,xp:0.08,dur:360}},
-  void_elixir:   {name:'Void Elixir',          icon:'🔮',sell:9350,potion:{speed:0.14,xp:0.14,gp:0.14,dur:600}},
   // ── Combat potions (added 1.0.63; effects wire up when combat hookup ships) ──
   // Healing draughts — instant restore mid-combat. No `dur` field; the use
   // handler currently gates these with a "coming soon" toast so the inert
@@ -2830,8 +2826,6 @@ const ITEMS={
   mana_essence:    {name:'Mana Essence',       icon:'🫧',sell:990},
   rune_fragment:   {name:'Rune Fragment',      icon:'🗿',sell:330},
   // Rare potions
-  elixir_mastery:  {name:'Elixir of Mastery',  icon:'🏺',sell:14850,rare:true, potion:{xp:0.35,speed:0.10,dur:480}},
-  bountiful_brew:  {name:'Bountiful Brew',     icon:'🌿',sell:14300,rare:true, potion:{doubleChance:0.25,dur:600}},
   philosophers_drop:{name:"Philosopher's Drop", icon:'💎',sell:24750,rare:true, potion:{xp:0.45,speed:0.25,gp:0.25,dur:900}},
   // Firemaking outputs
   ash:           {name:'Ash',            icon:'⬜',sell:11},
@@ -3790,17 +3784,11 @@ const SKILLS={
     {id:'al1', name:'Brew Swiftness I',      lvl:1, ms:9800, xp:61,  spdMult:0.600,minMs:1706, inp:{wildberries:3},                        out:{swiftness_i:1}},
     {id:'al2', name:'Brew Bountiful I',      lvl:8, ms:10300,xp:75,  spdMult:0.620,minMs:1755, inp:{thornvine:3},                          out:{bountiful_i:1}},
     {id:'al3', name:'Brew Wisdom I',         lvl:10,ms:11000,xp:83,  spdMult:0.640,minMs:1804, inp:{dewleaf:3},                            out:{wisdom_i:1}},
-    {id:'al4', name:'Brew Swiftness II',     lvl:15,ms:12300,xp:114, spdMult:0.650,minMs:1999, inp:{wildberries:3,thornvine:2},            out:{swiftness_ii:1}},
-    {id:'al5', name:'Brew Bountiful II',     lvl:25,ms:13500,xp:158, spdMult:0.667,minMs:2194, inp:{thornvine:3,dewleaf:2},                out:{bountiful_ii:1}},
-    {id:'al6', name:'Brew Wisdom II',        lvl:30,ms:14200,xp:194, spdMult:0.680,minMs:2291, inp:{dewleaf:3,emberbloom:2},               out:{wisdom_ii:1}},
     {id:'al7', name:'Brew Swiftness III',    lvl:38,ms:15900,xp:264, spdMult:0.700,minMs:2560, inp:{thornvine:3,dewleaf:3},                out:{swiftness_iii:1}},
     {id:'al8', name:'Brew Bountiful III',    lvl:45,ms:17200,xp:351, spdMult:0.720,minMs:2730, inp:{sunroot:2,dewleaf:2},                  out:{bountiful_iii:1}},
     {id:'al9', name:'Brew Wisdom III',       lvl:55,ms:18400,xp:483, spdMult:0.735,minMs:2925, inp:{emberbloom:2,sunroot:2},               out:{wisdom_iii:1}},
     {id:'al10',name:'Brew Vitality Elixir',  lvl:68,ms:24600,xp:787, spdMult:0.760,minMs:3822, inp:{moonpetal:2,sunroot:2},                out:{vitality:1}},
     {id:'al11',name:'Brew Bountiful III+',   lvl:75,ms:19500,xp:594, spdMult:0.750,minMs:3169, inp:{starfern:2,sunroot:2},                 out:{bountiful_iii:1}},
-    {id:'al12',name:'Brew Void Elixir',      lvl:88,ms:32800,xp:1130, spdMult:0.790,minMs:5200, inp:{voidmoss:2,moonpetal:2},              out:{void_elixir:1}},
-    {id:'al_r1',name:'Brew Elixir of Mastery', lvl:60,ms:29300,xp:975, spdMult:0.760,minMs:4680, inp:{birds_nest:2,moonpetal:2},                        out:{elixir_mastery:1}},
-    {id:'al_r2',name:"Brew Bountiful Brew",    lvl:72,ms:32300,xp:1092, spdMult:0.765,minMs:5120, inp:{void_essence:1,ember_resin:2},                   out:{bountiful_brew:1}},
     {id:'al_r3',name:"Brew Philosopher's Drop", lvl:90,ms:44000,xp:1580, spdMult:0.790,minMs:6435, inp:{void_shard:1,ancient_seed:1,shadow_crystal:1},   out:{philosophers_drop:1}},
     // ─── Combat tier (heal + atk/str/def buffs) — added 1.0.63 ─────────────
     // Healing draughts (bloodcap → tearmoss progression). Output items use
@@ -3825,7 +3813,7 @@ const SKILLS={
     {id:'al_m4', name:'Distill Keen Mind I',       lvl:18,ms:12300,xp:120,spdMult:0.650,minMs:1999, inp:{tribal_fetish:2,shaman_tooth:1},     out:{wisdom_i:1}},
     // mid→endgame monster-part brews (1.0.7) — alternate sources for buffs + heals
     {id:'al_m5', name:'Temper Ironhide II (dust)', lvl:35,ms:15500,xp:260,spdMult:0.690,minMs:2451, inp:{cursed_dust:3,rib_plate:2},          out:{ironhide_2:1}},
-    {id:'al_m6', name:'Distill Keen Mind II',      lvl:30,ms:14200,xp:194,spdMult:0.680,minMs:2291, inp:{ectoplasm:2,soul_shard:1},          out:{wisdom_ii:1}},
+    {id:'al_m6', name:'Distill Keen Mind (soul)',  lvl:30,ms:14200,xp:194,spdMult:0.680,minMs:2291, inp:{ectoplasm:2,soul_shard:1},          out:{wisdom_i:1}},
     {id:'al_m7', name:'Grind Honed Edge II (fang)',lvl:40,ms:16000,xp:280,spdMult:0.700,minMs:2560, inp:{wolf_fang:3,alpha_claw:2},          out:{honed_edge_2:1}},
     {id:'al_m8', name:"Brew Berserker's II (fur)", lvl:45,ms:17000,xp:350,spdMult:0.715,minMs:2730, inp:{frostfur:2,howling_horn:1},         out:{berserker_2:1}},
     {id:'al_m9', name:"Brew Berserker's II (tusk)",lvl:50,ms:18000,xp:420,spdMult:0.720,minMs:2900, inp:{ogre_tusk:3,warhound_fang:2},       out:{berserker_2:1}},
@@ -9653,6 +9641,18 @@ function normalizeState(){
     const t=+state.autoHeal.thresholdPct;
     if(!isFinite(t)||t<5||t>95) state.autoHeal.thresholdPct=30;
     if(typeof state.autoHeal.itemId!=='string') state.autoHeal.itemId=''; // auto-eat pick (1.0.8)
+  }
+  // 1.0.20 — trimmed redundant potions: migrate any held copies to the kept equivalent
+  // so saves never carry a now-undefined item. (Swiftness/Wisdom/Bountiful II -> I,
+  // Elixir of Mastery -> Vitality, Void Elixir -> Philosopher's Drop, Bountiful Brew -> III.)
+  if(state.items){
+    const _potMig={swiftness_ii:'swiftness_i', wisdom_ii:'wisdom_i', bountiful_ii:'bountiful_i',
+                   elixir_mastery:'vitality', void_elixir:'philosophers_drop', bountiful_brew:'bountiful_iii'};
+    for(const oldId in _potMig){
+      const n=state.items[oldId]||0;
+      if(n>0) state.items[_potMig[oldId]]=(state.items[_potMig[oldId]]||0)+n;
+      delete state.items[oldId];
+    }
   }
   if(!state.newlyDiscovered||typeof state.newlyDiscovered!=='object'||Array.isArray(state.newlyDiscovered)) state.newlyDiscovered={};
   if(state.action!==null&&typeof state.action!=='object') state.action=null;
