@@ -2254,7 +2254,7 @@ header h1 .flame{color:var(--ember)}
   <div class="mm-btns">
     <button class="mm-btn mm-primary" id="mmPlay">▶ Play</button>
   </div>
-  <div class="mm-ver">v1.0.14</div>
+  <div class="mm-ver">v1.0.15</div>
 </div>
 
 <!-- ===== CHARACTER SELECT (added) ===== -->
@@ -4313,6 +4313,12 @@ const CR_PAL={
   cobalt:   {light:'#5090e8', mid:'#2050b0', dark:'#102060', edge:'#080820', hl:'#a0c8ff', accent:'#040818', glow:'#3060c8'},
   runite:   {light:'#40a088', mid:'#186050', dark:'#083828', edge:'#04140c', hl:'#80e0b8', accent:'#021008', glow:'#208870'},
   starsteel:{light:'#e0e8fc', mid:'#909ac0', dark:'#4a527a', edge:'#0e1018', hl:'#ffffff', accent:'#303860', glow:'#a0a8d0', sparkles:true},
+  // ── Tool-tier palettes (1.0.15) — for the skilling-tool icon generators ──
+  eclipse:  {light:'#5ad0c0', mid:'#1e7a78', dark:'#0c3840', edge:'#04141a', hl:'#a0f0e8', accent:'#06202a', glow:'#30b0a8', sparkles:true},
+  wood:     {light:'#b88a52', mid:'#7a5228', dark:'#3a2410', edge:'#1a1006', hl:'#e0b87a', accent:'#2a180a'},
+  crystal:  {light:'#90e0e0', mid:'#3098a8', dark:'#104858', edge:'#06202a', hl:'#d0fafa', accent:'#082630', glow:'#40c0c8'},
+  moon:     {light:'#dfe6f4', mid:'#9aa6c8', dark:'#4a5478', edge:'#161c2c', hl:'#ffffff', accent:'#2a3050', glow:'#a8b8e0'},
+  voidp:    {light:'#b070e0', mid:'#6028a0', dark:'#2a1048', edge:'#100420', hl:'#e0b0ff', accent:'#160830', glow:'#8040c0', sparkles:true},
 };
 function _crGlow(p, cx, cy, rx, ry){
   return p.glow ? `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="${p.glow}" opacity="0.32"/>` : '';
@@ -4340,6 +4346,34 @@ function _bootsSVG(p){
 }
 function _swordSVGwpn(p){
   return `<svg class="ev-icon" viewBox="0 0 64 64">${_crGlow(p,32,32,12,26)}${_crShadow(32,58,12)}<path d="M30 6 L32 2 L34 6 L36 36 L28 36 Z" fill="${p.mid}" stroke="${p.edge}" stroke-width="0.9" stroke-linejoin="round"/><path d="M30 6 L32 2 L33 6 L34 36 L30 36 Z" fill="${p.light}"/><path d="M32 2 L32 36" stroke="${p.hl}" stroke-width="0.7" opacity="0.85"/><path d="M30 8 L34 8 M30 16 L34 16 M30 24 L34 24" stroke="${p.dark}" stroke-width="0.4" opacity="0.6"/><path d="M12 34 L52 34 L50 40 L14 40 Z" fill="${p.dark}" stroke="${p.edge}" stroke-width="0.9" stroke-linejoin="round"/><path d="M12 34 L52 34 L51 36 L13 36 Z" fill="${p.mid}"/><rect x="11" y="32" width="4" height="10" rx="1" fill="${p.accent}" stroke="${p.edge}" stroke-width="0.5"/><rect x="49" y="32" width="4" height="10" rx="1" fill="${p.accent}" stroke="${p.edge}" stroke-width="0.5"/><path d="M29 40 L35 40 L36 52 L28 52 Z" fill="${p.accent}" stroke="${p.edge}" stroke-width="0.7" stroke-linejoin="round"/><path d="M29 42 L35 42 M29 45 L35 45 M29 48 L35 48 M29 51 L35 51" stroke="${p.edge}" stroke-width="0.5" opacity="0.8"/><circle cx="32" cy="55" r="3.5" fill="${p.mid}" stroke="${p.edge}" stroke-width="0.8"/><circle cx="32" cy="54" r="2.4" fill="${p.light}"/><circle cx="31" cy="53.5" r="1" fill="${p.hl}" opacity="0.85"/>${_crSparkles(p)}</svg>`;
+}
+/* Skilling-tool icon generators (1.0.15) — one silhouette, palette-swapped per
+   tier (same {light,mid,dark,edge,hl,accent,glow?,sparkles?} contract as weapons).
+   Replaces the old emoji fallbacks for axes / picks / rods. */
+function _axeSVG(p){
+  return `<svg class="ev-icon" viewBox="0 0 64 64">${_crGlow(p,38,22,16,16)}${_crShadow(32,58,11)}`
+   +`<rect x="28" y="12" width="5" height="46" rx="2.2" fill="${p.dark}" stroke="${p.edge}" stroke-width="0.7"/>`
+   +`<rect x="29" y="13" width="1.6" height="44" fill="${p.hl}" opacity="0.4"/>`
+   +`<path d="M31 12 Q50 10 54 26 Q50 32 33 30 L31 26 Z" fill="${p.mid}" stroke="${p.edge}" stroke-width="0.9" stroke-linejoin="round"/>`
+   +`<path d="M31 12 Q47 11 53 24 L47 26 Q40 15 31 16 Z" fill="${p.light}"/>`
+   +`<path d="M50 14 Q54 20 53 26" stroke="${p.hl}" stroke-width="0.6" fill="none" opacity="0.7"/>${_crSparkles(p)}</svg>`;
+}
+function _pickSVG(p){
+  return `<svg class="ev-icon" viewBox="0 0 64 64">${_crGlow(p,32,20,18,12)}${_crShadow(32,58,11)}`
+   +`<rect x="29" y="16" width="5" height="42" rx="2.2" fill="${p.dark}" stroke="${p.edge}" stroke-width="0.7"/>`
+   +`<rect x="30" y="17" width="1.6" height="40" fill="${p.hl}" opacity="0.4"/>`
+   +`<path d="M10 26 Q22 12 31 18 Q40 12 54 26 Q40 18 32 24 Q24 18 10 26 Z" fill="${p.mid}" stroke="${p.edge}" stroke-width="0.9" stroke-linejoin="round"/>`
+   +`<path d="M10 26 Q22 13 31 18 Q24 19 14 25 Z" fill="${p.light}"/>`
+   +`<path d="M54 26 Q40 13 32 18 Q40 19 50 25 Z" fill="${p.light}"/>${_crSparkles(p)}</svg>`;
+}
+function _rodSVG(p){
+  return `<svg class="ev-icon" viewBox="0 0 64 64">${_crGlow(p,34,30,14,20)}${_crShadow(30,58,10)}`
+   +`<path d="M12 54 L52 12" stroke="${p.dark}" stroke-width="4" stroke-linecap="round"/>`
+   +`<path d="M12 54 L52 12" stroke="${p.light}" stroke-width="1.4" stroke-linecap="round"/>`
+   +`<rect x="9" y="49" width="9" height="6" rx="2" transform="rotate(-46 13 52)" fill="${p.accent}" stroke="${p.edge}" stroke-width="0.6"/>`
+   +`<circle cx="50" cy="14" r="2" fill="${p.mid}" stroke="${p.edge}" stroke-width="0.5"/>`
+   +`<path d="M50 14 Q60 22 56 36 Q54 42 48 42" stroke="${p.hl}" stroke-width="0.7" fill="none" opacity="0.8"/>`
+   +`<path d="M48 42 Q44 42 46 47 Q49 50 46 52" stroke="${p.mid}" stroke-width="1.2" fill="none" stroke-linecap="round"/>${_crSparkles(p)}</svg>`;
 }
 function _shieldSVG(p){
   return `<svg class="ev-icon" viewBox="0 0 64 64">${_crGlow(p,32,32,24,24)}${_crShadow(32,58,14)}<path d="M10 8 L54 8 L52 30 Q50 48 32 58 Q14 48 12 30 Z" fill="${p.mid}" stroke="${p.edge}" stroke-width="1" stroke-linejoin="round"/><path d="M10 8 L32 8 L32 56 Q14 48 12 30 Z" fill="${p.light}"/><path d="M14 12 L50 12 L48 30 Q46 44 32 52 Q18 44 16 30 Z" fill="none" stroke="${p.dark}" stroke-width="0.8" opacity="0.7"/><path d="M14 12 L50 12" stroke="${p.hl}" stroke-width="0.8" opacity="0.7"/><circle cx="32" cy="30" r="7" fill="${p.dark}" stroke="${p.edge}" stroke-width="0.8"/><circle cx="32" cy="29" r="5.2" fill="${p.mid}"/><circle cx="32" cy="28" r="3.4" fill="${p.light}"/><circle cx="30.8" cy="27" r="1.2" fill="${p.hl}" opacity="0.9"/><path d="M32 8 L32 56" stroke="${p.dark}" stroke-width="0.6" opacity="0.55"/><circle cx="14" cy="14" r="1.1" fill="${p.accent}" stroke="${p.edge}" stroke-width="0.3"/><circle cx="50" cy="14" r="1.1" fill="${p.accent}" stroke="${p.edge}" stroke-width="0.3"/><circle cx="18" cy="42" r="1.1" fill="${p.accent}" stroke="${p.edge}" stroke-width="0.3"/><circle cx="46" cy="42" r="1.1" fill="${p.accent}" stroke="${p.edge}" stroke-width="0.3"/>${_crSparkles(p)}</svg>`;
@@ -5274,6 +5308,10 @@ const ICONS = {
   starsteel_boots:  _bootsSVG(CR_PAL.starsteel),
   starsteel_sword:  _swordSVGwpn(CR_PAL.starsteel),
   starsteel_shield: _shieldSVG(CR_PAL.starsteel),
+  // ── Gathering tools (1.0.15) — generator + palette swap per tier ──
+  bronze_axe:_axeSVG(CR_PAL.bronze), iron_axe:_axeSVG(CR_PAL.iron), steel_axe:_axeSVG(CR_PAL.steel), cobalt_axe:_axeSVG(CR_PAL.cobalt), eclipse_axe:_axeSVG(CR_PAL.eclipse),
+  bronze_pick:_pickSVG(CR_PAL.bronze), iron_pick:_pickSVG(CR_PAL.iron), steel_pick:_pickSVG(CR_PAL.steel), cobalt_pick:_pickSVG(CR_PAL.cobalt), eclipse_pick:_pickSVG(CR_PAL.eclipse),
+  cane_rod:_rodSVG(CR_PAL.wood), iron_rod:_rodSVG(CR_PAL.iron), crystal_rod:_rodSVG(CR_PAL.crystal), moonrod:_rodSVG(CR_PAL.moon), voidrod:_rodSVG(CR_PAL.voidp),
   /* ─── Daggers (1.0.93) — stab-type 1H weapons, one per tier ─── */
   bronze_dagger:    _daggerSVG(CR_PAL.bronze),
   iron_dagger:      _daggerSVG(CR_PAL.iron),
