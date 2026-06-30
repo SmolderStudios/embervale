@@ -1403,6 +1403,45 @@ header h1 .flame{color:var(--ember)}
 .mm-mini{background:#322415;border:1px solid #6e552c;color:#ead9b5;border-radius:4px;
   padding:7px 15px;font-family:inherit;font-size:14px;cursor:pointer}
 .mm-mini.mm-primary{border-color:#c79b4e;color:#f0c772}
+/* Character-select destiny badges */
+.mm-slot .mm-badges{margin-top:6px;display:flex;flex-wrap:wrap;gap:6px}
+.mm-badge{font-size:11px;letter-spacing:.5px;color:#1a1006;background:#c79b4e;border-radius:9px;
+  padding:1px 8px;font-family:'Courier New',monospace}
+.mm-badge.mm-badge-cls{background:#4a3a1e;color:#ead9b5}
+/* ── Destiny (character type + class) selection screen ── */
+#mmDestiny{position:fixed;inset:0;z-index:10001;display:flex;align-items:flex-start;justify-content:center;
+  overflow-y:auto;padding:32px 18px;font-family:'Crimson Pro',Georgia,serif;
+  background:radial-gradient(ellipse at 50% 16%,#3a2710 0%,#1a1107 55%,#0c0804 100%)}
+#mmDestiny.mm-hidden{display:none}
+.mmd-scroll{width:min(96vw,900px);display:flex;flex-direction:column;align-items:center;gap:12px}
+#mmDestiny h2{color:#c79b4e;font-variant:small-caps;letter-spacing:2px;font-size:30px;margin:0;
+  text-shadow:0 2px 4px rgba(0,0,0,.45)}
+#mmDestiny .mm-sub{color:#a08a64;font-size:15px;margin:0 0 2px;text-align:center;max-width:640px}
+.mmd-sec-title{align-self:flex-start;color:#e0b964;font-variant:small-caps;letter-spacing:1.5px;
+  font-size:19px;margin-top:10px}
+.mmd-sec-title span{color:#8a7350;font-size:14px;letter-spacing:.5px;text-transform:none}
+.mmd-types{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;width:100%}
+.mmd-classes{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;width:100%}
+@media(max-width:760px){.mmd-types{grid-template-columns:1fr}.mmd-classes{grid-template-columns:repeat(2,1fr)}}
+.mmd-card{position:relative;cursor:pointer;text-align:center;background:linear-gradient(#26190d,#191006);
+  border:2px solid #5a4326;border-radius:10px;padding:14px 12px;color:#ead9b5;transition:.14s;
+  box-shadow:0 3px 10px rgba(0,0,0,.45)}
+.mmd-card:hover{border-color:#c79b4e;transform:translateY(-2px)}
+.mmd-card.mmd-on{border-color:#f0c772;box-shadow:0 0 0 1px #f0c772,0 6px 18px rgba(0,0,0,.55);
+  background:linear-gradient(#34230f,#241608)}
+.mmd-card.mmd-on::after{content:'✓';position:absolute;top:6px;right:9px;color:#f0c772;font-size:16px;font-weight:bold}
+.mmd-tname{font-variant:small-caps;letter-spacing:1px;font-size:21px;color:#f0c772;margin-bottom:3px}
+.mmd-tag{display:inline-block;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:#1a1006;
+  background:#c79b4e;border-radius:10px;padding:1px 9px;margin-bottom:8px;font-family:'Courier New',monospace}
+.mmd-blurb{font-size:13.5px;line-height:1.34;color:#b7a986}
+.mmd-model{width:100%;max-width:120px;height:132px;display:block;margin:0 auto 8px;
+  filter:drop-shadow(0 4px 7px rgba(0,0,0,.5))}
+.mmd-stats{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin-top:9px}
+.mmd-pill{font-size:11.5px;letter-spacing:.4px;color:#d8c79a;background:#352510;border:1px solid #5a4326;
+  border-radius:9px;padding:2px 9px;font-family:'Courier New',monospace}
+.mmd-actions{display:flex;gap:12px;margin-top:20px;margin-bottom:8px}
+.mmd-actions .mm-btn{font-size:18px;padding:11px 22px}
+.mmd-actions .mm-btn:disabled{opacity:.4;cursor:not-allowed;transform:none;border-color:#5a4326;color:#8a7350}
 
 /* ════════ [CSS-15] GEAR PANEL ═══════════════════════════════════════════════════ */
 /* gear panel */
@@ -2235,8 +2274,10 @@ header h1 .flame{color:var(--ember)}
 
 .mlog-section-head{font-size:12px;color:var(--trim);font-variant:small-caps;letter-spacing:1.5px;
   padding:10px 0 6px;border-bottom:1px dashed var(--trim-d);margin-bottom:6px}
+.mlog-dropmod{display:inline-block;font-size:10px;letter-spacing:.5px;color:#1a1006;border-radius:8px;
+  padding:1px 7px;margin-left:6px;vertical-align:middle;font-family:'Courier New',monospace}
 .mlog-drops{display:flex;flex-direction:column;gap:4px}
-.mlog-drop{display:grid;grid-template-columns:22px minmax(0,1fr) 70px 50px 14px;gap:8px;
+.mlog-drop{display:grid;grid-template-columns:22px minmax(0,1fr) 86px 50px 14px;gap:8px;
   align-items:center;padding:6px 9px;background:#0f0a08;border:1px solid #2a2018;
   border-radius:4px;font-family:'Crimson Pro',serif;opacity:.55;transition:opacity .15s}
 .mlog-drop.got{opacity:1;background:#0f1408;border-color:#3a5018}
@@ -2287,7 +2328,7 @@ header h1 .flame{color:var(--ember)}
   <div class="mm-btns">
     <button class="mm-btn mm-primary" id="mmPlay">▶ Play</button>
   </div>
-  <div class="mm-ver">v1.0.22</div>
+  <div class="mm-ver">v1.0.23</div>
 </div>
 
 <!-- ===== CHARACTER SELECT (added) ===== -->
@@ -2326,6 +2367,22 @@ header h1 .flame{color:var(--ember)}
     <div class="mm-row">
       <button class="mm-mini" id="mmImportCancel">Cancel</button>
       <button class="mm-mini mm-primary" id="mmImportOk">Load</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== CHOOSE DESTINY (character type + class) ===== -->
+<div id="mmDestiny" class="mm-hidden">
+  <div class="mmd-scroll">
+    <h2>Forge Your Destiny</h2>
+    <p class="mm-sub" id="mmdSubtitle">Choose a path and a calling for your new adventurer. This choice is permanent.</p>
+    <div class="mmd-sec-title">① Your Path <span>— risk &amp; reward</span></div>
+    <div class="mmd-types" id="mmdTypes"></div>
+    <div class="mmd-sec-title">② Your Calling <span>— a lifelong specialty</span></div>
+    <div class="mmd-classes" id="mmdClasses"></div>
+    <div class="mmd-actions">
+      <button class="mm-btn" id="mmdBack">← Back</button>
+      <button class="mm-btn mm-primary" id="mmdConfirm" disabled>Begin Your Journey</button>
     </div>
   </div>
 </div>
@@ -5866,6 +5923,8 @@ const SKILLING_SETS={
 function rollSkillingGear(skill, actLvl, cycles){
   var def=SKILLING_SETS[skill]; if(!def) return;
   var baseChance=actLvl>=75?0.0006:actLvl>=50?0.0004:actLvl>=25?0.0002:0.0001;
+  // Character-type global drop dial applies to rare skilling-gear drops too.
+  baseChance*=charDropMult();
   // Build pool of missing pieces
   var pool=[];
   for(var pi=0;pi<def.pieces.length;pi++){
@@ -7933,7 +7992,7 @@ function harvestPatch(patchId, silent){
   if(crop.rareDrops){
     for(var ri=0;ri<crop.rareDrops.length;ri++){
       var rd=crop.rareDrops[ri];
-      var got=binom(mult, rd.chance); // mult = 1 normally, 2 with Abundance
+      var got=binom(mult, effDropChance(rd.chance)); // mult = 1 normally, 2 with Abundance
       if(got>0){
         state.items[rd.id]=(state.items[rd.id]||0)+got;
         markDiscovered(rd.id);
@@ -8675,7 +8734,7 @@ function renderFarming(){
     // otherwise wrap and grow the card; we clamp each text row to a single
     // line with ellipsis so all crop cards stay at the same compact size.
     var outListHTML=Object.keys(c.out).map(function(id){return (ITEMS[id]?ITEMS[id].name:id)+' ×'+c.out[id];}).join(', ')
-      +(c.rareDrops?' · '+c.rareDrops.map(function(rd){return (ITEMS[rd.id]?ITEMS[rd.id].name:rd.id)+' '+(rd.chance*100).toFixed(0)+'%';}).join(', '):'');
+      +(c.rareDrops?' · '+c.rareDrops.map(function(rd){return (ITEMS[rd.id]?ITEMS[rd.id].name:rd.id)+' '+_fmtMonChance(effDropChance(rd.chance));}).join(', '):'');
     var outTitle=(c.name+' produces: '+outListHTML).replace(/"/g,'&quot;');
     return '<div style="background:var(--raised);border:1px solid var(--trim-d);border-radius:6px;padding:7px 8px;'
       +'display:flex;flex-direction:column;gap:3px;height:78px;overflow:hidden;'+(locked?'opacity:0.5':'')+'\">'
@@ -9442,6 +9501,8 @@ function defaultState(){
   return {
     xp, items:{}, coins:0,
     charName:'Adventurer',
+    charType:null,    // 'normal'|'hardcore'|'accelerated' — chosen once at creation (null = prompt)
+    charClass:null,   // 'rogue'|'berserker'|'guardian'|'artisan' — chosen once at creation
     tree:{},
     gear:[],
     equipped:{},
@@ -9530,6 +9591,10 @@ function normalizeState(){
   if(!state||typeof state!=='object') { state=defaultState(); return; }
   if(!state.xp||typeof state.xp!=='object') state.xp={};
   if(typeof state.charName!=='string'||!state.charName.trim()) state.charName='Adventurer';
+  // Destiny fields — leave invalid/missing as null so legacy saves get the
+  // one-time prompt on load. Never auto-default to 'normal' here.
+  if(typeof CHAR_TYPES!=='undefined'  && !CHAR_TYPES[state.charType])   state.charType=null;
+  if(typeof CHAR_CLASSES!=='undefined'&& !CHAR_CLASSES[state.charClass]) state.charClass=null;
   for(const s in SKILLS) if(typeof state.xp[s]!=='number') state.xp[s]=0;
   if(!state.items||typeof state.items!=='object'||Array.isArray(state.items)) state.items={};
   if(typeof state.coins!=='number') state.coins=0;
@@ -10822,7 +10887,7 @@ function combatLevel(){
 function playerAccuracy(){
   const cs=combatStats();
   const b=combatBonusesAll();
-  return Math.round((cmbLvl('attack') + cs.atk*2) * (1 + (b.atkBoost||0)));
+  return Math.round((cmbLvl('attack') + cs.atk*2) * (1 + (b.atkBoost||0)) * classAccuracyMult());
 }
 
 /* Player max hit: floor(1 + str_lvl*0.13 + gear_str*0.5) × (1 + atkBoost%).
@@ -10831,14 +10896,14 @@ function playerAccuracy(){
 function playerMaxHit(){
   const cs=combatStats();
   const b=combatBonusesAll();
-  return Math.max(1, Math.floor((1 + cmbLvl('strength')*0.13 + cs.str*0.5) * (1 + (b.atkBoost||0))));
+  return Math.max(1, Math.floor((1 + cmbLvl('strength')*0.13 + cs.str*0.5) * (1 + (b.atkBoost||0)) * classMaxHitMult()));
 }
 
 /* Player defence stat: (defence level + gear def) × (1 + defBoost%). */
 function playerDefence(){
   const cs=combatStats();
   const b=combatBonusesAll();
-  return Math.round((cmbLvl('defence') + cs.def) * (1 + (b.defBoost||0)));
+  return Math.round((cmbLvl('defence') + cs.def) * (1 + (b.defBoost||0)) * classDefenceMult());
 }
 
 /* Derived max HP: (10 + HP lvl + gear_def/4) × (1 + hpBoost%). hpBoost comes
@@ -10846,7 +10911,7 @@ function playerDefence(){
 function maxHpFromStats(){
   const cs=combatStats();
   const b=combatBonusesAll();
-  return Math.max(1, Math.floor((10 + cmbLvl('hitpoints') + Math.floor(cs.def/4)) * (1 + (b.hpBoost||0))));
+  return Math.max(1, Math.floor((10 + cmbLvl('hitpoints') + Math.floor(cs.def/4)) * (1 + (b.hpBoost||0)) * classHpMult()));
 }
 
 /* Player swing time (ms per attack) — base 2400ms, Agility shaves 12ms per level.
@@ -10859,7 +10924,9 @@ const COMBAT_BASE_SWING_MS=2400;
 const COMBAT_MIN_SWING_MS=1200;
 function playerSwingMs(){
   const agi=levelFromXp((state&&state.xp&&state.xp.agility)||0);
-  return Math.max(COMBAT_MIN_SWING_MS, COMBAT_BASE_SWING_MS - agi*12);
+  const base=Math.max(COMBAT_MIN_SWING_MS, COMBAT_BASE_SWING_MS - agi*12);
+  // Rogue class — 6% faster swings. Still floored so bars stay readable.
+  return Math.max(COMBAT_MIN_SWING_MS, Math.round(base*classSwingMult()));
 }
 
 /* Refresh the live combat object's stats from current gear and levels.
@@ -10883,6 +10950,121 @@ function refreshCombatStats(){
   combat.youDef=playerDefence();
   combat.youSwingMs=playerSwingMs();
 }
+
+/* ════════ CHARACTER DESTINY — type (XP/drop dial) + class (combat/skill focus) ═══
+   Chosen once at character creation; legacy saves are prompted on first load.
+   · charType  — a pure risk/reward dial scaling GLOBAL xp + GLOBAL drop chance.
+   · charClass — a small, focused combat- or skilling-identity bonus.
+   Tuning is deliberately gentle: nudge a playstyle, never break balance.        */
+const CHAR_TYPES={
+  normal:{ name:'Normal', xpMult:1.0, dropMult:1.0, col:'#c79b4e', tag:'Balanced',
+    blurb:'The even road. Standard XP and standard drop rates — no trade-offs, no surprises.' },
+  hardcore:{ name:'Hardcore', xpMult:0.75, dropMult:1.25, col:'#c4543a', tag:'Slow · Rich',
+    blurb:'Levels come harder at 75% XP, but fortune favours you — +25% drop chance on everything: loot, rare mats, even rare monster spawns.' },
+  accelerated:{ name:'Accelerated', xpMult:2.0, dropMult:0.6, col:'#4a90d9', tag:'Fast · Lean',
+    blurb:'Tear up the levels at 2× XP — but the world turns stingy: −40% drop chance across the board.' },
+};
+/* Character-model SVGs — stylised dark-fantasy full-body silhouettes (120×160). */
+const CLASS_MODELS={
+  rogue:'<svg class="mmd-model" viewBox="0 0 120 160" xmlns="http://www.w3.org/2000/svg">'
+    +'<defs><linearGradient id="rgC" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#33493a"/><stop offset="1" stop-color="#111d16"/></linearGradient>'
+    +'<linearGradient id="rgS" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#eef3f5"/><stop offset="1" stop-color="#7e8d94"/></linearGradient></defs>'
+    +'<path d="M60 36 C40 40 34 70 36 120 L30 150 L50 146 L60 150 L70 146 L90 150 L84 120 C86 70 80 40 60 36 Z" fill="url(#rgC)" stroke="#0a120d" stroke-width="2"/>'
+    +'<path d="M60 13 C43 13 37 31 42 45 C50 38 70 38 78 45 C83 31 77 13 60 13 Z" fill="#26382c" stroke="#0a120d" stroke-width="2"/>'
+    +'<path d="M50 35 Q60 45 70 35 Q66 51 54 51 Q50 43 50 35Z" fill="#0a0f0c"/>'
+    +'<circle cx="55" cy="40" r="2" fill="#9be8a0"/><circle cx="65" cy="40" r="2" fill="#9be8a0"/>'
+    +'<path d="M40 92 L80 92 L78 100 L42 100 Z" fill="#5a4326" stroke="#0a120d" stroke-width="1.5"/>'
+    +'<g transform="rotate(18 30 112)"><rect x="26" y="94" width="6" height="32" rx="2" fill="url(#rgS)"/><rect x="23" y="123" width="12" height="5" rx="1" fill="#5a4326"/></g>'
+    +'<g transform="rotate(-18 90 112)"><rect x="88" y="94" width="6" height="32" rx="2" fill="url(#rgS)"/><rect x="85" y="123" width="12" height="5" rx="1" fill="#5a4326"/></g></svg>',
+  berserker:'<svg class="mmd-model" viewBox="0 0 120 160" xmlns="http://www.w3.org/2000/svg">'
+    +'<defs><linearGradient id="bzSk" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#caa07a"/><stop offset="1" stop-color="#88603f"/></linearGradient>'
+    +'<linearGradient id="bzAx" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#c2ccd0"/><stop offset="1" stop-color="#69757a"/></linearGradient></defs>'
+    +'<path d="M44 58 L18 98" stroke="url(#bzSk)" stroke-width="10" stroke-linecap="round"/>'
+    +'<g transform="rotate(13 30 96)"><rect x="27" y="34" width="6" height="108" rx="3" fill="#4a3320"/><path d="M33 40 Q62 32 58 66 Q33 72 27 60 Z" fill="url(#bzAx)" stroke="#2b3236" stroke-width="2"/></g>'
+    +'<path d="M60 40 C44 42 40 60 44 90 L40 122 L53 122 L56 96 L64 96 L67 122 L80 122 L76 90 C80 60 76 42 60 40Z" fill="url(#bzSk)" stroke="#3a2418" stroke-width="2"/>'
+    +'<path d="M60 58 L60 92 M52 70 H68 M52 81 H68" stroke="#6b4631" stroke-width="1.4" fill="none" opacity=".7"/>'
+    +'<circle cx="60" cy="27" r="13" fill="url(#bzSk)" stroke="#3a2418" stroke-width="2"/>'
+    +'<path d="M46 21 L41 10 L50 17 L48 6 L56 15 L60 4 L64 15 L72 6 L70 17 L79 10 L74 21 Z" fill="#7a1d16"/>'
+    +'<path d="M53 27 l6 2 M67 27 l-6 2" stroke="#3a1410" stroke-width="2" fill="none"/></svg>',
+  guardian:'<svg class="mmd-model" viewBox="0 0 120 160" xmlns="http://www.w3.org/2000/svg">'
+    +'<defs><linearGradient id="gdA" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#aebcc9"/><stop offset="1" stop-color="#5b6979"/></linearGradient>'
+    +'<linearGradient id="gdS" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#7fa8d4"/><stop offset="1" stop-color="#2c466a"/></linearGradient></defs>'
+    +'<path d="M60 40 C46 42 42 62 46 96 L42 132 L78 132 L74 96 C78 62 74 42 60 40Z" fill="url(#gdA)" stroke="#2a3540" stroke-width="2"/>'
+    +'<path d="M60 52 V128 M50 70 H70 M48 88 H72" stroke="#2a3540" stroke-width="1.2" opacity=".55" fill="none"/>'
+    +'<path d="M48 30 Q48 13 60 13 Q72 13 72 30 L72 41 Q60 47 48 41Z" fill="url(#gdA)" stroke="#2a3540" stroke-width="2"/>'
+    +'<rect x="58" y="19" width="4" height="22" fill="#2a3540"/>'
+    +'<path d="M74 64 L90 78" stroke="url(#gdA)" stroke-width="9" stroke-linecap="round"/>'
+    +'<path d="M83 54 L113 54 L111 92 Q109 113 98 122 Q87 113 85 92Z" fill="url(#gdS)" stroke="#1e3450" stroke-width="2"/>'
+    +'<path d="M98 58 V118 M86 86 H110" stroke="#d3e4f6" stroke-width="2" opacity=".7"/></svg>',
+  artisan:'<svg class="mmd-model" viewBox="0 0 120 160" xmlns="http://www.w3.org/2000/svg">'
+    +'<defs><linearGradient id="arR" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#7a5a2e"/><stop offset="1" stop-color="#41301a"/></linearGradient>'
+    +'<linearGradient id="arM" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#e6c878"/><stop offset="1" stop-color="#9b7a34"/></linearGradient></defs>'
+    +'<path d="M60 38 C44 42 40 64 42 96 L34 142 L86 142 L78 96 C80 64 76 42 60 38Z" fill="url(#arR)" stroke="#2a1c0e" stroke-width="2"/>'
+    +'<path d="M50 60 H70 L72 112 H48 Z" fill="#5a3d20" stroke="#2a1c0e" stroke-width="1.5"/>'
+    +'<path d="M44 64 L24 104" stroke="#caa07a" stroke-width="8" stroke-linecap="round"/>'
+    +'<g transform="rotate(20 21 110)"><rect x="18" y="98" width="6" height="34" rx="2" fill="#5a3d20"/><rect x="6" y="92" width="28" height="14" rx="3" fill="url(#arM)" stroke="#5a4410" stroke-width="1.5"/></g>'
+    +'<circle cx="60" cy="26" r="12" fill="#caa07a" stroke="#2a1c0e" stroke-width="2"/>'
+    +'<path d="M50 30 Q60 49 70 30 Q68 43 60 45 Q52 43 50 30Z" fill="#b9b3a6"/>'
+    +'<circle cx="96" cy="62" r="11" fill="none" stroke="url(#arM)" stroke-width="4"/><circle cx="96" cy="62" r="3" fill="url(#arM)"/></svg>',
+};
+const CHAR_CLASSES={
+  rogue:{ name:'Rogue', tag:'Light · Speed', model:CLASS_MODELS.rogue,
+    blurb:'A nimble shadow. +6% attack speed, and +12% damage & +8% accuracy with light weapons (daggers — and bows to come).' },
+  berserker:{ name:'Berserker', tag:'Heavy · Power', model:CLASS_MODELS.berserker,
+    blurb:'A wrathful brute. +18% damage & +6% accuracy with heavy weapons (hammers, mauls and great two-handers).' },
+  guardian:{ name:'Guardian', tag:'Shields · Tank', model:CLASS_MODELS.guardian,
+    blurb:'An unbreakable wall. +12% Defence and +15% max HP whenever a shield is equipped.' },
+  artisan:{ name:'Artisan', tag:'Skilling · Yield', model:CLASS_MODELS.artisan,
+    blurb:'A master of trades. +10% skilling XP and +5% chance for bonus resources from every gather and craft.' },
+};
+
+function charType(){ return (state&&CHAR_TYPES[state.charType])?state.charType:'normal'; }
+function charTypeDef(){ return CHAR_TYPES[charType()]; }
+function charTypeXpMult(){ return charTypeDef().xpMult; }
+function charDropMult(){ return charTypeDef().dropMult; }
+/* Effective drop chance after the character-type drop dial. Boss trophies
+   (≥99%) are exempt; everything else scales proportionally and clamps at
+   RARE_DROP_CAP. The single source of truth shared by the roll logic AND every
+   rate display, so what the player sees always equals what actually rolls. */
+function effDropChance(c){
+  if(!(c>0)) return c||0;
+  if(c>=0.99) return c;
+  return Math.min(RARE_DROP_CAP, c*charDropMult());
+}
+function charClass(){ return (state&&CHAR_CLASSES[state.charClass])?state.charClass:null; }
+/* Weapon weight-class from dmgType: stab/ranged→light, crush→heavy, slash→standard.
+   An explicit ITEMS[id].wclass override always wins (future bows etc). */
+function weaponClass(itemId){
+  const it=itemId&&ITEMS[itemId]; if(!it) return null;
+  if(it.wclass) return it.wclass;
+  const t=it.dmgType;
+  if(t==='stab'||t==='ranged') return 'light';
+  if(t==='crush') return 'heavy';
+  if(t==='slash') return 'standard';
+  return null;
+}
+function eqCombatWeapon(){ return (state&&state.combatEquipped&&state.combatEquipped.weapon)||''; }
+function eqCombatShield(){ return (state&&state.combatEquipped&&state.combatEquipped.shield)||''; }
+/* Class combat multipliers — read live, baked into combat stats at refreshCombatStats(). */
+function classMaxHitMult(){
+  const c=charClass(); if(!c) return 1;
+  const wc=weaponClass(eqCombatWeapon());
+  if(c==='rogue'    && wc==='light') return 1.12;
+  if(c==='berserker'&& wc==='heavy') return 1.18;
+  return 1;
+}
+function classAccuracyMult(){
+  const c=charClass(); if(!c) return 1;
+  const wc=weaponClass(eqCombatWeapon());
+  if(c==='rogue'    && wc==='light') return 1.08;
+  if(c==='berserker'&& wc==='heavy') return 1.06;
+  return 1;
+}
+function classSwingMult(){ return charClass()==='rogue' ? 0.94 : 1; }
+function classDefenceMult(){ return (charClass()==='guardian' && eqCombatShield()) ? 1.12 : 1; }
+function classHpMult(){ return (charClass()==='guardian' && eqCombatShield()) ? 1.15 : 1; }
+function classSkillXpBonus(){ return charClass()==='artisan' ? 0.10 : 0; }
+function classYieldBonus(){ return charClass()==='artisan' ? 0.05 : 0; }
 
 function mods(skill){
   const p=SK_PFX[skill];
@@ -10943,13 +11125,15 @@ function mods(skill){
                   + (skill==='fishing'?r('fi_gm_double')*0.02:0)
                   + eb.doubleYield                       // enchantments (Gatherer / Hoarder / sets)
                   + sb.doubleYield                       // socket gems
+                  + classYieldBonus()                    // Artisan class — bonus gather yield
                   + activeEffectBonus('doubleChance')):0,
-    xpMult:  (1 + xpAdditive) * xp2x,
+    xpMult:  (1 + xpAdditive) * xp2x * charTypeXpMult() * (1 + classSkillXpBonus()),
     preserve:!IS_G?(r(p+'_thrift')||r(p+'_seed'))*(skill==='alchemy'?0.015:skill==='cooking'?0.005:skill==='firemaking'?0.015:0.02):0,
     extraBar: !IS_G?((r(p+'_double')||r(p+'_yield'))*(skill==='alchemy'?0.015:skill==='cooking'?0.006:skill==='firemaking'?0.015:0.04)
                  + (skill==='cooking'&&r('co_gm_feast')>0?0.25:0)  // Feasting Table: 25% chance for a 2nd meal (no longer guaranteed double)
                  + eb.doubleYield                       // enchantments (Gatherer / Hoarder / sets)
                  + sb.doubleYield                       // socket gems
+                 + classYieldBonus()                    // Artisan class — bonus craft yield
                  + activeEffectBonus('doubleChance')):0,
     extraSell: (skill==='mining'?(r('mi_gm_fortune')*0.07)
                :skill==='woodcutting'?(r('wc_gm_sell')*0.07)
@@ -12223,7 +12407,7 @@ function completeAction(act,skillKey,times){
   if(IS_G){
     const dropTable=DROPS[act.id]||[];
     for(const drop of dropTable){
-      const hits=binom(times,drop.chance);
+      const hits=binom(times,effDropChance(drop.chance));
       if(hits>0) grantItem(drop.id, hits);
     }
   }
@@ -12284,7 +12468,7 @@ function completeDualAction(pair,times){
     const dropTable=DROPS[actA.id]||[];
     for(var di=0;di<dropTable.length;di++){
       var drop=dropTable[di];
-      var hits=binom(times,drop.chance);
+      var hits=binom(times,effDropChance(drop.chance));
       if(hits>0){
         state.items[drop.id]=(state.items[drop.id]||0)+hits;
         markDiscovered(drop.id);
@@ -12573,7 +12757,7 @@ function completeWcDoubleAction(act,cycles){
   showXpPop('woodcutting',xpGained);
   // Rare drops
   const dropTable=DROPS[act.id]||[];
-  for(const drop of dropTable){ const hits=binom(cycles,drop.chance); if(hits>0) grantItem(drop.id,hits); }
+  for(const drop of dropTable){ const hits=binom(cycles,effDropChance(drop.chance)); if(hits>0) grantItem(drop.id,hits); }
 }
 
 function setFishDoubleAct(actId){
@@ -12627,7 +12811,7 @@ function completeFishDoubleAction(act,cycles){
   showXpPop('fishing',xpGained);
   // Rare drops
   const dropTable=DROPS[act.id]||[];
-  for(const drop of dropTable){ const hits=binom(cycles,drop.chance); if(hits>0) grantItem(drop.id,hits); }
+  for(const drop of dropTable){ const hits=binom(cycles,effDropChance(drop.chance)); if(hits>0) grantItem(drop.id,hits); }
 }
 
 function setMineDoubleAct(actId){
@@ -12668,7 +12852,7 @@ function completeDoubleAction(act,cycles){
   showXpPop('mining',xpGained);
   // Rare drops
   const dropTable=DROPS[act.id]||[];
-  for(const drop of dropTable){ const hits=binom(cycles,drop.chance); if(hits>0) grantItem(drop.id,hits); }
+  for(const drop of dropTable){ const hits=binom(cycles,effDropChance(drop.chance)); if(hits>0) grantItem(drop.id,hits); }
 }
 
 /* ════ [JS-21e] main tick ════════════════════════════════════════════════════════ */
@@ -14573,14 +14757,15 @@ function renderPets(){
    across the top, a monsters list on the left, and a detail panel on the right
    showing stats / rewards / kills / drops / zone-pet status. Drop chances are
    formatted by magnitude (X%, X.X%, X.XX%, "1 in N" for the extreme rares). */
+/* Drop-rate formatter — "1 in N" fractions read cleaner than tiny percentages,
+   especially for rares (1 in 10,000) and for showing the character-type dial's
+   effect (1 in 100 → 1 in 67). Denominator clamps at ≥2 so we never print
+   "1 in 1"; ≥99% drops are shown as guaranteed. Pass the EFFECTIVE chance. */
 function _fmtMonChance(c){
-  if(c>=0.99)   return 'always';
-  if(c>=0.10)   return Math.round(c*100)+'%';
-  if(c>=0.01)   return (c*100).toFixed(1)+'%';
-  if(c>=0.001)  return (c*100).toFixed(2)+'%';
-  if(c>=0.0001) return (c*100).toFixed(3)+'%';
-  if(c>0)       return '1 in '+Math.round(1/c).toLocaleString();
-  return '—';
+  if(!(c>0))   return '—';
+  if(c>=0.99)  return 'always';
+  const den=Math.max(2, Math.round(1/c));
+  return '1 in '+den.toLocaleString();
 }
 function buildMonLogHTML(){
   // Resolve current selection — fall back if state points at a stale id.
@@ -14627,7 +14812,7 @@ function buildMonLogHTML(){
     return `<div class="mlog-drop${has?' got':''}">
       <span class="mld-ic">${iconHTML(d.id)}</span>
       <span class="mld-nm">${it?it.name:d.id}${qtyTag}</span>
-      <span class="mld-rate">${_fmtMonChance(d.chance)}</span>
+      <span class="mld-rate">${_fmtMonChance(effDropChance(d.chance))}</span>
       <span class="mld-cnt">${has?'×'+got.toLocaleString():'—'}</span>
       <span class="mld-mark">${has?'✓':'✗'}</span>
     </div>`;
@@ -14689,7 +14874,12 @@ function buildMonLogHTML(){
           <span class="mlk-value">${sKills.toLocaleString()}</span>
         </div>
         ${bossLockHint}
-        <div class="mlog-section-head">Drops</div>
+        <div class="mlog-section-head">Drops${(function(){
+          var dm=charDropMult(); if(dm===1) return '';   // Normal — no adjustment to flag
+          var td=charTypeDef();
+          // Rates below already reflect the dial; the chip just names the active profile.
+          return ` <span class="mlog-dropmod" style="background:${td.col}">${td.name} rates</span>`;
+        })()}</div>
         <div class="mlog-drops">${dropList}</div>
         ${petBlock}
       </div>
@@ -15916,11 +16106,14 @@ function rollDrops(monId, isRare){
   const tbl=MONSTER_DROPS[monId]; if(!tbl||!tbl.length) return [];
   const out=[];
   const mul = isRare ? RARE_DROP_MUL : 1;
+  // Character-type global drop dial (hardcore 1.5× / accelerated 0.6×). Boss
+  // trophies (≥99%) are exempt so a build choice never locks anyone out of a key.
+  const cMul = charDropMult();
   for(const d of tbl){
     if(d.once && (state.items&&state.items[d.id])>0) continue;
     // "Always" drops (≥99%, mostly boss trophies) stay at their base chance —
     // multiplying them would just hit the cap noisily. Below that, scale + clamp.
-    const c = d.chance>=0.99 ? d.chance : Math.min(RARE_DROP_CAP, d.chance*mul);
+    const c = d.chance>=0.99 ? d.chance : Math.min(RARE_DROP_CAP, d.chance*mul*cMul);
     if(Math.random()<c){
       let qty=1;
       if(Array.isArray(d.qty)){
@@ -15955,7 +16148,8 @@ const RARE_PET_CHANCE=0.05;
 function rareSpawnChance(mon){
   if(!mon || mon.boss) return 0;
   const t=Math.max(0, Math.min(1, (mon.lvl-1)/89));
-  return RARE_SPAWN_MIN + t*(RARE_SPAWN_MAX-RARE_SPAWN_MIN);
+  // Character-type drop dial also nudges rare-monster spawn frequency.
+  return (RARE_SPAWN_MIN + t*(RARE_SPAWN_MAX-RARE_SPAWN_MIN)) * charDropMult();
 }
 function rollRare(mon){ return Math.random()<rareSpawnChance(mon); }
 /* Returns a shallow-cloned monster object with rare scaling applied, or the
@@ -16987,8 +17181,12 @@ function showItemTooltip(itemId, x, y){
   if(sources.length){
     html+=`<div style="margin-bottom:3px;font-size:12px;color:#a08a64;text-transform:uppercase;letter-spacing:1px">Sources</div>`;
     for(const s of sources.slice(0,5)){
-      const pctStr=s.chance>=1?'100%':(s.chance>=0.01?(s.chance*100).toFixed(1)+'%':(s.chance*100).toFixed(2)+'%');
-      const color=s.chance>=1?'#7da33f':s.chance>=0.01?'#c79b4e':'#e0762f';
+      // Rare sources reflect the character-type drop dial so the shown rate
+      // equals the real one; guaranteed outputs / seed returns are left as-is.
+      // Same "1 in N" fraction formatter as the Monster Log for consistency.
+      const ch=s.rare?effDropChance(s.chance):s.chance;
+      const pctStr=ch>=1?'100%':_fmtMonChance(ch);
+      const color=ch>=1?'#7da33f':ch>=0.01?'#c79b4e':'#e0762f';
       html+=`<div class="tt-source">${s.skIcon} ${s.actName}<span class="tt-chance" style="color:${color}">${pctStr}</span></div>`;
     }
     if(sources.length>5) html+=`<div style="font-size:12px;color:#6e552c">+${sources.length-5} more sources</div>`;
@@ -19278,6 +19476,8 @@ function combatTick(){
    raises max hit, etc. Skipped for non-combat stats. */
 function grantCombatXp(stat,amount){
   if(!COMBAT_STATS[stat]||!amount||amount<=0) return;
+  // Character-type global XP dial (hardcore 0.75× / accelerated 2×) applies to combat too.
+  amount=Math.max(1, Math.round(amount*charTypeXpMult()));
   if(!state.combatXp) state.combatXp={attack:0,strength:0,defence:0,hitpoints:0};
   const beforeStat=cmbLvl(stat);
   const beforeCl=combatLevel();
@@ -20970,7 +21170,9 @@ function mmSummary(n){
     else if(s._silverV2) silverCoins=Math.round((s.coins||0)/10);
     else silverCoins=Math.round((s.coins||0)*SILVER_PER_GOLD);
     return { name:(typeof s.charName==='string'&&s.charName.trim())?s.charName:'Adventurer',
-             totalLevel:tot, coins:silverCoins, lastSeen:s.lastSeen||0 };
+             totalLevel:tot, coins:silverCoins, lastSeen:s.lastSeen||0,
+             charType:(s.charType&&CHAR_TYPES[s.charType])?s.charType:null,
+             charClass:(s.charClass&&CHAR_CLASSES[s.charClass])?s.charClass:null };
   }catch(e){ return null; }
 }
 function mmShowMenu(){
@@ -20990,10 +21192,17 @@ function mmRenderSlots(){
     const el=document.createElement('div');
     el.className='mm-slot'+(s?'':' mm-empty');
     if(s){
+      var badges='';
+      if(s.charType||s.charClass){
+        badges='<div class="mm-badges">'+
+          (s.charType?'<span class="mm-badge" style="background:'+(CHAR_TYPES[s.charType].col)+'">'+CHAR_TYPES[s.charType].name+'</span>':'')+
+          (s.charClass?'<span class="mm-badge mm-badge-cls">'+CHAR_CLASSES[s.charClass].name+'</span>':'')+
+          '</div>';
+      }
       el.innerHTML='<div class="mm-ic">🛡️</div>'+
         '<div class="mm-info"><div class="mm-nm">'+mmEsc(s.name)+'</div>'+
         '<div class="mm-mt">Total Lv '+s.totalLevel+' · 🪙 '+fmtCoins(s.coins,true)+
-        (s.lastSeen?' · '+mmFmtAgo(s.lastSeen):'')+'</div></div>'+
+        (s.lastSeen?' · '+mmFmtAgo(s.lastSeen):'')+'</div>'+badges+'</div>'+
         '<button class="mm-del" data-del="'+n+'" title="Delete">🗑</button>';
       el.addEventListener('click',e=>{ if(e.target.closest('[data-del]')) return; mmStart(n,false); });
     }else{
@@ -21026,21 +21235,89 @@ function mmNewChar(n){
 function mmConfirmName(){
   const name=($('mmNameInput').value||'').trim().slice(0,20)||'Adventurer';
   const n=mmPendingSlot; mmPendingSlot=0;
+  // Name chosen — move on to the one-time Destiny (type + class) selection.
+  mmOpenDestiny('new', n, name);
+}
+
+/* ── Destiny selection (character type + class) ─────────────────────────────
+   Shown for a brand-new character right after naming, and once for any legacy
+   save that predates the system (on first load). The choice is permanent. */
+let mmDestinyMode='new', mmDestinySlot=0, mmDestinyName='', mmSelType='', mmSelClass='';
+function mmOpenDestiny(mode, slot, name){
+  mmDestinyMode=mode; mmDestinySlot=slot||mmSlot; mmDestinyName=name||'';
+  mmSelType=''; mmSelClass='';
+  $('mmdBack').style.display = (mode==='new') ? '' : 'none';
+  $('mmdSubtitle').textContent = (mode==='existing')
+    ? 'A one-time choice for your adventurer. Pick a path and a calling — this is permanent.'
+    : 'Choose a path and a calling for your new adventurer. This choice is permanent.';
+  mmRenderDestiny();
   $('mmNameModal').classList.add('mm-hidden');
-  mmSlot=n;
-  state=defaultState(); state.charName=name; state.lastSeen=Date.now();
-  normalizeState();
-  try{ localStorage.setItem(mmKey(n), JSON.stringify(state)); }catch(e){}
-  mmStart(n,true);
+  $('emberMenu').classList.add('mm-hidden');
+  $('charSelect').classList.add('mm-hidden');
+  $('mmDestiny').classList.remove('mm-hidden');
+}
+function mmRenderDestiny(){
+  const tb=$('mmdTypes'); tb.innerHTML='';
+  ['normal','hardcore','accelerated'].forEach(key=>{
+    const t=CHAR_TYPES[key];
+    const xpStr=t.xpMult===1?'XP ×1.0':((t.xpMult>=1?'+':'')+Math.round((t.xpMult-1)*100)+'% XP');
+    const drStr=t.dropMult===1?'Drops ×1.0':((t.dropMult>=1?'+':'')+Math.round((t.dropMult-1)*100)+'% Drops');
+    const el=document.createElement('div');
+    el.className='mmd-card'+(mmSelType===key?' mmd-on':'');
+    el.innerHTML='<div class="mmd-tname" style="color:'+t.col+'">'+t.name+'</div>'+
+      '<div class="mmd-tag" style="background:'+t.col+'">'+t.tag+'</div>'+
+      '<div class="mmd-blurb">'+t.blurb+'</div>'+
+      '<div class="mmd-stats"><span class="mmd-pill">'+xpStr+'</span><span class="mmd-pill">'+drStr+'</span></div>';
+    el.addEventListener('click',()=>{ mmSelType=key; mmRenderDestiny(); });
+    tb.appendChild(el);
+  });
+  const cb=$('mmdClasses'); cb.innerHTML='';
+  ['rogue','berserker','guardian','artisan'].forEach(key=>{
+    const c=CHAR_CLASSES[key];
+    const el=document.createElement('div');
+    el.className='mmd-card'+(mmSelClass===key?' mmd-on':'');
+    el.innerHTML=c.model+'<div class="mmd-tname">'+c.name+'</div>'+
+      '<div class="mmd-tag">'+c.tag+'</div>'+
+      '<div class="mmd-blurb">'+c.blurb+'</div>';
+    el.addEventListener('click',()=>{ mmSelClass=key; mmRenderDestiny(); });
+    cb.appendChild(el);
+  });
+  $('mmdConfirm').disabled = !(mmSelType&&mmSelClass);
+}
+function mmConfirmDestiny(){
+  if(!mmSelType||!mmSelClass) return;
+  $('mmDestiny').classList.add('mm-hidden');
+  if(mmDestinyMode==='new'){
+    const n=mmDestinySlot;
+    state=defaultState();
+    state.charName=mmDestinyName||'Adventurer';
+    state.charType=mmSelType; state.charClass=mmSelClass;
+    state.lastSeen=Date.now();
+    normalizeState();
+    try{ localStorage.setItem(mmKey(n), JSON.stringify(state)); }catch(e){}
+    mmStart(n,true);   // reloads the freshly-saved char and enters the world
+  }else{
+    // Legacy save — stamp the destiny onto the already-loaded state, then enter.
+    state.charType=mmSelType; state.charClass=mmSelClass;
+    saveGame();
+    mmFinishStart(mmDestinySlot,false);
+  }
 }
 function mmStart(slot,isNew){
   mmSlot=slot;
   state=defaultState();
   loadGame();
   normalizeState();
+  // One-time Destiny prompt for legacy saves that predate the system.
+  if(!state.charType){ mmOpenDestiny('existing', slot); return; }
+  mmFinishStart(slot,isNew);
+}
+function mmFinishStart(slot,isNew){
+  mmSlot=slot;
   mmAtMenu=false;
   $('emberMenu').classList.add('mm-hidden');
   $('charSelect').classList.add('mm-hidden');
+  $('mmDestiny').classList.add('mm-hidden');
   selectedSkill='woodcutting'; viewTab='acts'; rightTab='satchel';
   if(!isNew) grantOffline();
   renderAll();
@@ -21099,6 +21376,11 @@ $('mmBackToMenu').addEventListener('click',mmShowMenu);
 $('btnMenu').addEventListener('click',mmQuitToMenu);
 $('mmNameOk').addEventListener('click',mmConfirmName);
 $('mmNameCancel').addEventListener('click',()=>$('mmNameModal').classList.add('mm-hidden'));
+$('mmdConfirm').addEventListener('click',mmConfirmDestiny);
+$('mmdBack').addEventListener('click',()=>{
+  $('mmDestiny').classList.add('mm-hidden');
+  if(mmDestinyMode==='new') mmNewChar(mmDestinySlot); // back to the name prompt
+});
 $('mmNameInput').addEventListener('keydown',e=>{ if(e.key==='Enter') mmConfirmName(); });
 $('mmImportBtn').addEventListener('click',()=>{ $('mmImportInput').value=''; $('mmImportMsg').textContent=''; $('mmImportModal').classList.remove('mm-hidden'); });
 $('mmImportOk').addEventListener('click',mmDoImport);
