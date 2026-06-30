@@ -409,7 +409,9 @@ header h1 .flame{color:var(--ember)}
 /* Log + Food row */
 .cmb-logfood{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(212px,1fr);
   gap:9px;align-items:stretch;margin-bottom:8px}
-.cmb-logfood .cmb-log{height:auto;min-height:158px;margin:0}
+/* Fixed-height scroll box — NOT height:auto, or it grows with content and pushes
+   the panel off-screen instead of scrolling. Stretch makes the food menu match it. */
+.cmb-logfood .cmb-log{height:200px;max-height:200px;margin:0;overflow-y:auto}
 .cmb-foodmenu{display:flex;flex-direction:column;gap:7px;min-width:0;border:1px solid var(--trim-d);
   border-radius:5px;padding:8px 9px;background:linear-gradient(180deg,#2a0e0a40,#150c05)}
 .cmb-foodmenu-head{font-size:12px;color:var(--trim);font-variant:small-caps;letter-spacing:1.5px;
@@ -2388,7 +2390,7 @@ header h1 .flame{color:var(--ember)}
   <div class="mm-btns">
     <button class="mm-btn mm-primary" id="mmPlay">▶ Play</button>
   </div>
-  <div class="mm-ver">v1.0.27</div>
+  <div class="mm-ver">v1.0.28</div>
 </div>
 
 <!-- ===== CHARACTER SELECT (added) ===== -->
