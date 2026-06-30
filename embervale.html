@@ -2388,7 +2388,7 @@ header h1 .flame{color:var(--ember)}
   <div class="mm-btns">
     <button class="mm-btn mm-primary" id="mmPlay">▶ Play</button>
   </div>
-  <div class="mm-ver">v1.0.26</div>
+  <div class="mm-ver">v1.0.27</div>
 </div>
 
 <!-- ===== CHARACTER SELECT (added) ===== -->
@@ -14855,15 +14855,15 @@ function renderPets(){
    across the top, a monsters list on the left, and a detail panel on the right
    showing stats / rewards / kills / drops / zone-pet status. Drop chances are
    formatted by magnitude (X%, X.X%, X.XX%, "1 in N" for the extreme rares). */
-/* Drop-rate formatter — "1 in N" fractions read cleaner than tiny percentages,
-   especially for rares (1 in 10,000) and for showing the character-type dial's
-   effect (1 in 100 → 1 in 67). Denominator clamps at ≥2 so we never print
-   "1 in 1"; ≥99% drops are shown as guaranteed. Pass the EFFECTIVE chance. */
+/* Drop-rate formatter — "1/N" fractions read cleaner than tiny percentages,
+   especially for rares (1/10000) and for showing the character-type dial's
+   effect (1/100 → 1/67). Denominator clamps at ≥2 so we never print "1/1";
+   ≥99% drops are shown as guaranteed. Pass the EFFECTIVE chance. */
 function _fmtMonChance(c){
   if(!(c>0))   return '—';
   if(c>=0.99)  return 'always';
   const den=Math.max(2, Math.round(1/c));
-  return '1 in '+den.toLocaleString();
+  return '1/'+den;
 }
 function buildMonLogHTML(){
   // Resolve current selection — fall back if state points at a stale id.
@@ -17276,7 +17276,7 @@ function showItemTooltip(itemId, x, y){
     for(const s of sources.slice(0,5)){
       // Rare sources reflect the character-type drop dial so the shown rate
       // equals the real one; guaranteed outputs / seed returns are left as-is.
-      // Same "1 in N" fraction formatter as the Monster Log for consistency.
+      // Same "1/N" fraction formatter as the Monster Log for consistency.
       const ch=s.rare?effDropChance(s.chance):s.chance;
       const pctStr=ch>=1?'100%':_fmtMonChance(ch);
       const color=ch>=1?'#7da33f':ch>=0.01?'#c79b4e':'#e0762f';
