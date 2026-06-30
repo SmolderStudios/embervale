@@ -365,6 +365,66 @@ header h1 .flame{color:var(--ember)}
 .cmb-style-pick .cmb-style.sel{border-color:var(--ember);background:#3a1714;
   box-shadow:inset 0 0 6px #e0762f33}
 .cmb-style-pick .cmb-style:disabled{opacity:.5;cursor:not-allowed}
+/* ════ Arena layout rework (v1.0.25) ════════════════════════════════════════
+   Fight block = engrid (fighters + basic stats) on the left, a static skill-
+   levels card on the right (replaces the old Stats & Training dropdown). Below:
+   a control row (style segmented-control + a prominent Engage/Disengage button),
+   then a log-left / food-menu-right row. */
+.cmb-fightwrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(186px,0.66fr);
+  gap:9px;align-items:stretch;margin-bottom:8px}
+.cmb-fightwrap > .cmb-engrid{margin:0}
+.cmb-skillcard{background:#150c05;border:1px solid var(--trim-d);border-radius:5px;
+  padding:8px 9px;min-width:0;display:flex;flex-direction:column}
+.cmb-skillcard .cmb-stats-row{margin:0;background:transparent;border:none;padding:0}
+.cmb-skillcard .cmb-stats-head{margin-bottom:6px;padding-bottom:6px}
+.cmb-skillcard .cmb-base-row{grid-template-columns:repeat(2,1fr);margin:0;padding:0;border-bottom:none;gap:4px}
+.cmb-skillcard .cmb-style-row{display:none}     /* style now lives in the control row */
+/* Control row — style segmented control (left) + Engage/Disengage (right) */
+.cmb-controlrow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+.cmb-style-seg{display:flex;align-items:center;gap:8px;flex:1 1 auto;min-width:0}
+.cmb-style-seg .cstyle-lbl{font-size:12px;color:var(--muted);font-variant:small-caps;letter-spacing:1.5px;flex:0 0 auto}
+.cmb-style-seg .cstyle-btns{display:flex;border:1px solid var(--trim-d);border-radius:5px;overflow:hidden}
+.cmb-style-seg .cmb-style{display:flex;align-items:center;gap:5px;background:var(--raised-s);
+  border:none;border-right:1px solid var(--trim-d);border-radius:0;padding:7px 13px;font-size:13px;
+  color:var(--text);cursor:pointer;letter-spacing:.3px;font-family:inherit;transition:.12s}
+.cmb-style-seg .cmb-style:last-child{border-right:none}
+.cmb-style-seg .cmb-style .style-ic{display:inline-flex;width:16px;height:16px;align-items:center}
+.cmb-style-seg .cmb-style .style-ic svg{width:16px;height:16px}
+.cmb-style-seg .cmb-style:hover:not(:disabled){background:#231811;color:var(--trim)}
+.cmb-style-seg .cmb-style.sel{background:#3a1714;color:#ffd0a8;box-shadow:inset 0 0 8px #e0762f33}
+.cmb-style-seg .cmb-style:disabled{opacity:.5;cursor:not-allowed}
+.cmb-style-seg .cstyle-lock{font-size:11px;color:var(--muted);font-style:italic;flex:0 0 auto}
+.cmb-engage-wrap{flex:0 0 auto}
+.cmb-engage-btn{display:inline-flex;align-items:center;gap:8px;padding:11px 24px;font-size:15px;
+  font-weight:bold;letter-spacing:.5px;border-radius:6px;cursor:pointer;border:1px solid var(--trim-d);
+  transition:.12s;font-family:inherit}
+.cmb-engage-btn .ceb-ic{font-size:16px;line-height:1}
+.cmb-engage-btn b{font-weight:bold}
+.cmb-engage-btn.engage{border-color:#c4543a;color:#ffd2c2;
+  background:linear-gradient(180deg,#5e1e16,#3a1410);box-shadow:0 2px 9px #00000055}
+.cmb-engage-btn.engage:hover{background:linear-gradient(180deg,#74271c,#4a1813);border-color:#e0762f;
+  color:#fff;transform:translateY(-1px)}
+.cmb-engage-btn.flee{border-color:#6e552c;color:#ecdcb6;background:linear-gradient(180deg,#2c1e11,#1d1409)}
+.cmb-engage-btn.flee:hover{border-color:var(--trim);color:#fff;transform:translateY(-1px)}
+/* Log + Food row */
+.cmb-logfood{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(212px,1fr);
+  gap:9px;align-items:stretch;margin-bottom:8px}
+.cmb-logfood .cmb-log{height:auto;min-height:158px;margin:0}
+.cmb-foodmenu{display:flex;flex-direction:column;gap:7px;min-width:0;border:1px solid var(--trim-d);
+  border-radius:5px;padding:8px 9px;background:linear-gradient(180deg,#2a0e0a40,#150c05)}
+.cmb-foodmenu-head{font-size:12px;color:var(--trim);font-variant:small-caps;letter-spacing:1.5px;
+  padding-bottom:5px;border-bottom:1px dashed var(--trim-d)}
+.cmb-foodmenu-slots{display:flex;flex-wrap:wrap;gap:5px}
+.cmb-foodmenu-slots .cmb-hbgrp{display:flex;flex-wrap:wrap;gap:5px}
+.cmb-foodmenu-buffs .cmb-buffbar{margin:0;flex-wrap:wrap}
+.cmb-foodmenu-auto{margin-top:auto;padding-top:7px;border-top:1px dashed var(--trim-d)}
+.cmb-food-empty{font-size:12px;color:var(--muted);font-style:italic;line-height:1.4}
+@media(max-width:720px){
+  .cmb-fightwrap{grid-template-columns:1fr}
+  .cmb-logfood{grid-template-columns:1fr}
+  .cmb-controlrow{flex-direction:column;align-items:stretch}
+  .cmb-engage-wrap .cmb-engage-btn{width:100%;justify-content:center}
+}
 /* Compact base-stat row — Atk / Str / Def / HP + Magic / Ranged placeholders.
    Lives at the top of the stats card, between the Combat Lv header and the
    derived stats. Each pill shows icon · name · level + a thin XP progress bar. */
@@ -2328,7 +2388,7 @@ header h1 .flame{color:var(--ember)}
   <div class="mm-btns">
     <button class="mm-btn mm-primary" id="mmPlay">▶ Play</button>
   </div>
-  <div class="mm-ver">v1.0.24</div>
+  <div class="mm-ver">v1.0.25</div>
 </div>
 
 <!-- ===== CHARACTER SELECT (added) ===== -->
@@ -20449,7 +20509,7 @@ function renderCombat(){
   // attaches without changes.
   const arenaBodyHTML=(subTab==='arena')?`
     ${noteHtml}
-    <div class="cmb-arena">
+    <div class="cmb-fightwrap">
       <div class="cmb-engrid">
         <div class="cmb-fighter foe${combat.rare?' rare':''}${baseMon.boss?' boss':''}">
           ${combat.rare?'<div class="rareBadge">★ RARE ★</div>':''}
@@ -20484,27 +20544,33 @@ function renderCombat(){
           <div class="cmb-srow" data-tip="Agility lvl ${agiLvl} trims swing time from 2.40s base${speedReductionPct?` (-${speedReductionPct}%)`:''}"><span class="lbl">Speed</span><span class="val">${speedDisplay}</span></div>
         </div>
       </div>
+      <div class="cmb-skillcard">${statsCard}</div>
     </div>
-    <div class="cmb-actions">
-      ${active
-        ? `<button class="cmb-btn flee" id="cmbFlee">Disengage</button>`
-        : `<button class="cmb-btn engage" id="cmbEngage">Engage ${mon.name}</button>`}
-    </div>
-    <div class="cmb-hotbar">
-      <div class="cmb-hbgrp">
-        <button class="cmb-slot cmb-style ${style==='attack'?'sel':''}" data-style="attack" data-tip="Train Attack" ${active?'disabled':''}><span class="style-ic">${iconHTML('attack')}</span></button>
-        <button class="cmb-slot cmb-style ${style==='strength'?'sel':''}" data-style="strength" data-tip="Train Strength" ${active?'disabled':''}><span class="style-ic">${iconHTML('strength')}</span></button>
-        <button class="cmb-slot cmb-style ${style==='defence'?'sel':''}" data-style="defence" data-tip="Train Defence" ${active?'disabled':''}><span class="style-ic">${iconHTML('defence')}</span></button>
+    <div class="cmb-controlrow">
+      <div class="cmb-style-seg">
+        <span class="cstyle-lbl">Train</span>
+        <div class="cstyle-btns">
+          <button class="cmb-style ${style==='attack'?'sel':''}" data-style="attack" title="Train Attack — improves hit chance" ${active?'disabled':''}><span class="style-ic">${iconHTML('attack')}</span>Attack</button>
+          <button class="cmb-style ${style==='strength'?'sel':''}" data-style="strength" title="Train Strength — raises max hit" ${active?'disabled':''}><span class="style-ic">${iconHTML('strength')}</span>Strength</button>
+          <button class="cmb-style ${style==='defence'?'sel':''}" data-style="defence" title="Train Defence — reduces foe accuracy" ${active?'disabled':''}><span class="style-ic">${iconHTML('defence')}</span>Defence</button>
+        </div>
+        ${active?'<span class="cstyle-lock">🔒 locked mid-fight</span>':'<span class="cstyle-lock">XP from damage · HP always +⅓</span>'}
       </div>
-      ${healSlotsHTML}
-      <div class="cmb-hbgrp" style="margin-left:auto">${autoHealPillHTML}</div>
+      <div class="cmb-engage-wrap">
+        ${active
+          ? `<button class="cmb-engage-btn flee" id="cmbFlee"><span class="ceb-ic">✕</span>Disengage</button>`
+          : `<button class="cmb-engage-btn engage" id="cmbEngage"><span class="ceb-ic">⚔</span>Engage <b>${mon.name}</b></button>`}
+      </div>
     </div>
-    ${buffBarHTML}
-    <div class="cmb-log" id="cmbLog">${combat.log.map(l=>`<div class="ln ${l.c}">${l.t}</div>`).join('')||'<div class="ln sys">The arena is quiet…</div>'}</div>
-    <details class="cmb-stats-drawer"${state.cmbStatsOpen?' open':''}>
-      <summary class="cmb-stats-toggle"><span class="csd-ic">📊</span><span class="csd-lbl">Stats &amp; Training</span><span class="csd-hint">click to ${state.cmbStatsOpen?'collapse':'expand'}</span><span class="csd-caret">▾</span></summary>
-      <div class="cmb-stats-body">${statsCard}</div>
-    </details>
+    <div class="cmb-logfood">
+      <div class="cmb-log" id="cmbLog">${combat.log.map(l=>`<div class="ln ${l.c}">${l.t}</div>`).join('')||'<div class="ln sys">The arena is quiet…</div>'}</div>
+      <div class="cmb-foodmenu">
+        <div class="cmb-foodmenu-head">🍖 Food &amp; Healing</div>
+        <div class="cmb-foodmenu-slots">${healSlotsHTML||'<span class="cmb-food-empty">No food or potions yet — cook fish or brew draughts to heal here.</span>'}</div>
+        ${buffBarHTML?`<div class="cmb-foodmenu-buffs">${buffBarHTML}</div>`:''}
+        <div class="cmb-foodmenu-auto">${autoHealPillHTML}</div>
+      </div>
+    </div>
     <div class="cmb-zones-block">
       <div class="cmb-zone-modes">
         <button class="cmb-zmode ${state.zoneMode==='dungeons'?'on':''}" data-zmode="dungeons">Dungeons</button>
