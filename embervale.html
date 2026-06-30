@@ -2388,7 +2388,7 @@ header h1 .flame{color:var(--ember)}
   <div class="mm-btns">
     <button class="mm-btn mm-primary" id="mmPlay">▶ Play</button>
   </div>
-  <div class="mm-ver">v1.0.25</div>
+  <div class="mm-ver">v1.0.26</div>
 </div>
 
 <!-- ===== CHARACTER SELECT (added) ===== -->
@@ -2856,14 +2856,14 @@ const ITEMS={
   // Fishing (cooked)
   // Cooked fish double as combat food — instant heal scaled by cook level (1.0.21).
   // Cheap, spammable sustain; the dedicated Healing Draughts out-heal them tier-for-tier.
-  cooked_minnow:    {name:'Cooked Minnow',    icon:'🍢',sell:44,  potion:{heal:6}},
-  cooked_sardine:   {name:'Cooked Sardine',   icon:'🍢',sell:99,  potion:{heal:12}},
-  cooked_trout:     {name:'Cooked Trout',     icon:'🍢',sell:198, potion:{heal:18}},
-  cooked_tuna:      {name:'Cooked Tuna',      icon:'🍢',sell:330, potion:{heal:26}},
-  cooked_salmon:    {name:'Cooked Salmon',    icon:'🍢',sell:550, potion:{heal:36}},
-  cooked_swordfish: {name:'Cooked Swordfish', icon:'🍱',sell:880, potion:{heal:48}},
-  cooked_shark:     {name:'Cooked Shark',     icon:'🍱',sell:1408,potion:{heal:62}},
-  cooked_voideel:   {name:'Cooked Void Eel',  icon:'🍱',sell:2255,potion:{heal:80}},
+  cooked_minnow:    {name:'Cooked Minnow',    icon:'🍢',sell:44,  potion:{heal:60}},
+  cooked_sardine:   {name:'Cooked Sardine',   icon:'🍢',sell:99,  potion:{heal:120}},
+  cooked_trout:     {name:'Cooked Trout',     icon:'🍢',sell:198, potion:{heal:180}},
+  cooked_tuna:      {name:'Cooked Tuna',      icon:'🍢',sell:330, potion:{heal:260}},
+  cooked_salmon:    {name:'Cooked Salmon',    icon:'🍢',sell:550, potion:{heal:360}},
+  cooked_swordfish: {name:'Cooked Swordfish', icon:'🍱',sell:880, potion:{heal:480}},
+  cooked_shark:     {name:'Cooked Shark',     icon:'🍱',sell:1408,potion:{heal:620}},
+  cooked_voideel:   {name:'Cooked Void Eel',  icon:'🍱',sell:2255,potion:{heal:800}},
   // Smithing bars
   bronze_bar:    {name:'Bronze Bar',       icon:'🟫',sell:77},
   iron_bar:      {name:'Iron Bar',         icon:'⬜',sell:176},
@@ -2886,10 +2886,10 @@ const ITEMS={
   // Healing draughts — instant restore mid-combat. No `dur` field; the use
   // handler currently gates these with a "coming soon" toast so the inert
   // brew can't be wasted before combat consumes it.
-  heal_draught_1:{name:'Lesser Healing Draught',icon:'❤️',sell:250,  potion:{heal:15}},
-  heal_draught_2:{name:'Healing Draught',       icon:'❤️',sell:1200, potion:{heal:35}},
-  heal_draught_3:{name:'Greater Healing Draught',icon:'❤️',sell:4400,potion:{heal:70}},
-  heal_draught_4:{name:'Master Healing Elixir', icon:'❤️',sell:11000,rare:true,potion:{heal:140}},
+  heal_draught_1:{name:'Lesser Healing Draught',icon:'❤️',sell:250,  potion:{heal:150}},
+  heal_draught_2:{name:'Healing Draught',       icon:'❤️',sell:1200, potion:{heal:350}},
+  heal_draught_3:{name:'Greater Healing Draught',icon:'❤️',sell:4400,potion:{heal:700}},
+  heal_draught_4:{name:'Master Healing Elixir', icon:'❤️',sell:11000,rare:true,potion:{heal:1400}},
   // Buff potions — duration buffs to combat stats. atk/str/def get added to
   // the active gear contribution while the effect window is open (eventual).
   honed_edge_1:  {name:'Honed Edge Potion I',   icon:'⚔️',sell:600,  potion:{atk:2,dur:120}},
@@ -2906,17 +2906,17 @@ const ITEMS={
   // a draught), REGEN (heal-over-time — same total spread over seconds, great for
   // sustained idle fights), and FEAST (smaller instant heal + a short combat buff).
   // potion.regen = total HP, potion.regenDur = seconds. potion.buff = {str/def/atk,dur}.
-  marrow_broth:    {name:'Marrow Broth',    icon:'🍲',sell:40,  potion:{regen:18, regenDur:6}, desc:'Bones boiled down to a rich, restorative broth. Mends you slowly — 18 HP over 6s.'},
-  ratmeat_skewer:  {name:'Ratmeat Skewer',  icon:'🍢',sell:70,  potion:{heal:10, buff:{str:1,dur:30}}, desc:'Charred warren-rat on a splinter of bone. Restores 10 HP and fires you up — +1 Strength for 30s.'},
-  silk_poultice:   {name:'Silk Poultice',   icon:'🩹',sell:90,  potion:{heal:16}, desc:'A wound-dressing of spider-silk and crushed venom sac — knits cuts closed fast. Instant 16 HP.'},
-  goblin_jerky:    {name:'Goblin Jerky',    icon:'🥓',sell:120, potion:{heal:24}, desc:'Strips of cured hide smoked over a goblin fire. Tough, salty, and filling. Instant 24 HP.'},
+  marrow_broth:    {name:'Marrow Broth',    icon:'🍲',sell:40,  potion:{regen:180, regenDur:6}, desc:'Bones boiled down to a rich, restorative broth. Mends you slowly — 180 HP over 6s.'},
+  ratmeat_skewer:  {name:'Ratmeat Skewer',  icon:'🍢',sell:70,  potion:{heal:100, buff:{str:1,dur:30}}, desc:'Charred warren-rat on a splinter of bone. Restores 100 HP and fires you up — +1 Strength for 30s.'},
+  silk_poultice:   {name:'Silk Poultice',   icon:'🩹',sell:90,  potion:{heal:160}, desc:'A wound-dressing of spider-silk and crushed venom sac — knits cuts closed fast. Instant 160 HP.'},
+  goblin_jerky:    {name:'Goblin Jerky',    icon:'🥓',sell:120, potion:{heal:240}, desc:'Strips of cured hide smoked over a goblin fire. Tough, salty, and filling. Instant 240 HP.'},
   // ─── Monster-drop foods, mid→endgame tiers (1.0.7, reworked 1.0.21) ─────────
-  bone_stew:       {name:'Bone Marrow Stew', icon:'🍲',sell:180, potion:{regen:40, regenDur:8}, desc:'Ancient bones simmered grey. Grim fare that knits you back together — 40 HP over 8s.'},
-  wolf_jerky:      {name:'Wolf Jerky',       icon:'🥓',sell:280, potion:{heal:50}, desc:'Smoke-cured strips of dire-wolf. Chewy, fatty, warming. Instant 50 HP.'},
-  ogre_roast:      {name:'Ogre Roast',       icon:'🍖',sell:420, potion:{heal:40, buff:{str:2,dur:60}}, desc:'A slab of ogre haunch roasted over coals. Restores 40 HP and bolsters you — +2 Strength for 60s.'},
-  troll_stew:      {name:'Troll Stew',       icon:'🍲',sell:640, potion:{regen:96, regenDur:8}, desc:'Troll meat and regenerative blood, stewed thick. You feel the wounds closing — 96 HP over 8s.'},
-  drake_roast:     {name:'Drake Roast',      icon:'🍖',sell:950, potion:{heal:120}, desc:'Seared drake flank, still faintly smoking. Rich enough to mend deep wounds. Instant 120 HP.'},
-  infernal_roast:  {name:'Infernal Roast',   icon:'🍖',sell:1500,potion:{heal:80, buff:{str:3,def:3,dur:90}}, desc:'Demon-flesh roasted in brimstone. Restores 80 HP and steels you — +3 Strength & +3 Defence for 90s.'},
+  bone_stew:       {name:'Bone Marrow Stew', icon:'🍲',sell:180, potion:{regen:400, regenDur:8}, desc:'Ancient bones simmered grey. Grim fare that knits you back together — 400 HP over 8s.'},
+  wolf_jerky:      {name:'Wolf Jerky',       icon:'🥓',sell:280, potion:{heal:500}, desc:'Smoke-cured strips of dire-wolf. Chewy, fatty, warming. Instant 500 HP.'},
+  ogre_roast:      {name:'Ogre Roast',       icon:'🍖',sell:420, potion:{heal:400, buff:{str:2,dur:60}}, desc:'A slab of ogre haunch roasted over coals. Restores 400 HP and bolsters you — +2 Strength for 60s.'},
+  troll_stew:      {name:'Troll Stew',       icon:'🍲',sell:640, potion:{regen:960, regenDur:8}, desc:'Troll meat and regenerative blood, stewed thick. You feel the wounds closing — 960 HP over 8s.'},
+  drake_roast:     {name:'Drake Roast',      icon:'🍖',sell:950, potion:{heal:1200}, desc:'Seared drake flank, still faintly smoking. Rich enough to mend deep wounds. Instant 1200 HP.'},
+  infernal_roast:  {name:'Infernal Roast',   icon:'🍖',sell:1500,potion:{heal:800, buff:{str:3,def:3,dur:90}}, desc:'Demon-flesh roasted in brimstone. Restores 800 HP and steels you — +3 Strength & +3 Defence for 90s.'},
   // Rare drops
   birds_nest:      {name:"Bird's Nest",       icon:'🪹',sell:990,  rare:true},
   ancient_seed:    {name:'Ancient Seed',       icon:'🌱',sell:825,  rare:true},
@@ -6090,8 +6090,8 @@ function combatGearStatBlock(itemId){
   var it=ITEMS[itemId];
   if(!it||!it.cgear) return '';
   var s=COMBAT_GEAR_STATS[itemId]||{atk:0,str:0,def:0};
-  var tierNames={1:'Bronze',2:'Iron',3:'Steel',4:'Mithril',5:'Cobalt',6:'Runite',7:'Starsteel'};
-  var slotLabels={helmet:'Helmet',chest:'Chest',legs:'Legs',gloves:'Gloves',boots:'Boots',weapon:'Weapon',shield:'Shield'};
+  var tierNames={1:'Bronze',2:'Iron',3:'Steel',4:'Mithril',5:'Cobalt',6:'Runite',7:'Starsteel',8:'Void'};
+  var slotLabels={helmet:'Helmet',chest:'Chest',legs:'Legs',gloves:'Gloves',boots:'Boots',weapon:'Weapon',shield:'Shield',cape:'Cape'};
   var tierName=tierNames[it.ctier]||('Tier '+it.ctier);
   var slotLabel=slotLabels[it.cslot]||it.cslot;
   var parts=[];
@@ -6099,8 +6099,17 @@ function combatGearStatBlock(itemId){
   if(s.str) parts.push('<span style="color:#e0762f"><span style="display:inline-block;font-size:14px;line-height:1;vertical-align:-2px;margin-right:2px">'+iconHTML('strength')+'</span>+'+s.str+' Str</span>');
   if(s.def) parts.push('<span style="color:#5478c8"><span style="display:inline-block;font-size:14px;line-height:1;vertical-align:-2px;margin-right:2px">'+iconHTML('defence')+'</span>+'+s.def+' Def</span>');
   var statLine=parts.length?parts.join(' &nbsp; '):'<span style="color:var(--muted)">No combat stats</span>';
+  // Equip requirement (1.0.26) — green if met, red lock if not.
+  var reqLine='';
+  var req=(typeof combatGearReq==='function')?combatGearReq(itemId):null;
+  if(req){
+    var met=(typeof cmbLvl==='function')&&cmbLvl(req.stat)>=req.level;
+    var statName=req.stat==='attack'?'Attack':'Defence';
+    reqLine='<div style="font-size:12px;margin-top:6px;color:'+(met?'#7da33f':'#d04848')+'">'
+      +(met?'✓':'🔒')+' Requires '+req.level+' '+statName+(met?'':' (you have '+cmbLvl(req.stat)+')')+'</div>';
+  }
   return '<div style="color:var(--ember);font-size:12px;letter-spacing:.5px;margin-bottom:6px">⚔ '+tierName+' · Tier '+it.ctier+' · '+slotLabel+'</div>'
-    +'<div style="font-size:14px;line-height:1.7">'+statLine+'</div>';
+    +'<div style="font-size:14px;line-height:1.7">'+statLine+'</div>'+reqLine;
 }
 
 /* Build a reusable enchant/gem block for gem-tier jewelry (ring/amulet/pendant/jewel).
@@ -9090,8 +9099,31 @@ function anyLoadoutHas(id){
   for(var k in se) if(se[k]===id) return true;
   return false;
 }
+/* Equip requirement for combat gear (1.0.26). Weapons gate on Attack level,
+   armour/shields/etc on Defence level, by crafted tier. Derived from ctier+cslot
+   so monster-drop weapons & armour are covered automatically. Returns
+   {stat:'attack'|'defence', level} or null for non-combat / unranked items. */
+const COMBAT_GEAR_REQ={1:1,2:10,3:20,4:30,5:40,6:55,7:70,8:90};
+function combatGearReq(id){
+  const it=ITEMS[id];
+  if(!it||!it.cgear||!it.ctier) return null;
+  const stat=(it.cslot==='weapon')?'attack':'defence';
+  return {stat, level:COMBAT_GEAR_REQ[it.ctier]||1};
+}
+/* True if the player meets a combat item's level requirement (or it has none). */
+function meetsCombatReq(id){
+  const r=combatGearReq(id);
+  return !r || cmbLvl(r.stat)>=r.level;
+}
+
 function equipBodyItem(id,slot,scope){
   scope=scope||'skilling';
+  // ── Combat gear level gate (1.0.26) ──
+  const _req=combatGearReq(id);
+  if(_req && cmbLvl(_req.stat)<_req.level){
+    toast(`🔒 Requires ${_req.level} ${_req.stat==='attack'?'Attack':'Defence'} to wield ${(ITEMS[id]&&ITEMS[id].name)||'this'}.`);
+    return;
+  }
   // Ownership lives in three places: state.items (satchel quantity), state.gear
   // (shop-bought permanents), and state.skillingGear (skilling-set pieces — these
   // never enter the satchel as quantities, they're a separate one-of collection).
@@ -10926,10 +10958,10 @@ function openGearModal(){
    XP per damage: styleStat += dmg*4   hp += dmg*1.33
    Kill XP:      mon.xp split 75/25 between style and HP.                     */
 const COMBAT_STATS={
-  attack:    {name:'Attack',    icon:'⚔️', desc:'Pushes your damage rolls toward your max hit.\nEach Attack level adds +1 to Attack.\nGear atk adds +2 per point.\nHigher Attack vs the foe Defence means higher rolls — every swing lands, there are no misses.'},
-  strength:  {name:'Strength',  icon:'💪', desc:'Raises your maximum damage roll.\nEach Strength level adds +0.13 to Max Hit.\nGear str adds +0.5 per point.\nWhen you land a hit, damage = random 1…Max Hit.'},
-  defence:   {name:'Defence',   icon:'🛡️', desc:'Reduces how often foes connect with you.\nEach Defence level adds +1 to your Defence stat.\nGear def adds +1 per point.\nFoe hit chance = foe attack ÷ (foe attack + your defence).'},
-  hitpoints: {name:'Hitpoints', icon:'❤️', desc:'Your health pool. Reach 0 and you retreat.\nMax HP = 10 + Hitpoints level + ¼ × gear def.\nGains XP from every point of damage you deal, and a share of every kill.\nStarts at level 10.'},
+  attack:    {name:'Attack',    icon:'⚔️', desc:'Your accuracy — the chance each swing lands.\nEach Attack level adds +1.5 accuracy; gear atk adds +3.5 per point.\nHit chance = your accuracy ÷ (your accuracy + foe Defence). Lose the roll and you hit 0 (a miss).'},
+  strength:  {name:'Strength',  icon:'💪', desc:'Raises your maximum damage roll.\nEach Strength level adds +1.6 max hit; gear str adds +5 per point.\nWhen a hit lands, damage = 50–100% of your max hit.'},
+  defence:   {name:'Defence',   icon:'🛡️', desc:'Reduces how often foes connect with you.\nEach Defence level adds +1.2; gear def adds +1 per point.\nFoe hit chance = foe attack ÷ (foe attack + your defence).'},
+  hitpoints: {name:'Hitpoints', icon:'❤️', desc:'Your health pool. Reach 0 and you retreat.\nMax HP = Hitpoints level × 10 + ½ × gear def (Lv 10 = 100, Lv 99 = 990).\nGains XP from every point of damage you deal, and a share of every kill.\nStarts at level 10.'},
 };
 
 function cmbXp(stat){ return (state&&state.combatXp&&state.combatXp[stat])||0; }
@@ -10941,37 +10973,43 @@ function combatLevel(){
   return Math.max(1, Math.floor((a+s+d+h)/4));
 }
 
-/* Player accuracy stat: (attack level + 2× gear atk) × (1 + atkBoost%).
-   atkBoost combines jewelry enchants (Warlord, Bloodthirst, Warband set, etc.)
-   and combat socket gems (Sanguine line) — all aggregated in combatBonusesAll. */
+/* ════ COMBAT MATH v2 (1.0.26) — unified number-scale with monsters ════════════
+   HP ×10 (Lv10→100, Lv99→990) and all derived stats re-based so player and
+   monster numbers live in one universe. Hit chance = acc/(acc+foeDef); a lost
+   roll deals 0 (a real miss). See COMBAT_P constants — they mirror the offline
+   balance simulator that tuned the monster curve. */
+const COMBAT_P={ HIT_LVL:1.6, HIT_GEAR:5.0, ACC_LVL:1.5, ACC_GEAR:3.5,
+                 DEF_LVL:1.2, DEF_GEAR:1.0, HP_LVL:10, HP_GEAR:0.5,
+                 HIT_MIN:0.5, HP_BOOST_FACTOR:0.3 };
+
+/* Player accuracy: (attack lvl ×1.5 + gear atk ×3.5) × (1+atkBoost) × class. */
 function playerAccuracy(){
   const cs=combatStats();
   const b=combatBonusesAll();
-  return Math.round((cmbLvl('attack') + cs.atk*2) * (1 + (b.atkBoost||0)) * classAccuracyMult());
+  return Math.round((cmbLvl('attack')*COMBAT_P.ACC_LVL + cs.atk*COMBAT_P.ACC_GEAR) * (1 + (b.atkBoost||0)) * classAccuracyMult());
 }
 
-/* Player max hit: floor(1 + str_lvl*0.13 + gear_str*0.5) × (1 + atkBoost%).
-   The atkBoost multiplier applies to both accuracy and max hit — "Attack" in
-   the enchant descriptions is the overall offensive output, not a single stat. */
+/* Player max hit: (strength lvl ×1.6 + gear str ×5.0) × (1+atkBoost) × class. */
 function playerMaxHit(){
   const cs=combatStats();
   const b=combatBonusesAll();
-  return Math.max(1, Math.floor((1 + cmbLvl('strength')*0.13 + cs.str*0.5) * (1 + (b.atkBoost||0)) * classMaxHitMult()));
+  return Math.max(1, Math.round((cmbLvl('strength')*COMBAT_P.HIT_LVL + cs.str*COMBAT_P.HIT_GEAR) * (1 + (b.atkBoost||0)) * classMaxHitMult()));
 }
 
-/* Player defence stat: (defence level + gear def) × (1 + defBoost%). */
+/* Player defence: (defence lvl ×1.2 + gear def ×1.0) × (1+defBoost) × class. */
 function playerDefence(){
   const cs=combatStats();
   const b=combatBonusesAll();
-  return Math.round((cmbLvl('defence') + cs.def) * (1 + (b.defBoost||0)) * classDefenceMult());
+  return Math.round((cmbLvl('defence')*COMBAT_P.DEF_LVL + cs.def*COMBAT_P.DEF_GEAR) * (1 + (b.defBoost||0)) * classDefenceMult());
 }
 
-/* Derived max HP: (10 + HP lvl + gear_def/4) × (1 + hpBoost%). hpBoost comes
-   from Verdant socket gems and Warband/Bulwark/Warlord jewelry enchants. */
+/* Derived max HP: (HP lvl ×10 + gear def ×0.5) × (1 + hpBoost×0.3) × class.
+   hpBoost is applied at ⅓ strength now so gems/enchants flavor the pool rather
+   than doubling it on the new ×10 scale. */
 function maxHpFromStats(){
   const cs=combatStats();
   const b=combatBonusesAll();
-  return Math.max(1, Math.floor((10 + cmbLvl('hitpoints') + Math.floor(cs.def/4)) * (1 + (b.hpBoost||0)) * classHpMult()));
+  return Math.max(10, Math.round((cmbLvl('hitpoints')*COMBAT_P.HP_LVL + cs.def*COMBAT_P.HP_GEAR) * (1 + (b.hpBoost||0)*COMBAT_P.HP_BOOST_FACTOR) * classHpMult()));
 }
 
 /* Player swing time (ms per attack) — base 2400ms, Agility shaves 12ms per level.
@@ -14517,10 +14555,10 @@ function renderStats(){
   // Matches the in-combat sidebar formulas exactly so numbers don't disagree.
   const cs=combatStats();
   const aLvl=cmbLvl('attack'), sLvl=cmbLvl('strength'), dLvl=cmbLvl('defence'), hLvl=cmbLvl('hitpoints');
-  const accBase=aLvl, accGear=cs.atk*2, accTot=accBase+accGear;
-  const hitBase=Math.max(1, Math.floor(1 + sLvl*0.13)), hitTot=playerMaxHit(), hitGear=hitTot-hitBase;
-  const defBase=dLvl, defGear=cs.def, defTot=defBase+defGear;
-  const hpBase=10+hLvl, hpGear=Math.floor(cs.def/4), hpTot=hpBase+hpGear;
+  const accBase=Math.round(aLvl*COMBAT_P.ACC_LVL), accTot=playerAccuracy(), accGear=accTot-accBase;
+  const hitBase=Math.round(sLvl*COMBAT_P.HIT_LVL), hitTot=playerMaxHit(), hitGear=hitTot-hitBase;
+  const defBase=Math.round(dLvl*COMBAT_P.DEF_LVL), defTot=playerDefence(), defGear=defTot-defBase;
+  const hpBase=Math.round(hLvl*COMBAT_P.HP_LVL), hpTot=maxHpFromStats(), hpGear=hpTot-hpBase;
   const swingMs=playerSwingMs();
   const agiLvl=levelFromXp((state.xp&&state.xp.agility)||0);
   const speedPct=Math.round(100*(COMBAT_BASE_SWING_MS-swingMs)/COMBAT_BASE_SWING_MS);
@@ -15427,93 +15465,88 @@ const MONSTERS=[
   // flavor only — used by combat tick to roll player-vs-foe matchups.
   // weakTo / resistTo: damage TYPES the foe is vulnerable to / resists when YOU
   // strike them with that weapon style. Wired into combatTick (±15% dmg, see [JS-CMB]).
-  {id:'rat',         zone:'rat_warrens', name:'Cave Rat',         icon:'🐀', lvl:1,  hp:12,  atk:2,   str:2,   def:1,   coins:3,   xp:8,   swingMs:1700, dmgType:'stab',  weakTo:'crush'},
-  {id:'plague_rat',  zone:'rat_warrens', name:'Plague Rat',       icon:'🐀', lvl:3,  hp:22,  atk:5,   str:4,   def:3,   coins:6,   xp:14,  swingMs:1600, dmgType:'stab',  weakTo:'crush'},
-  {id:'dire_rat',    zone:'rat_warrens', name:'Dire Rat',         icon:'🐀', lvl:6,  hp:40,  atk:9,   str:7,   def:6,   coins:12,  xp:24,  swingMs:1700, dmgType:'stab',  weakTo:'crush'},
-  {id:'brood_rat',   zone:'rat_warrens', name:'Rat Brood Mother', icon:'🐀', lvl:9,  hp:70,  atk:15,  str:11,  def:10,  coins:22,  xp:42,  swingMs:2000, dmgType:'crush', weakTo:'crush'},
-  {id:'rat_queen',   zone:'rat_warrens', name:'Rat Queen',        icon:'👑', lvl:12, hp:180, atk:24,  str:18,  def:17,  coins:60,  xp:130, swingMs:2400, boss:true, bossReq:'royal_rat_sigil', dmgType:'slash', weakTo:'crush'},
+  {id:'rat',         zone:'rat_warrens', name:'Cave Rat',         icon:'🐀', lvl:1,  hp:50,  atk:14,   str:4,   def:7,   coins:3,   xp:8,   swingMs:1700, dmgType:'stab',  weakTo:'crush'},
+  {id:'plague_rat',  zone:'rat_warrens', name:'Plague Rat',       icon:'🐀', lvl:3,  hp:63,  atk:16,   str:8,   def:8,   coins:6,   xp:14,  swingMs:1600, dmgType:'stab',  weakTo:'crush'},
+  {id:'dire_rat',    zone:'rat_warrens', name:'Dire Rat',         icon:'🐀', lvl:6,  hp:84,  atk:19,   str:14,   def:10,   coins:12,  xp:24,  swingMs:1700, dmgType:'stab',  weakTo:'crush'},
+  {id:'brood_rat',   zone:'rat_warrens', name:'Rat Brood Mother', icon:'🐀', lvl:9,  hp:134,  atk:27,  str:29,  def:17,  coins:22,  xp:42,  swingMs:2000, dmgType:'crush', weakTo:'crush'},
+  {id:'rat_queen',   zone:'rat_warrens', name:'Rat Queen',        icon:'👑', lvl:12, hp:439, atk:71,  str:52,  def:39,  coins:60,  xp:130, swingMs:2400, boss:true, bossReq:'royal_rat_sigil', dmgType:'slash', weakTo:'crush'},
   // ── Spider Hollow ─────────────────────────────────────────────────────────
-  {id:'spider',           zone:'spider_hollow', name:'Cave Spider',     icon:'🕷️', lvl:5,  hp:28,  atk:7,   str:4,   def:3,   coins:8,   xp:18,  swingMs:1500, dmgType:'stab', weakTo:'crush', resistTo:'stab'},
-  {id:'web_weaver',       zone:'spider_hollow', name:'Web Weaver',      icon:'🕷️', lvl:8,  hp:50,  atk:11,  str:7,   def:6,   coins:14,  xp:28,  swingMs:1700, dmgType:'stab', weakTo:'crush', resistTo:'stab'},
-  {id:'venomfang',        zone:'spider_hollow', name:'Venomfang',       icon:'🕷️', lvl:11, hp:75,  atk:16,  str:12,  def:10,  coins:22,  xp:44,  swingMs:1600, dmgType:'stab', weakTo:'crush', resistTo:'stab'},
-  {id:'brood_matron',     zone:'spider_hollow', name:'Brood Matron',    icon:'🕷️', lvl:14, hp:110, atk:22,  str:17,  def:15,  coins:35,  xp:70,  swingMs:2100, dmgType:'stab', weakTo:'crush', resistTo:'stab'},
-  {id:'silkweaver_queen', zone:'spider_hollow', name:'Silkweaver Queen',icon:'👑', lvl:17, hp:260, atk:32,  str:25,  def:23,  coins:90,  xp:175, swingMs:2500, boss:true, bossReq:'silken_sigil', dmgType:'stab', weakTo:'crush', resistTo:'stab'},
+  {id:'spider',           zone:'spider_hollow', name:'Cave Spider',     icon:'🕷️', lvl:5,  hp:76,  atk:18,   str:12,   def:9,   coins:8,   xp:18,  swingMs:1500, dmgType:'stab', weakTo:'crush', resistTo:'stab'},
+  {id:'web_weaver',       zone:'spider_hollow', name:'Web Weaver',      icon:'🕷️', lvl:8,  hp:97,  atk:21,  str:18,   def:11,   coins:14,  xp:28,  swingMs:1700, dmgType:'stab', weakTo:'crush', resistTo:'stab'},
+  {id:'venomfang',        zone:'spider_hollow', name:'Venomfang',       icon:'🕷️', lvl:11, hp:160,  atk:38,  str:26,  def:16,  coins:22,  xp:44,  swingMs:1600, dmgType:'stab', weakTo:'crush', resistTo:'stab'},
+  {id:'brood_matron',     zone:'spider_hollow', name:'Brood Matron',    icon:'🕷️', lvl:14, hp:234, atk:50,  str:46,  def:26,  coins:35,  xp:70,  swingMs:2100, dmgType:'stab', weakTo:'crush', resistTo:'stab'},
+  {id:'silkweaver_queen', zone:'spider_hollow', name:'Silkweaver Queen',icon:'👑', lvl:17, hp:529, atk:79,  str:71,  def:47,  coins:90,  xp:175, swingMs:2500, boss:true, bossReq:'silken_sigil', dmgType:'stab', weakTo:'crush', resistTo:'stab'},
   // ── Goblin Cave ───────────────────────────────────────────────────────────
-  {id:'goblin',          zone:'goblin_cave', name:'Goblin',           icon:'👺', lvl:10, hp:50,  atk:12,  str:7,   def:6,   coins:15,  xp:30,  swingMs:2000, dmgType:'slash', weakTo:'slash'},
-  {id:'goblin_archer',   zone:'goblin_cave', name:'Goblin Archer',    icon:'🏹', lvl:13, hp:75,  atk:17,  str:12,  def:9,   coins:22,  xp:46,  swingMs:1500, dmgType:'stab',  weakTo:'slash'},
-  {id:'goblin_brute',    zone:'goblin_cave', name:'Goblin Brute',     icon:'👹', lvl:16, hp:130, atk:25,  str:19,  def:16,  coins:38,  xp:76,  swingMs:2400, dmgType:'slash', weakTo:'stab',  resistTo:'slash'},
-  {id:'goblin_shaman',   zone:'goblin_cave', name:'Goblin Shaman',    icon:'🧙', lvl:19, hp:165, atk:30,  str:24,  def:18,  coins:50,  xp:100, swingMs:2000, dmgType:'crush', weakTo:'slash'},
-  {id:'goblin_warchief', zone:'goblin_cave', name:'Goblin Warchief',  icon:'👑', lvl:22, hp:340, atk:44,  str:35,  def:30,  coins:130, xp:250, swingMs:2600, boss:true, bossReq:'warchief_banner', dmgType:'slash', weakTo:'stab', resistTo:'slash'},
+  {id:'goblin',          zone:'goblin_cave', name:'Goblin',           icon:'👺', lvl:10, hp:151,  atk:37,  str:24,   def:15,   coins:15,  xp:30,  swingMs:2000, dmgType:'slash', weakTo:'slash'},
+  {id:'goblin_archer',   zone:'goblin_cave', name:'Goblin Archer',    icon:'🏹', lvl:13, hp:172,  atk:40,  str:30,  def:18,   coins:22,  xp:46,  swingMs:1500, dmgType:'stab',  weakTo:'slash'},
+  {id:'goblin_brute',    zone:'goblin_cave', name:'Goblin Brute',     icon:'👹', lvl:16, hp:193, atk:43,  str:37,  def:19,  coins:38,  xp:76,  swingMs:2400, dmgType:'slash', weakTo:'stab',  resistTo:'slash'},
+  {id:'goblin_shaman',   zone:'goblin_cave', name:'Goblin Shaman',    icon:'🧙', lvl:19, hp:279, atk:56,  str:61,  def:31,  coins:50,  xp:100, swingMs:2000, dmgType:'crush', weakTo:'slash'},
+  {id:'goblin_warchief', zone:'goblin_cave', name:'Goblin Warchief',  icon:'👑', lvl:22, hp:731, atk:122,  str:94,  def:68,  coins:130, xp:250, swingMs:2600, boss:true, bossReq:'warchief_banner', dmgType:'slash', weakTo:'stab', resistTo:'slash'},
   // ── Skeleton Crypt (1.0.93) ────────────────────────────────────────────────
   // Undead: bones SHATTER under crushing weapons but laugh off slashes. Wights
   // are insubstantial flesh — slashes find them; crushes pass through.
-  {id:'skeleton',     zone:'skeleton_crypt', name:'Skeleton',         icon:'💀', lvl:18, hp:80,  atk:20, str:13, def:12, coins:25,  xp:50,  swingMs:2100, dmgType:'crush', weakTo:'crush', resistTo:'slash'},
-  {id:'skel_archer',  zone:'skeleton_crypt', name:'Skeletal Archer',  icon:'💀', lvl:21, hp:115, atk:26, str:18, def:14, coins:35,  xp:70,  swingMs:1600, dmgType:'stab',  weakTo:'crush', resistTo:'slash'},
-  {id:'crypt_wight',  zone:'skeleton_crypt', name:'Crypt Wight',      icon:'👻', lvl:24, hp:175, atk:33, str:25, def:20, coins:50,  xp:100, swingMs:2300, dmgType:'slash', weakTo:'slash', resistTo:'crush'},
-  {id:'bone_knight',  zone:'skeleton_crypt', name:'Bone Knight',      icon:'⚔️', lvl:27, hp:245, atk:42, str:33, def:30, coins:75,  xp:150, swingMs:2600, dmgType:'crush', weakTo:'crush', resistTo:'stab'},
-  {id:'lich',         zone:'skeleton_crypt', name:'Lich',             icon:'👑', lvl:30, hp:470, atk:60, str:50, def:44, coins:200, xp:360, swingMs:2800, boss:true, bossReq:'lich_phylactery', dmgType:'slash', weakTo:'slash', resistTo:'crush'},
+  {id:'skeleton',     zone:'skeleton_crypt', name:'Skeleton',         icon:'💀', lvl:18, hp:206,  atk:45, str:41, def:21, coins:25,  xp:50,  swingMs:2100, dmgType:'crush', weakTo:'crush', resistTo:'slash'},
+  {id:'skel_archer',  zone:'skeleton_crypt', name:'Skeletal Archer',  icon:'💀', lvl:21, hp:269, atk:65, str:49, def:29, coins:35,  xp:70,  swingMs:1600, dmgType:'stab',  weakTo:'crush', resistTo:'slash'},
+  {id:'crypt_wight',  zone:'skeleton_crypt', name:'Crypt Wight',      icon:'👻', lvl:24, hp:286, atk:69, str:56, def:30, coins:50,  xp:100, swingMs:2300, dmgType:'slash', weakTo:'slash', resistTo:'crush'},
+  {id:'bone_knight',  zone:'skeleton_crypt', name:'Bone Knight',      icon:'⚔️', lvl:27, hp:407, atk:87, str:87, def:47, coins:75,  xp:150, swingMs:2600, dmgType:'crush', weakTo:'crush', resistTo:'stab'},
+  {id:'lich',         zone:'skeleton_crypt', name:'Lich',             icon:'👑', lvl:30, hp:1046, atk:174, str:128, def:98, coins:200, xp:360, swingMs:2800, boss:true, bossReq:'lich_phylactery', dmgType:'slash', weakTo:'slash', resistTo:'crush'},
   // ── Wolf Den (1.0.93) ─────────────────────────────────────────────────────
   // Beasts: fast, claw-and-fang, lightly armored. Stab finds the gap between
   // ribs; crush bounces off thick winter pelts. Ironfang's scarred hide turns
   // most blades — only a precise thrust gets through.
-  {id:'wolf',         zone:'wolf_den', name:'Dire Wolf',         icon:'🐺', lvl:30, hp:140, atk:33, str:22, def:20, coins:55,  xp:90,  swingMs:1600, dmgType:'slash', weakTo:'stab'},
-  {id:'frost_wolf',   zone:'wolf_den', name:'Frost Wolf',        icon:'🐺', lvl:33, hp:200, atk:41, str:28, def:25, coins:75,  xp:130, swingMs:1700, dmgType:'slash', weakTo:'slash', resistTo:'crush'},
-  {id:'alpha_wolf',   zone:'wolf_den', name:'Alpha Wolf',        icon:'🐺', lvl:36, hp:285, atk:51, str:38, def:33, coins:105, xp:180, swingMs:1800, dmgType:'slash', weakTo:'stab'},
-  {id:'pack_hunter',  zone:'wolf_den', name:'Pack Hunter',       icon:'🐺', lvl:39, hp:365, atk:62, str:47, def:41, coins:145, xp:235, swingMs:1500, dmgType:'stab',  weakTo:'crush'},
-  {id:'ironfang',     zone:'wolf_den', name:'Ironfang',          icon:'👑', lvl:42, hp:650, atk:84, str:68, def:60, coins:290, xp:460, swingMs:2400, boss:true, bossReq:'ironfang_pelt', dmgType:'stab', weakTo:'stab', resistTo:'crush'},
+  {id:'wolf',         zone:'wolf_den', name:'Dire Wolf',         icon:'🐺', lvl:30, hp:391, atk:95, str:71, def:42, coins:55,  xp:90,  swingMs:1600, dmgType:'slash', weakTo:'stab'},
+  {id:'frost_wolf',   zone:'wolf_den', name:'Frost Wolf',        icon:'🐺', lvl:33, hp:412, atk:98, str:77, def:44, coins:75,  xp:130, swingMs:1700, dmgType:'slash', weakTo:'slash', resistTo:'crush'},
+  {id:'alpha_wolf',   zone:'wolf_den', name:'Alpha Wolf',        icon:'🐺', lvl:36, hp:433, atk:101, str:83, def:46, coins:105, xp:180, swingMs:1800, dmgType:'slash', weakTo:'stab'},
+  {id:'pack_hunter',  zone:'wolf_den', name:'Pack Hunter',       icon:'🐺', lvl:39, hp:597, atk:127, str:126, def:68, coins:145, xp:235, swingMs:1500, dmgType:'stab',  weakTo:'crush'},
+  {id:'ironfang',     zone:'wolf_den', name:'Ironfang',          icon:'👑', lvl:42, hp:1485, atk:241, str:180, def:137, coins:290, xp:460, swingMs:2400, boss:true, bossReq:'ironfang_pelt', dmgType:'stab', weakTo:'stab', resistTo:'crush'},
   // ── Ogre Stronghold (1.0.1) — full tier: 4 standard + Ogre Warlord boss ─────
   // Crush brutes weak to slash; the Houndmaster is a fast slasher (weak to stab)
   // and the Seer resists stab — style-swap zone. Boss gated by warlord_totem.
-  {id:'ogre_grunt',       zone:'ogre_stronghold', name:'Ogre Grunt',       icon:'👹', lvl:44, hp:430,  atk:70,  str:54,  def:47,  coins:165, xp:255, swingMs:2600, dmgType:'crush', weakTo:'slash'},
-  {id:'ogre',             zone:'ogre_stronghold', name:'Ogre',             icon:'👹', lvl:47, hp:540,  atk:82,  str:64,  def:55,  coins:200, xp:310, swingMs:2800, dmgType:'crush', weakTo:'slash', resistTo:'crush'},
-  {id:'ogre_houndmaster', zone:'ogre_stronghold', name:'Ogre Houndmaster', icon:'👹', lvl:50, hp:670,  atk:95,  str:76,  def:64,  coins:245, xp:380, swingMs:2000, dmgType:'slash', weakTo:'stab'},
-  {id:'ogre_seer',        zone:'ogre_stronghold', name:'Ogre Seer',        icon:'👹', lvl:53, hp:820,  atk:110, str:90,  def:74,  coins:295, xp:460, swingMs:2200, dmgType:'crush', weakTo:'slash', resistTo:'stab'},
-  {id:'ogre_warlord',     zone:'ogre_stronghold', name:'Ogre Warlord',     icon:'👑', lvl:56, hp:1350, atk:158, str:128, def:106, coins:580, xp:820, swingMs:2900, boss:true, bossReq:'warlord_totem', dmgType:'crush', weakTo:'slash', resistTo:'crush'},
+  {id:'ogre_grunt',       zone:'ogre_stronghold', name:'Ogre Grunt',       icon:'👹', lvl:44, hp:567,  atk:134,  str:103,  def:60,  coins:165, xp:255, swingMs:2600, dmgType:'crush', weakTo:'slash'},
+  {id:'ogre',             zone:'ogre_stronghold', name:'Ogre',             icon:'👹', lvl:47, hp:588,  atk:137,  str:109,  def:62,  coins:200, xp:310, swingMs:2800, dmgType:'crush', weakTo:'slash', resistTo:'crush'},
+  {id:'ogre_houndmaster', zone:'ogre_stronghold', name:'Ogre Houndmaster', icon:'👹', lvl:50, hp:609,  atk:140,  str:115,  def:64,  coins:245, xp:380, swingMs:2000, dmgType:'slash', weakTo:'stab'},
+  {id:'ogre_seer',        zone:'ogre_stronghold', name:'Ogre Seer',        icon:'👹', lvl:53, hp:837,  atk:175, str:172,  def:94,  coins:295, xp:460, swingMs:2200, dmgType:'crush', weakTo:'slash', resistTo:'stab'},
+  {id:'ogre_warlord',     zone:'ogre_stronghold', name:'Ogre Warlord',     icon:'👑', lvl:56, hp:2025, atk:321, str:240, def:182, coins:580, xp:820, swingMs:2900, boss:true, bossReq:'warlord_totem', dmgType:'crush', weakTo:'slash', resistTo:'crush'},
   // ── Troll Caverns ─────────────────────────────────────────────────────────
   // ── Troll Caverns (1.0.3) — full tier: 4 trolls + Troll King boss ───────────
   // Slow crush brutes with stony hides. Stone Troll resists crush (rock plate);
   // Moss Troll regenerates (flavor); Cavern Troll is the red-eyed bruiser.
-  {id:'cave_troll',   zone:'troll_caverns', name:'Cave Troll',    icon:'🗿', lvl:58, hp:950,  atk:168, str:138, def:116, coins:620,  xp:860,  swingMs:3000, dmgType:'crush', weakTo:'slash'},
-  {id:'troll',        zone:'troll_caverns', name:'Stone Troll',   icon:'🗿', lvl:61, hp:1150, atk:188, str:156, def:130, coins:700,  xp:980,  swingMs:3200, dmgType:'crush', weakTo:'stab',  resistTo:'crush'},
-  {id:'moss_troll',   zone:'troll_caverns', name:'Moss Troll',    icon:'🗿', lvl:64, hp:1380, atk:210, str:175, def:146, coins:800,  xp:1120, swingMs:2900, dmgType:'crush', weakTo:'slash'},
-  {id:'cavern_troll', zone:'troll_caverns', name:'Cavern Troll',  icon:'🗿', lvl:67, hp:1660, atk:236, str:198, def:164, coins:920,  xp:1290, swingMs:3100, dmgType:'crush', weakTo:'stab'},
-  {id:'troll_king',   zone:'troll_caverns', name:'Troll King',    icon:'👑', lvl:70, hp:3000, atk:318, str:276, def:226, coins:1350, xp:1980, swingMs:3300, boss:true, bossReq:'granite_sigil', dmgType:'crush', weakTo:'slash', resistTo:'crush'},
+  {id:'cave_troll',   zone:'troll_caverns', name:'Cave Troll',    icon:'🗿', lvl:58, hp:769,  atk:178, str:136, def:79, coins:620,  xp:860,  swingMs:3000, dmgType:'crush', weakTo:'slash'},
+  {id:'troll',        zone:'troll_caverns', name:'Stone Troll',   icon:'🗿', lvl:61, hp:790, atk:180, str:142, def:81, coins:700,  xp:980,  swingMs:3200, dmgType:'crush', weakTo:'stab',  resistTo:'crush'},
+  {id:'moss_troll',   zone:'troll_caverns', name:'Moss Troll',    icon:'🗿', lvl:64, hp:806, atk:183, str:148, def:83, coins:800,  xp:1120, swingMs:2900, dmgType:'crush', weakTo:'slash'},
+  {id:'cavern_troll', zone:'troll_caverns', name:'Cavern Troll',  icon:'🗿', lvl:67, hp:1099, atk:227, str:218, def:122, coins:920,  xp:1290, swingMs:3100, dmgType:'crush', weakTo:'stab'},
+  {id:'troll_king',   zone:'troll_caverns', name:'Troll King',    icon:'👑', lvl:70, hp:2610, atk:411, str:300, def:235, coins:1350, xp:1980, swingMs:3300, boss:true, bossReq:'granite_sigil', dmgType:'crush', weakTo:'slash', resistTo:'crush'},
   // ── Wyvern Roost ──────────────────────────────────────────────────────────
   // ── Wyvern Roost (1.0.4) — draconic apex: 4 drakes + Emberwyrm boss ─────────
   // Molten-scaled flyers. Hard scales resist slash; the Cinder Drake bites (stab)
   // and the Magma Wyrm body-slams (crush, resists crush). Boss gated by Ember Crest.
-  {id:'drake',        zone:'wyvern_roost', name:'Crag Drake',     icon:'🐉', lvl:72, hp:2000, atk:340, str:290, def:238, coins:1450, xp:2150, swingMs:2200, dmgType:'slash', weakTo:'stab'},
-  {id:'wyvern',       zone:'wyvern_roost', name:'Ashwing Wyvern', icon:'🐉', lvl:75, hp:2400, atk:370, str:318, def:260, coins:1600, xp:2400, swingMs:2400, dmgType:'slash', weakTo:'stab', resistTo:'slash'},
-  {id:'cinder_drake', zone:'wyvern_roost', name:'Cinder Drake',   icon:'🐉', lvl:78, hp:2850, atk:405, str:350, def:286, coins:1800, xp:2700, swingMs:2000, dmgType:'stab',  weakTo:'crush'},
-  {id:'magma_wyrm',   zone:'wyvern_roost', name:'Magma Wyrm',     icon:'🐉', lvl:81, hp:3400, atk:445, str:388, def:314, coins:2050, xp:3050, swingMs:2600, dmgType:'crush', weakTo:'stab', resistTo:'crush'},
-  {id:'emberwyrm',    zone:'wyvern_roost', name:'Emberwyrm',      icon:'👑', lvl:84, hp:5400, atk:590, str:520, def:420, coins:3000, xp:4400, swingMs:2700, boss:true, bossReq:'ember_crest', dmgType:'slash', weakTo:'stab', resistTo:'crush'},
+  {id:'drake',        zone:'wyvern_roost', name:'Crag Drake',     icon:'🐉', lvl:72, hp:987, atk:226, str:169, def:102, coins:1450, xp:2150, swingMs:2200, dmgType:'slash', weakTo:'stab'},
+  {id:'wyvern',       zone:'wyvern_roost', name:'Ashwing Wyvern', icon:'🐉', lvl:75, hp:1008, atk:229, str:175, def:104, coins:1600, xp:2400, swingMs:2400, dmgType:'slash', weakTo:'stab', resistTo:'slash'},
+  {id:'cinder_drake', zone:'wyvern_roost', name:'Cinder Drake',   icon:'🐉', lvl:78, hp:1029, atk:232, str:181, def:106, coins:1800, xp:2700, swingMs:2000, dmgType:'stab',  weakTo:'crush'},
+  {id:'magma_wyrm',   zone:'wyvern_roost', name:'Magma Wyrm',     icon:'🐉', lvl:81, hp:1395, atk:287, str:265, def:154, coins:2050, xp:3050, swingMs:2600, dmgType:'crush', weakTo:'stab', resistTo:'crush'},
+  {id:'emberwyrm',    zone:'wyvern_roost', name:'Emberwyrm',      icon:'👑', lvl:84, hp:2858, atk:436, str:353, def:256, coins:3000, xp:4400, swingMs:2700, boss:true, bossReq:'ember_crest', dmgType:'slash', weakTo:'stab', resistTo:'crush'},
   // ── Demon Sanctum ─────────────────────────────────────────────────────────
   // ── Demon Sanctum (1.0.5) — endgame: 4 demons + Demon Lord boss (L86-99) ────
   // The Demon Lord is now the proper final boss (gated by the Infernal Crest).
   // Hellhound is a fast slasher; Dread Knight is the armored crush wall.
-  {id:'hellhound',    zone:'demon_sanctum', name:'Hellhound',     icon:'😈', lvl:86, hp:5800,  atk:620,  str:550, def:440, coins:3200, xp:4700,  swingMs:1900, dmgType:'slash', weakTo:'stab'},
-  {id:'demon',        zone:'demon_sanctum', name:'Sanctum Demon',  icon:'😈', lvl:89, hp:6900,  atk:680,  str:600, def:480, coins:3500, xp:5200,  swingMs:2500, dmgType:'crush', weakTo:'slash'},
-  {id:'abyssal_fiend',zone:'demon_sanctum', name:'Abyssal Fiend',  icon:'😈', lvl:92, hp:8200,  atk:750,  str:670, def:530, coins:3900, xp:5800,  swingMs:2300, dmgType:'stab',  weakTo:'crush', resistTo:'stab'},
-  {id:'dread_knight', zone:'demon_sanctum', name:'Dread Knight',   icon:'😈', lvl:95, hp:9800,  atk:830,  str:740, def:600, coins:4400, xp:6500,  swingMs:2700, dmgType:'crush', weakTo:'stab',  resistTo:'crush'},
-  {id:'demon_lord',   zone:'demon_sanctum', name:'Demon Lord',     icon:'👑', lvl:99, hp:13500, atk:1020, str:920, def:720, coins:7000, xp:10000, swingMs:2800, boss:true, bossReq:'infernal_crest', dmgType:'slash', weakTo:'slash', resistTo:'crush'},
+  {id:'hellhound',    zone:'demon_sanctum', name:'Hellhound',     icon:'😈', lvl:86, hp:1084,  atk:240,  str:198, def:111, coins:3200, xp:4700,  swingMs:1900, dmgType:'slash', weakTo:'stab'},
+  {id:'demon',        zone:'demon_sanctum', name:'Sanctum Demon',  icon:'😈', lvl:89, hp:1100,  atk:243,  str:204, def:113, coins:3500, xp:5200,  swingMs:2500, dmgType:'crush', weakTo:'slash'},
+  {id:'abyssal_fiend',zone:'demon_sanctum', name:'Abyssal Fiend',  icon:'😈', lvl:92, hp:1205,  atk:262,  str:213, def:122, coins:3900, xp:5800,  swingMs:2300, dmgType:'stab',  weakTo:'crush', resistTo:'stab'},
+  {id:'dread_knight', zone:'demon_sanctum', name:'Dread Knight',   icon:'😈', lvl:95, hp:1629,  atk:324,  str:309, def:178, coins:4400, xp:6500,  swingMs:2700, dmgType:'crush', weakTo:'stab',  resistTo:'crush'},
+  {id:'demon_lord',   zone:'demon_sanctum', name:'Demon Lord',     icon:'👑', lvl:99, hp:3353, atk:494, str:414, def:296, coins:7000, xp:10000, swingMs:2800, boss:true, bossReq:'infernal_crest', dmgType:'slash', weakTo:'slash', resistTo:'crush'},
 ];
 
-/* ════ COMBAT REBALANCE (1.0.10) ═══════════════════════════════════════════════
-   Every monster's hp / max-hit (str) / defence / attack is DERIVED from its level
-   so the whole 1-99 roster is coherent. The player's max hit caps around ~50 and
-   max HP around ~150, so a monster's max-hit is kept survivable (no one-shots) and
-   its HP is sized to the player's real damage output (no thousand-HP slogs). Bosses
-   get a multiplier. coins / xp / swingMs / damage-types stay as authored.
-   The literal hp/atk/str/def values above are now just placeholders — this governs. */
-(function rebalanceMonsters(){
-  for(const m of MONSTERS){
-    const L=Math.max(1, m.lvl||1), boss=!!m.boss;
-    m.hp  = Math.round((6 + L + L*L*0.075) * (boss?2.2:1));  // sized to player maxhit × a fair hit-count
-    m.str = Math.round((1 + L*0.32)        * (boss?1.4:1));  // foe MAX HIT — survivable at every bracket
-    m.def = Math.round((2 + L*0.78)        * (boss?1.3:1));  // sets your attack-advantage (damage scaling)
-    m.atk = Math.round((2 + L*0.78)        * (boss?1.3:1));  // foe attack-advantage vs your defence
-  }
-})();
+/* ════ COMBAT REBALANCE v2 (1.0.26) ═══════════════════════════════════════════════
+   The old runtime IIFE that re-derived every monster's hp/str/def/atk from level
+   has been REMOVED. The literal hp/atk/str/def values in the MONSTERS table above
+   are now authoritative — they were generated by the offline combat simulator so
+   that each monster is balanced against a tier-appropriate, correctly-geared player
+   on the new ×10 HP scale (hit/miss model). Per role:
+     · normal — player lands ~70%, foe ~45%, dies in ~8 swings
+     · elite  — pre-boss bruiser, tankier and hits harder
+     · boss   — player lands ~50%, foe ~60% and bursts hard (~34-swing fight)
+   Under-geared players miss far more (acc≪foe def) and get bursted — gear matters.
+   coins / xp / swingMs / damage-types stay as authored. Retune script: _retune.js. */
 
 /* Zones — picker tabs. `unlockLvl` is the soft Combat Lv gate (locked tile until
    the player reaches it). `keyItem` (if present) is the rare drop that opens the
@@ -19340,12 +19373,13 @@ function combatTick(){
   // ── Player swing — only when their own swing timer has elapsed ───────────
   if(now-combat.youSwingStart>=combat.youSwingMs){
     combat.youSwingStart=now;
-    // 1.0.10 combat rework — no binary miss. Your Attack (accuracy) biases the
-    // damage roll within the Strength-defined range: high attack vs the foe's
-    // defence pushes the roll toward your max hit; low attack rolls nearer the
-    // floor. Every swing lands for at least 1 — "missing" is gone.
-    const accAdv=combat.youAcc/(combat.youAcc+mon.def);           // 0..1 attack advantage
-    let youDmg=Math.max(1, Math.round(combat.youMaxHit*(0.20+0.80*accAdv)*(0.55+0.45*Math.random())));
+    // 1.0.26 combat math v2 — hit/miss is back. Hit chance = acc/(acc+foeDef);
+    // a lost roll deals 0 (a real miss). On a hit, damage rolls HIT_MIN..1.0 of
+    // your max hit. Low accuracy vs a high-defence foe = lots of 0s.
+    const hitChance=Math.max(0.03, Math.min(0.97, combat.youAcc/(combat.youAcc+mon.def)));
+    let youDmg = (Math.random()<hitChance)
+      ? Math.max(1, Math.round(combat.youMaxHit*(COMBAT_P.HIT_MIN+(1-COMBAT_P.HIT_MIN)*Math.random())))
+      : 0;
     let didCrit=false;
     {
       // ── Damage-type matchup (1.0.93) — equipped weapon's dmgType vs foe's
@@ -19369,8 +19403,9 @@ function combatTick(){
     combat.foeHp=Math.max(0,combat.foeHp-youDmg);
     if(youDmg>0){
       cmbLog(`You ${didCrit?'<span style="color:#ffd700">crit</span> ':''}hit the ${mon.name} for ${youDmg}.`,'hit');
-      grantCombatXp(style,youDmg*4);
-      grantCombatXp('hitpoints',Math.round(youDmg*1.33));
+      // Per-damage XP factor ÷10 vs old scale — damage numbers are ~10× bigger now.
+      grantCombatXp(style,youDmg*0.4);
+      grantCombatXp('hitpoints',Math.round(youDmg*0.133));
       // Lifesteal — heal a fraction of damage dealt, capped at maxHp.
       // Bloodthirst enchant (15%) is the headline source; sockets stack on top.
       const cb2=(typeof combatBonusesAll==='function')?combatBonusesAll():null;
@@ -19495,12 +19530,14 @@ function combatTick(){
   // ── Monster swing — only when foe's own swing timer has elapsed ──────────
   if(now-combat.foeSwingStart>=combat.foeSwingMs){
     combat.foeSwingStart=now;
-    // 1.0.10 — foe uses the same no-miss model: its Attack biases its roll within
-    // its Strength-defined max hit, weighted against your Defence. Always lands ≥1.
-    const foeAccAdv=mon.atk/(mon.atk+combat.youDef);
-    let foeDmg=Math.max(1, Math.round(mon.str*(0.20+0.80*foeAccAdv)*(0.55+0.45*Math.random())));
+    // 1.0.26 — foe uses the same hit/miss model. Foe hit chance = foeAtk/(foeAtk+yourDef);
+    // a lost roll deals 0. On a hit, it rolls HIT_MIN..1.0 of its max hit (str).
+    const foeHitChance=Math.max(0.03, Math.min(0.97, mon.atk/(mon.atk+combat.youDef)));
+    let foeDmg = (Math.random()<foeHitChance)
+      ? Math.max(1, Math.round(mon.str*(COMBAT_P.HIT_MIN+(1-COMBAT_P.HIT_MIN)*Math.random())))
+      : 0;
     combat.youHp=Math.max(0,combat.youHp-foeDmg);
-    cmbLog(`${mon.name} hits you for ${foeDmg}.`,'hit');
+    cmbLog(foeDmg>0?`${mon.name} hits you for ${foeDmg}.`:`${mon.name} misses.`, foeDmg>0?'hit':'');
 
     if(combat.youHp<=0){
       cmbLog('💀 You were defeated and retreat to safety.','lose');
@@ -20215,10 +20252,10 @@ function renderCombat(){
   // Derived rows show "lvl-base + gear-bonus = total" so the gear contribution is explicit.
   // Gear never raises the skill level itself — only the derived combat stat.
   const aLvl=cmbLvl('attack'), sLvl=cmbLvl('strength'), dLvl=cmbLvl('defence'), hLvl=cmbLvl('hitpoints');
-  const accBase=aLvl, accGear=cs.atk*2;
-  const hitBase=Math.max(1, Math.floor(1 + sLvl*0.13)), hitGear=playerMaxHit()-hitBase;
-  const defBase=dLvl, defGear=cs.def;
-  const hpBase=10+hLvl, hpGear=Math.floor(cs.def/4);
+  const accBase=Math.round(aLvl*COMBAT_P.ACC_LVL), accGear=playerAccuracy()-accBase;
+  const hitBase=Math.round(sLvl*COMBAT_P.HIT_LVL), hitGear=playerMaxHit()-hitBase;
+  const defBase=Math.round(dLvl*COMBAT_P.DEF_LVL), defGear=playerDefence()-defBase;
+  const hpBase=Math.round(hLvl*COMBAT_P.HP_LVL), hpGear=maxHpFromStats()-hpBase;
   const breakdown=(base,gear)=>gear>0?`<span class="cd-val">${base+gear}</span><span class="cd-bd">(${base} + ${gear})</span>`
                                      :`<span class="cd-val">${base}</span>`;
   // Speed display — your swing time in seconds. Lower is better.
