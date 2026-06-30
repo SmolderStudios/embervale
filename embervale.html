@@ -2328,7 +2328,7 @@ header h1 .flame{color:var(--ember)}
   <div class="mm-btns">
     <button class="mm-btn mm-primary" id="mmPlay">▶ Play</button>
   </div>
-  <div class="mm-ver">v1.0.23</div>
+  <div class="mm-ver">v1.0.24</div>
 </div>
 
 <!-- ===== CHARACTER SELECT (added) ===== -->
@@ -10959,8 +10959,8 @@ function refreshCombatStats(){
 const CHAR_TYPES={
   normal:{ name:'Normal', xpMult:1.0, dropMult:1.0, col:'#c79b4e', tag:'Balanced',
     blurb:'The even road. Standard XP and standard drop rates — no trade-offs, no surprises.' },
-  hardcore:{ name:'Hardcore', xpMult:0.75, dropMult:1.25, col:'#c4543a', tag:'Slow · Rich',
-    blurb:'Levels come harder at 75% XP, but fortune favours you — +25% drop chance on everything: loot, rare mats, even rare monster spawns.' },
+  hardcore:{ name:'Hardcore', xpMult:0.75, dropMult:1.2, col:'#c4543a', tag:'Slow · Rich',
+    blurb:'Levels come harder at 75% XP, but fortune favours you — +20% drop chance on everything: loot, rare mats, even rare monster spawns.' },
   accelerated:{ name:'Accelerated', xpMult:2.0, dropMult:0.6, col:'#4a90d9', tag:'Fast · Lean',
     blurb:'Tear up the levels at 2× XP — but the world turns stingy: −40% drop chance across the board.' },
 };
@@ -15796,7 +15796,7 @@ const MONSTER_DROPS={
                {id:'gnawed_bone', chance:0.60, qty:[1,3]},
                {id:'beast_sinew', chance:0.030},       // ~1 in 33 — boss bonus
                {id:'shade_ember', chance:0.006},       // ~1 in 167
-               {id:'voidheart',   chance:0.0015}],     // ~1 in 667 — super rare
+               {id:'voidheart',   chance:0.0012}],     // ~1 in 833 — super rare
   // ── Spider Hollow drops — silks/chitin/venom + the key to the Queen ──
   // Slightly better combat-tier floors than rat zone, capped under boss rates.
   spider:           [{id:'spider_silk',  chance:0.27},  // was 0.45
@@ -15831,7 +15831,7 @@ const MONSTER_DROPS={
                      {id:'spider_silk',  chance:0.65, qty:[2,4]},
                      {id:'beast_sinew',  chance:0.060, qty:[1,2]}, // ~1 in 17 · boss bonus
                      {id:'shade_ember',  chance:0.015},            // ~1 in 67
-                     {id:'voidheart',    chance:0.0040}],          // ~1 in 250 · slightly better than rat queen
+                     {id:'voidheart',    chance:0.0032}],          // ~1 in 312 · slightly better than rat queen
   // ── Goblin Cave drops — ears/teeth/hides + weapon-craft hooks + the key to the Warchief ──
   // Lv 10-22. Combat-tier mat floors step up from spider zone (this is the bridge into
   // the mid-game). Weapon-craft drops (rusted_blade/crude_cleaver/shaman_tooth) are
@@ -15873,7 +15873,7 @@ const MONSTER_DROPS={
                      {id:'shaman_tooth',   chance:0.20, qty:[1,2]},
                      {id:'beast_sinew',    chance:0.080, qty:[1,2]}, // ~1 in 12 · boss bonus
                      {id:'shade_ember',    chance:0.020},             // ~1 in 50
-                     {id:'voidheart',      chance:0.0050}],           // ~1 in 200 · better than silkweaver
+                     {id:'voidheart',      chance:0.0040}],           // ~1 in 250 · better than silkweaver
   // ── Skeleton Crypt drops (1.0.93) — bones/dust/soul-mats + Lich phylactery ──
   // Lv 18-30. Combat-tier mat floors step up from goblin cave. Common-drop rates
   // mirror the rat-zone tier curve (~25-30% top end), with consolation gold for
@@ -15915,7 +15915,7 @@ const MONSTER_DROPS={
                     {id:'crown_jewel',     chance:0.040},            // ~1 in 25 · boss-only big drop
                     {id:'beast_sinew',     chance:0.10, qty:[1,2]},  // ~1 in 10 · boss bonus
                     {id:'shade_ember',     chance:0.030},            // ~1 in 33
-                    {id:'voidheart',       chance:0.0080}],          // ~1 in 125 · better than warchief
+                    {id:'voidheart',       chance:0.0064}],          // ~1 in 156 · better than warchief
   // ── Wolf Den drops (1.0.93) — pelts/fangs/primal mats + Ironfang's pelt ────
   // Lv 30-42. Combat-tier mats are richer than skeleton crypt — wolves are
   // deeper into the mid-game. Feeds future Beasthide armor + Fangblade weapon.
@@ -15957,7 +15957,7 @@ const MONSTER_DROPS={
                     {id:'moonstone_eye',   chance:0.045},            // ~1 in 22 · boss-only big drop
                     {id:'beast_sinew',     chance:0.13, qty:[1,3]},  // ~1 in 8 · boss bonus
                     {id:'shade_ember',     chance:0.045},            // ~1 in 22
-                    {id:'voidheart',       chance:0.012}],           // ~1 in 83 · best so far
+                    {id:'voidheart',       chance:0.0096}],          // ~1 in 104 · best so far
   // ── Ogre Stronghold drops (1.0.1) — hides/tusks/seer relics + Warlord's Totem ──
   // Lv 44-56. Rare-tier mat floors step up from wolf den; voidheart on the boss
   // (0.016) lands just above Ironfang's 0.012. Boss table carries the trophy
@@ -15993,7 +15993,7 @@ const MONSTER_DROPS={
                     {id:'tyrant_heart',     chance:0.040},           // ~1 in 25 · boss-only big drop
                     {id:'beast_sinew',      chance:0.15, qty:[1,2]}, // ~1 in 7 · boss bonus
                     {id:'shade_ember',      chance:0.055},           // ~1 in 18
-                    {id:'voidheart',        chance:0.016}],          // ~1 in 62 · best so far
+                    {id:'voidheart',        chance:0.013}],          // ~1 in 77 · best so far
   // ── Troll Caverns drops (1.0.3) — stony hides + regen blood + Granite Sigil ──
   // Lv 58-70. Rare-tier floors step up from ogre; boss voidheart 0.022 above
   // Warlord's 0.016. Troll Maul (weapon) + Troll King's Skull (trophy) drop direct.
@@ -16026,7 +16026,7 @@ const MONSTER_DROPS={
                    {id:'mountain_heart',   chance:0.040},           // ~1 in 25 · boss-only big drop
                    {id:'beast_sinew',      chance:0.17, qty:[1,2]}, // boss bonus
                    {id:'shade_ember',      chance:0.060},
-                   {id:'voidheart',        chance:0.022}],          // ~1 in 45 · best so far
+                   {id:'voidheart',        chance:0.018}],          // ~1 in 56 · best so far
   // ── Wyvern Roost drops (1.0.4) — molten scales/fangs/fire glands + Ember Crest ──
   // Lv 72-84. Boss voidheart 0.030 above Troll King's 0.022. Wyrmfang Blade
   // (slash weapon) + Emberwyrm Skull (trophy) drop direct.
@@ -16059,7 +16059,7 @@ const MONSTER_DROPS={
                    {id:'dragonheart',     chance:0.040},           // ~1 in 25 · boss-only big drop
                    {id:'beast_sinew',     chance:0.20, qty:[1,2]}, // boss bonus
                    {id:'shade_ember',     chance:0.070},
-                   {id:'voidheart',       chance:0.030}],          // ~1 in 33 · best so far
+                   {id:'voidheart',       chance:0.024}],          // ~1 in 42 · best so far
   // ── Demon Sanctum drops (1.0.5) — infernal hide/brimstone/void + Infernal Crest ──
   // Lv 86-99 endgame. Demon Lord is the apex voidheart source (0.045). Doomblade
   // (slash greatsword) + Demon Lord's Skull (ultimate trophy) drop direct.
@@ -16092,7 +16092,7 @@ const MONSTER_DROPS={
                    {id:'hellheart',      chance:0.045},           // ~1 in 22 · boss-only big drop
                    {id:'beast_sinew',    chance:0.22, qty:[1,2]}, // boss bonus
                    {id:'shade_ember',    chance:0.080},
-                   {id:'voidheart',      chance:0.045}],          // ~1 in 22 · apex source in the game
+                   {id:'voidheart',      chance:0.036}],          // ~1 in 28 · apex source in the game
 };
 /* Roll the drop table for one kill. Returns array of {id, qty} actually granted.
    `once:true` drops only fire if the player has never received that item before
