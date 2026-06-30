@@ -1272,8 +1272,17 @@ header h1 .flame{color:var(--ember)}
 
 /* ════════ [CSS-08] INVENTORY / SATCHEL ══════════════════════════════════════════ */
 /* inventory */
-.inv-item{display:flex;align-items:center;gap:8px;padding:3px 4px;
-  border-bottom:1px dashed #3a2a17;font-size:14px;}
+/* Modern satchel rows (1.0.29) — icon tile + name + qty pill, rounded with a
+   hover highlight; rarity/potion tints replace the old dashed separators. */
+.inv-item{display:flex;align-items:center;gap:7px;padding:2px 5px;border:1px solid transparent;
+  border-radius:6px;font-size:14px;transition:background .1s,border-color .1s}
+.inv-item:hover{background:#2c1f12;border-color:#4a3a20}
+.inv-item .inv-ic{width:21px;height:21px;flex:none;display:flex;align-items:center;justify-content:center;
+  background:#1a1209;border:1px solid #4a3a20;border-radius:5px;font-size:14px;line-height:1}
+.inv-item .inv-ic svg{width:15px;height:15px}
+.inv-item .inv-rare{color:var(--ember);font-size:12px;margin-left:3px}
+.inv-item.rare .inv-name{color:var(--trim)}
+.inv-item.rare .inv-ic{border-color:#7a5a28}
 
 /* xp/hr live tracking */
 .xph-row{display:flex;align-items:center;gap:6px;margin-top:3px}
@@ -1373,15 +1382,31 @@ header h1 .flame{color:var(--ember)}
   box-shadow:0 4px 12px #000}
 .dev-toggle:hover{background:#e0762f22}
 .hidden{display:none}
-.inv-item .qty{margin-left:auto;font-family:'Courier New',monospace;color:var(--trim)}
-.inv-item .inv-name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.inv-item .qty{margin-left:auto;font-family:'Courier New',monospace;font-size:13px;color:var(--trim);
+  background:#1a1209;border:1px solid #4a3a20;border-radius:10px;padding:1px 8px;flex:none}
+.inv-item .inv-name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text)}
 .inv-item .sell{background:var(--raised-s);border:1px solid var(--trim-d);color:var(--text);
-  border-radius:4px;font-size:13px;padding:2px 7px;}
+  border-radius:4px;font-size:13px;padding:2px 7px;flex:none}
 .inv-item .sell:hover{border-color:var(--trim)}
 .inv-empty{color:var(--muted);font-size:14px;font-style:italic}
 .sell-all{width:100%;margin-top:10px;background:var(--raised-s);border:1px solid var(--trim-d);
   color:var(--text);border-radius:4px;padding:6px;font-size:14px;}
 .sell-all:hover{border-color:var(--trim)}
+/* Satchel capacity header + expand button (1.0.29) */
+.sat-cap{background:#1a1209;border:1px solid #3a2a17;border-radius:7px;padding:6px 8px;margin-bottom:7px}
+.sat-cap-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px}
+.sat-cap-slots{font-family:'Courier New',monospace;font-size:13px;color:var(--text)}
+.sat-cap-max{color:#6e552c}
+.sat-cap-pct{font-size:11px;color:var(--muted)}
+.sat-cap-bar{height:6px;background:#0d0905;border-radius:4px;overflow:hidden;margin-bottom:6px}
+.sat-cap-bar>div{height:100%;border-radius:4px;transition:width .4s}
+.sat-expand{width:100%;display:flex;align-items:center;justify-content:center;gap:7px;
+  background:#33240f;border:1px solid #c79b4e;color:#f0c772;border-radius:6px;padding:6px;
+  font-family:inherit;font-size:13px;cursor:pointer;transition:background .12s}
+.sat-expand:hover:not(.poor){background:#42300f}
+.sat-expand .se-ic{font-size:15px;line-height:1;font-weight:bold}
+.sat-expand.poor{opacity:.5;cursor:not-allowed;border-color:#6e552c;color:#a08a64}
+.sat-cap-maxed{text-align:center;font-size:12px;color:#c79b4e;padding:3px}
 
 /* ════════ [CSS-12] TOASTS ═══════════════════════════════════════════════════════ */
 /* toast */
@@ -1750,9 +1775,11 @@ header h1 .flame{color:var(--ember)}
 
 /* ════════ [CSS-21] POTIONS & ACTIVE EFFECTS ═════════════════════════════════════ */
 /* potions in inventory */
-.inv-item.potion{border-left:2px solid var(--ember)}
-.use-btn{background:var(--raised-s);border:1px solid var(--ember);color:var(--ember);
-  border-radius:4px;font-size:13px;padding:2px 7px;margin-right:4px;cursor:pointer}
+.inv-item.potion{background:#241410}
+.inv-item.potion:hover{background:#2e1812;border-color:#7a3324}
+.inv-item.potion .inv-ic{border-color:#5a2820}
+.use-btn{background:#3a1714;border:1px solid var(--ember);color:var(--ember);flex:none;
+  border-radius:4px;font-size:13px;padding:2px 8px;margin-right:4px;cursor:pointer}
 .use-btn:hover:not(:disabled){background:#e0762f22}
 .use-btn:disabled{opacity:.35;cursor:not-allowed}
 
@@ -2390,7 +2417,7 @@ header h1 .flame{color:var(--ember)}
   <div class="mm-btns">
     <button class="mm-btn mm-primary" id="mmPlay">▶ Play</button>
   </div>
-  <div class="mm-ver">v1.0.28</div>
+  <div class="mm-ver">v1.0.29</div>
 </div>
 
 <!-- ===== CHARACTER SELECT (added) ===== -->
@@ -10050,25 +10077,20 @@ let viewTab='acts';
    affordable early, a real grind late. Cumulative ≈ 89,000g — a "work toward"
    endgame sink that sits just under the 100,000g skill-cape benchmark, so a fully
    maxed satchel is a comparable goal to earning a cape. */
-const SATCHEL_TIERS=[
-  {slots:5,  cost:150},
-  {slots:5,  cost:250},
-  {slots:5,  cost:450},
-  {slots:5,  cost:750},
-  {slots:5,  cost:1200},
-  {slots:5,  cost:2000},
-  {slots:5,  cost:3200},
-  {slots:5,  cost:5000},
-  {slots:5,  cost:8000},
-  {slots:5,  cost:13000},
-  {slots:5,  cost:21000},
-  {slots:5,  cost:34000},
-];
+/* Satchel expansion (1.0.29) — formula-based so the cap can grow deep into the
+   late game. 15 base + up to 30 expansions × 5 = 165 max. Cost climbs ~1.5× per
+   expansion (150g → ~19M g), rounded to 2 significant figures for clean prices. */
 const SATCHEL_BASE=15;
-
+const SATCHEL_SLOT_STEP=5;
+const SATCHEL_MAX_EXPANSIONS=30;       // 15 + 30×5 = 165 slots
+function satchelTierCost(n){           // n = 0-indexed expansion number → gold cost
+  const raw=150*Math.pow(1.5,n);
+  const mag=Math.pow(10,Math.max(1,Math.floor(Math.log10(raw))-1));
+  return Math.round(raw/mag)*mag;
+}
 function satchelCap(){
-  const bought=Math.min(state.satchelUpgrades||0, SATCHEL_TIERS.length);
-  return SATCHEL_BASE + SATCHEL_TIERS.slice(0,bought).reduce((s,t)=>s+t.slots,0);
+  const bought=Math.min(state.satchelUpgrades||0, SATCHEL_MAX_EXPANSIONS);
+  return SATCHEL_BASE + bought*SATCHEL_SLOT_STEP;
 }
 
 function satchelUsed(){
@@ -15230,33 +15252,36 @@ function renderInventory(){
   const used=satchelUsed();
   const pct=Math.min(100,Math.round(used/cap*100));
   const capBar=document.createElement('div');
-  capBar.style.cssText='margin-bottom:8px';
-  const nextTier=SATCHEL_TIERS[Math.min(state.satchelUpgrades||0, SATCHEL_TIERS.length-1)];
-  const atMax=(state.satchelUpgrades||0)>=SATCHEL_TIERS.length;
+  capBar.className='sat-cap';
+  const bought=state.satchelUpgrades||0;
+  const atMax=bought>=SATCHEL_MAX_EXPANSIONS;
+  const nextCost=atMax?0:satchelTierCost(bought);
   const barColor=pct>=90?'var(--red)':pct>=70?'var(--ember)':'var(--green)';
-  capBar.innerHTML=`<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
-    <span style="font-size:13px;color:var(--muted);font-family:'Courier New',monospace">🎒 ${used} / ${cap} slots</span>
-    <span style="font-size:12px;color:var(--muted)">${atMax?'Max size':'Next: +5 slots · 🪙 '+nextTier.cost.toLocaleString()+'g'}</span>
+  capBar.innerHTML=`<div class="sat-cap-top">
+    <span class="sat-cap-slots">${used} <span class="sat-cap-max">/ ${cap}</span> slots</span>
+    <span class="sat-cap-pct">${pct}% full</span>
   </div>
-  <div style="height:5px;background:#0d0905;border-radius:3px;overflow:hidden;margin-bottom:5px">
-    <div style="height:100%;width:${pct}%;background:${barColor};border-radius:3px;transition:width .4s"></div>
-  </div>`;
+  <div class="sat-cap-bar"><div style="width:${pct}%;background:${barColor}"></div></div>`;
   if(!atMax){
     const upBtn=document.createElement('button');
-    upBtn.className='sell-all';
-    upBtn.style.cssText='margin-top:0;margin-bottom:8px;font-size:14px;'+(state.coins>=nextTier.cost*SILVER_PER_GOLD?'border-color:var(--trim);color:var(--trim)':'opacity:0.5;cursor:not-allowed');
-    upBtn.textContent=`Expand satchel (+5 slots) — 🪙 ${nextTier.cost.toLocaleString()}g`;
-    upBtn.disabled=state.coins<nextTier.cost*SILVER_PER_GOLD;
+    upBtn.className='sat-expand';
+    const canAfford=state.coins>=nextCost*SILVER_PER_GOLD;
+    if(!canAfford) upBtn.classList.add('poor');
+    upBtn.innerHTML=`<span class="se-ic">＋</span>Expand +5 slots · 🪙 ${nextCost.toLocaleString()}g`;
+    upBtn.disabled=!canAfford;
     upBtn.addEventListener('click',()=>{
-      if(state.coins<nextTier.cost*SILVER_PER_GOLD){ toast('Not enough coins.'); return; }
-      state.coins-=nextTier.cost*SILVER_PER_GOLD;
+      const cost=satchelTierCost(state.satchelUpgrades||0);
+      if(state.coins<cost*SILVER_PER_GOLD){ toast('Not enough coins.'); return; }
+      state.coins-=cost*SILVER_PER_GOLD;
       state.satchelUpgrades=(state.satchelUpgrades||0)+1;
       renderHeader(); renderRightPanel();
-      const newCap=satchelCap();
-      toast(`🎒 Satchel expanded! Now ${newCap} slots.`);
+      toast(`🎒 Satchel expanded! Now ${satchelCap()} slots.`);
       saveGame();
     });
     capBar.appendChild(upBtn);
+  } else {
+    const mx=document.createElement('div'); mx.className='sat-cap-maxed'; mx.textContent='✦ Satchel fully expanded';
+    capBar.appendChild(mx);
   }
   box.appendChild(capBar);
 
@@ -15287,10 +15312,9 @@ function renderInventory(){
     const isPotion=!!it.potion;
     const isRare=!!it.rare;
     const row=document.createElement('div');
-    row.className='inv-item'+(isPotion?' potion':'');
-    // Rare indicator next to name — no category text label
-    const rareStar=isRare?`<span style="color:var(--ember);font-size:12px;margin-left:3px">✦</span>`:'';
-    row.innerHTML=`<span class="inv-name">${iconHTML(id)} ${it.name}${rareStar}</span><span class="qty">${q.toLocaleString()}</span>`;
+    row.className='inv-item'+(isPotion?' potion':'')+(isRare?' rare':'');
+    const rareStar=isRare?`<span class="inv-rare">✦</span>`:'';
+    row.innerHTML=`<span class="inv-ic">${iconHTML(id)}</span><span class="inv-name">${it.name}${rareStar}</span><span class="qty">${q.toLocaleString()}</span>`;
     attachTooltip(row, id);
 
     // Skilling gear is now stored separately and never appears in the satchel
@@ -15386,7 +15410,7 @@ function renderInventory(){
     const ghost=document.createElement('div');
     ghost.className='inv-item';
     ghost.style.cssText='visibility:hidden;pointer-events:none';
-    ghost.innerHTML='<span class="inv-name">ghost</span><span class="qty">0</span>';
+    ghost.innerHTML='<span class="inv-ic"></span><span class="inv-name">ghost</span><span class="qty">0</span>';
     itemsWrap.appendChild(ghost);
   }
   box.appendChild(itemsWrap);
