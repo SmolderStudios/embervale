@@ -2443,7 +2443,7 @@ header h1 .flame{color:var(--ember)}
   <div class="mm-btns">
     <button class="mm-btn mm-primary" id="mmPlay">▶ Play</button>
   </div>
-  <div class="mm-ver">v1.0.41</div>
+  <div class="mm-ver">v1.0.42</div>
 </div>
 
 <!-- ===== CHARACTER SELECT (added) ===== -->
@@ -17721,6 +17721,12 @@ function renderCenter(){
   }
   const pts=availPoints(selectedSkill);
   $('tabPts').textContent=pts>0?`(${pts})`:'';
+  // Enchant & Socket are the Jeweler's gem workbench (v1.0.42) — only surface them
+  // when Jeweler is selected; elsewhere hide them and fall back to Activities.
+  const _isJeweler = selectedSkill==='jeweler';
+  $('tabEnchant').style.display=_isJeweler?'':'none';
+  $('tabSocket').style.display=_isJeweler?'':'none';
+  if(!_isJeweler && (viewTab==='enchant'||viewTab==='socket')) viewTab='acts';
   $('tabActs').classList.toggle('on',viewTab==='acts');
   $('tabTree').classList.toggle('on',viewTab==='tree');
   $('tabShop').classList.toggle('on',viewTab==='shop');
@@ -18282,63 +18288,40 @@ function renderSockets(){
   } else {
     if(!_socketSel || owned.indexOf(_socketSel)<0) _socketSel=owned[0];
 
-    var gridTitle=document.createElement('div');
-    gridTitle.style.cssText='font-size:12px;color:var(--ember);text-transform:uppercase;letter-spacing:2px;margin-bottom:6px';
-    gridTitle.textContent='Select Gear';
-    box.appendChild(gridTitle);
-
+    // ── Gear selector — a single dropdown (grouped combat/jewelry) replaces the
+    // old tile grid, so you pick a piece and its sockets appear right below. ──
+    var selWrap=document.createElement('div');
+    selWrap.style.cssText='margin-bottom:10px';
+    var lbl=document.createElement('div');
+    lbl.style.cssText='font-size:11px;color:var(--ember);text-transform:uppercase;letter-spacing:2px;margin-bottom:5px';
+    lbl.textContent='Select Gear';
+    selWrap.appendChild(lbl);
+    var gearSel=document.createElement('select');
+    gearSel.style.cssText='width:100%;background:#0d0905;color:var(--text);border:1px solid var(--trim-d);border-radius:6px;padding:7px 9px;font-size:14px;cursor:pointer';
     var groups=[['combat','Combat Gear'],['jewelry','Jewelry']];
     for(var gi=0;gi<groups.length;gi++){
       var gtype=groups[gi][0], glabel=groups[gi][1];
       var inGroup=owned.filter(function(id){return _socketGroupOf(id)===gtype;});
       if(!inGroup.length) continue;
-
-      var gLab=document.createElement('div');
-      gLab.style.cssText='font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;margin:4px 0 6px';
-      gLab.textContent=glabel;
-      box.appendChild(gLab);
-
-      var grid=document.createElement('div');
-      grid.style.cssText='display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px';
-
+      var og=document.createElement('optgroup'); og.label=glabel;
       for(var ti=0;ti<inGroup.length;ti++){
         var id=inGroup[ti];
-        var it=ITEMS[id];
         var sd=(state.sockets&&state.sockets[id])||null;
-        var slotN=sd?sd.slots:0;
-        var filledN=sd?sd.gems.filter(function(g){return !!g;}).length:0;
-        var sel=_socketSel===id;
-        var equipped=state.equipped&&Object.values(state.equipped).indexOf(id)>=0;
-
-        var tile=document.createElement('div');
-        tile.style.cssText='position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;'
-          +'width:70px;height:68px;padding:4px;border-radius:7px;cursor:pointer;text-align:center;'
-          +'background:'+(sel?'var(--raised-s)':'var(--raised)')+';'
-          +'border:1px solid '+(sel?'var(--ember)':(slotN>0?'#7a5c2a':'var(--trim-d)'))+';'
-          +(sel?'box-shadow:0 0 0 1px var(--ember) inset;':'');
-        // Socket dots in upper-right (filled=ember, empty=muted)
-        var dots='';
-        if(slotN>0){
-          dots='<div style="position:absolute;top:2px;right:4px;display:flex;gap:2px">';
-          for(var di=0;di<slotN;di++){
-            var filled=sd.gems[di];
-            dots+='<div style="width:6px;height:6px;border-radius:50%;background:'+(filled?'var(--ember)':'var(--trim-d)')+';border:1px solid var(--trim-d)"></div>';
-          }
-          dots+='</div>';
-        }
-        var eqMark=equipped?'<div style="position:absolute;top:2px;left:4px;font-size:10px;color:var(--green);font-weight:700;letter-spacing:.5px">EQ</div>':'';
-        var shortName=(it?it.name:id).replace(/'s /,'\u2019s ').replace(/ (Ring|Amulet|Pendant|Jewel|Helm|Helmet|Chest|Legs|Gloves|Boots|Sword|Shield|Cape|Hat|Jacket|Trews|Vest|Trousers|Waders|Tunic|Leggings)$/,'');
-        tile.innerHTML=dots+eqMark
-          +'<div style="font-size:22px;line-height:1">'+iconHTML(id)+'</div>'
-          +'<div style="font-size:10px;color:'+(sel?'var(--trim)':'var(--muted)')+';line-height:1.05;margin-top:2px;max-width:64px;overflow:hidden">'+shortName+'</div>';
-        attachTooltip(tile, id);
-        (function(pickId){ tile.addEventListener('click',function(){ _socketSel=pickId; _socketSlotPicker=null; hideTooltip(); renderSockets(); }); })(id);
-        grid.appendChild(tile);
+        var slotN=sd?sd.slots:0, filledN=sd?sd.gems.filter(function(g){return !!g;}).length:0;
+        var isEq=(state.combatEquipped&&Object.values(state.combatEquipped).indexOf(id)>=0)||(state.skillingEquipped&&Object.values(state.skillingEquipped).indexOf(id)>=0);
+        var socketStr=slotN>0?(' · '+filledN+'/'+slotN+' gems'):(' · no sockets ('+maxSocketsFor(id)+' max)');
+        var o=document.createElement('option'); o.value=id;
+        o.textContent=(ITEMS[id]?ITEMS[id].name:id)+socketStr+(isEq?' ★':'');
+        if(id===_socketSel) o.selected=true;
+        og.appendChild(o);
       }
-      box.appendChild(grid);
+      gearSel.appendChild(og);
     }
+    gearSel.addEventListener('change',function(){ _socketSel=this.value; hideTooltip(); renderSockets(); });
+    selWrap.appendChild(gearSel);
+    box.appendChild(selWrap);
 
-    // ── Detail panel for selected item ──
+        // ── Detail panel for selected item ──
     renderSocketDetail(box, _socketSel);
   }
 
