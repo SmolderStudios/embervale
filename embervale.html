@@ -2443,7 +2443,7 @@ header h1 .flame{color:var(--ember)}
   <div class="mm-btns">
     <button class="mm-btn mm-primary" id="mmPlay">▶ Play</button>
   </div>
-  <div class="mm-ver">v1.0.40</div>
+  <div class="mm-ver">v1.0.41</div>
 </div>
 
 <!-- ===== CHARACTER SELECT (added) ===== -->
@@ -3347,7 +3347,7 @@ const ITEMS={
   granite_core:     {name:'Granite Core',      icon:'🪨',sell:600,  desc:'A dense nugget of living rock pried from a troll\'s gut. Warm, and faintly veined with gold.'},
   granite_sigil:    {name:'Granite Sigil',     icon:'🔱',sell:12000,rare:true, desc:'A rune-carved menhir shard. Set it at the cavern mouth and the Troll King stirs to meet you.'},
   mountain_heart:   {name:'Mountain Heart',    icon:'💎',sell:26000,rare:true, desc:"A fist-sized geode that beats like a slow drum — torn from the Troll King's chest."},
-  troll_maul:       {name:'Troll Maul',        icon:'🔨',sell:9200, cgear:true,ctier:6,cslot:'weapon', dmgType:'crush', desc:'A boulder lashed to an ironwood haft. Swings like an avalanche — if you can lift it.'},
+  troll_maul:       {name:'Troll Maul',        icon:'🔨',sell:9200, cgear:true,ctier:7,cslot:'weapon', dmgType:'crush', desc:'A boulder lashed to an ironwood haft. Swings like an avalanche — if you can lift it.'},
   troll_king_skull: {name:"Troll King's Skull",icon:'💀',sell:92000,rare:true, cgear:true,ctier:7,cslot:'helmet', desc:"The crowned granite skull of the Troll King, eye-sockets still glowing with stubborn life."},
   // ─── Combat drops · Wyvern Roost (1.0.4) ─── molten scales, fang, fire glands
   wyrmscale:        {name:'Wyrmscale',         icon:'🟧',sell:700,  desc:'An obsidian scale veined with cooling gold. Still warm hours after the kill.'},
@@ -3469,11 +3469,11 @@ const COMBAT_GEAR_STATS={
   soulbinder_hammer: {atk:10,str:16,def:0},   // T4.5 crush — between mithril (21) and cobalt (30) hammer, str-heavy
   ironfang_claws:    {atk:20,str:15,def:0},   // T5   stab  — between cobalt (30) and runite (41) dagger, atk-heavy
   // ─── Themed capes (1.0.96) — between standard tier capes, small atk/str slant
-  ratskin_cape:      {atk:0, str:0, def:2},   // T1.5 - between bronze cape (def 1) and iron (def 2), pure def
-  silkwoven_cape:    {atk:1, str:0, def:3},   // T2.5 - atk slant from venom-laced silk
-  warband_cape:      {atk:1, str:1, def:4},   // T3.5 - balanced offensive cape
-  wraithweave_cape:  {atk:1, str:0, def:6},   // T4.5 - heavy on def, light otherwise
-  pack_alpha_cape:   {atk:2, str:1, def:8},   // T5.5 - top of cape ladder, predator vibes
+  ratskin_cape:      {atk:0, str:0, def:3},   // T1.5 - now beats iron cape (def 2) as intended
+  silkwoven_cape:    {atk:1, str:0, def:4},   // T2.5 - above steel cape (atk1/def3)
+  warband_cape:      {atk:1, str:1, def:5},   // T3.5 - above mithril cape (atk1/def4)
+  wraithweave_cape:  {atk:1, str:1, def:7},   // T4.5 - above cobalt cape (atk1/str1/def6)
+  pack_alpha_cape:   {atk:2, str:1, def:10},  // T5.5 - clearly above runite cape (atk2/str1/def8)
   // ─── Themed chestplates (1.0.96) — between standard tier chests + small attack
   ratskin_tunic:     {atk:0, str:0, def:7},   // T1.5 - between bronze chest (5) and iron (10)
   chitin_plate:      {atk:0, str:1, def:13},  // T2.5 - between iron (10) and steel (16); chitin is sharp
@@ -3489,11 +3489,11 @@ const COMBAT_GEAR_STATS={
   lich_crown:        {atk:2, str:1, def:16},  // T4.5 helmet - above mithril (10) toward cobalt (14); lich magic
   ironfang_skull:    {atk:3, str:2, def:22},  // T5.5 helmet - above cobalt (14) toward runite (19); apex trophy
   warlord_skull:     {atk:4, str:3, def:28},  // T6.5 helmet - above ironfang (22); Ogre Stronghold apex trophy (1.0.1)
-  troll_maul:        {atk:22,str:26,def:0},   // T6   crush hammer (1.0.3) — heavy str slant, ~runite-tier
+  troll_maul:        {atk:27,str:35,def:0},   // T7.5 crush hammer — boss drop ABOVE starsteel (budget 62 vs 54); heavy str slant for berserkers
   troll_king_skull:  {atk:4, str:4, def:34},  // T7   helmet (1.0.3) — above warlord (28); Troll Caverns apex trophy
-  wyrmfang_blade:    {atk:30,str:24,def:0},   // T7   slash sword (1.0.4) — atk slant, ~runite/starsteel tier
+  wyrmfang_blade:    {atk:38,str:32,def:0},   // T8   slash sword — Wyvern boss, above troll_maul (budget 70); atk slant
   emberwyrm_skull:   {atk:5, str:4, def:40},  // T8   helmet (1.0.4) — above troll king (34); Wyvern Roost apex trophy
-  doomblade:         {atk:36,str:30,def:0},   // T9   slash greatsword (1.0.5) — endgame, above wyrmfang
+  doomblade:         {atk:49,str:40,def:0},   // T9   slash greatsword — Demon Lord endgame, best 1H in the game (budget 89, +65% over starsteel)
   demonlord_skull:   {atk:6, str:5, def:48},  // T9   helmet (1.0.5) — above emberwyrm (40); Demon Sanctum apex trophy
 };
 
