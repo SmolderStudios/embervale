@@ -1154,7 +1154,7 @@ header h1 .flame{color:var(--ember)}
 .alch-tier-select:focus{outline:none;border-color:var(--ember)}
 .alch-tier-select option{background:#1a0e08;color:var(--text)}
 .alch-tier-select option:disabled{color:var(--muted)}
-/* Standalone progress bar used in dual skill rows — same look as .act .prog */
+/* Standalone progress bar — same look as .act .prog */
 .prog{height:8px;background:#0d0905;border-radius:4px;overflow:hidden;margin-top:2px}
 .prog i{display:block;height:100%;background:linear-gradient(90deg,var(--ember),#f0a050);width:0%;transition:none}
 .act .stopnote{font-size:12px;color:var(--ember)}
@@ -1698,17 +1698,6 @@ header h1 .flame{color:var(--ember)}
 .stat-row[data-tip].tip-above:hover::after,
 .stats-skill-block > .stat-row[data-tip]:last-child:hover::after{
   top:auto;bottom:calc(100% + 2px)}
-/* Dual XP detail */
-.dual-detail-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
-.dual-detail-label{font-size:14px;color:var(--trim);font-variant:small-caps;letter-spacing:1px}
-.dual-detail-combined{font-family:'Courier New',monospace;font-size:14px;color:var(--ember);font-weight:bold}
-.dual-xp-row{margin-bottom:7px}
-.dual-xp-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:3px}
-.dual-xp-label{font-size:14px;color:var(--trim)}
-.dual-xp-rate{font-family:'Courier New',monospace;font-size:13px;color:var(--ember)}
-.dual-xp-eta{font-family:'Courier New',monospace;font-size:12px;color:var(--muted);margin-top:2px;text-align:right}
-.dual-action-timer{margin-top:6px;border-top:1px solid var(--trim-d);padding-top:6px}
-.dual-timer-label{font-size:13px;color:var(--muted)};align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--trim-d)}
 .offline-row:last-child{border-bottom:none}
 .offline-icon{font-size:20px;width:24px;text-align:center;flex-shrink:0}
 .offline-label{flex:1;font-size:14px;color:var(--text)}
@@ -2431,7 +2420,7 @@ header h1 .flame{color:var(--ember)}
   <div class="mm-btns">
     <button class="mm-btn mm-primary" id="mmPlay">▶ Play</button>
   </div>
-  <div class="mm-ver">v1.0.34</div>
+  <div class="mm-ver">v1.0.35</div>
 </div>
 
 <!-- ===== CHARACTER SELECT (added) ===== -->
@@ -2540,13 +2529,11 @@ header h1 .flame{color:var(--ember)}
     <div id="xpDetail" class="xp-detail"></div>
     <div class="tabs">
       <button class="tab" id="tabActs">Activities</button>
-      <button class="tab" id="tabDual" style="display:none">Dual</button>
       <button class="tab" id="tabTree">Skill Tree <span id="tabPts" style="color:var(--ember);font-family:monospace"></span></button>
       <button class="tab" id="tabEnchant">Enchant</button>
       <button class="tab" id="tabSocket">Socket</button>
     </div>
     <div id="activityGrid" class="activity-grid"></div>
-    <div id="dualView"    style="display:none"></div>
     <div id="treeView"    style="display:none"></div>
     <div id="shopView"    style="display:none"></div>
     <div id="masteryView" style="display:none"></div>
@@ -2755,7 +2742,6 @@ header h1 .flame{color:var(--ember)}
    [JS-11]    ITEM POPUP — item-collected floaters
    [JS-12]    XP POPUP — xp-gain floaters
    [JS-13]    OFFLINE SKILL — passive away-XP skill
-   [JS-14]    DUAL SKILLING — two-skill pairings
    [JS-15]    PERSISTENCE — localStorage save / load
    [JS-16]    MODAL SYSTEM — custom confirm / prompt
    [JS-17]    PASSIVES — helper calculations
@@ -2766,7 +2752,7 @@ header h1 .flame{color:var(--ember)}
        [JS-21a]   afford / getAct helpers
        [JS-21b]   firemaking & fuel system
        [JS-21c]   action completion (solo)
-       [JS-21d]   dual & double-action completion
+       [JS-21d]   woodcutting double-action helper
        [JS-21e]   main tick
        [JS-21f]   offline grant & summary
        [JS-21g]   setAction
@@ -2783,12 +2769,11 @@ header h1 .flame{color:var(--ember)}
        [JS-23a]   source / usage maps
        [JS-23b]   item tooltip show / hide
        [JS-23c]   grantItem & skill highlights
-   [JS-24]    COMPENDIUM, MASTERY, CENTER, DUAL, ENCHANT, FRAME LOOP
+   [JS-24]    COMPENDIUM, MASTERY, CENTER, ENCHANT, FRAME LOOP
        [JS-24a]   compendium view
        [JS-24b]   mastery view
        [JS-24c]   xp detail & center render
        [JS-24d]   offline overlay
-       [JS-24e]   dual view
        [JS-24f]   enchanting view
        [JS-24g]   frame loop (renderAll / animate)
        [JS-24h]   toast & notifications log
@@ -9652,7 +9637,6 @@ function defaultState(){
     newlyDiscovered:{}, // {itemId: true} — items found since last viewed in compendium (clears on hover)
     action:null,
     actionStart:0,
-    dualAction:null,    // {pairId} — active dual skill pair
     lastSeen:Date.now(),
     offlineXp:0,       // XP for the offline passive skill
     enchantments:{},   // {itemId: enchantId} — enchant per jewelry item (bonus applies only while equipped)
@@ -9660,7 +9644,6 @@ function defaultState(){
     patches:{},        // {patchId: {seedId,plantedAt,growMs,tendedMs,lastTended}}
     farmer:{tier:0,maxTier:0,enabled:false,seedId:null}, // tier=active, maxTier=highest unlocked
     patchNotified:{},  // {patchId: true} — patches that have become ready but not yet harvested/acknowledged
-    herbBuffer:{},     // {herbId: count} — foraging dual buffer waiting for alchemy recipe threshold
     mineStrikes:0,     // running strike counter for Veinbreaker (resets on 10th = triple ore)
     mineDoubleAct:null, // {actId} — second ore selected for Double Action (mi_gm_double)
     wcStrikes:0,       // running chop counter for Heartwood (resets on 10th = +2 bonus logs)
@@ -9872,10 +9855,9 @@ function normalizeState(){
   }
   if(!state.newlyDiscovered||typeof state.newlyDiscovered!=='object'||Array.isArray(state.newlyDiscovered)) state.newlyDiscovered={};
   if(state.action!==null&&typeof state.action!=='object') state.action=null;
-  // Dual skilling retired (v1.0.34) — force-clear any saved pairing so a legacy
-  // dual never resumes. The Dual tab is hidden; DUAL_PAIRS/completeDualAction and
-  // the rest of the plumbing are left dormant in case we revisit it later.
-  state.dualAction=null;
+  // Dual skilling removed (v1.0.35) — strip any stale pairing/buffer from old saves.
+  if('dualAction' in state) delete state.dualAction;
+  if('herbBuffer' in state) delete state.herbBuffer;
   if(typeof state.actionStart!=='number') state.actionStart=0;
   if(typeof state.offlineXp!=='number') state.offlineXp=0;
   if(state.offlineConfig!==null&&state.offlineConfig!==undefined&&typeof state.offlineConfig!=='object') state.offlineConfig=null;
@@ -9938,7 +9920,6 @@ function normalizeState(){
   if(typeof state.farmer.enabled!=='boolean') state.farmer.enabled=false;
   if(state.farmer.seedId!==null&&!getCrop(state.farmer.seedId)) state.farmer.seedId=null;
   if(!state.patchNotified||typeof state.patchNotified!=='object'||Array.isArray(state.patchNotified)) state.patchNotified={};
-  if(!state.herbBuffer||typeof state.herbBuffer!=='object'||Array.isArray(state.herbBuffer)) state.herbBuffer={};
   if(typeof state.mineStrikes!=='number') state.mineStrikes=0;
   if(state.mineDoubleAct!==undefined&&state.mineDoubleAct!==null&&typeof state.mineDoubleAct!=='object') state.mineDoubleAct=null;
   if(!state.hasOwnProperty('mineDoubleAct')) state.mineDoubleAct=null;
@@ -10523,176 +10504,6 @@ function offlineMods(){
   const lootBonus = r('of_loot')*0.08;
   const dualSkill = r('of_master3')>0;
   return {rate:flooredRate, capHours, xpRate, allSkillXp, lootBonus, dualSkill};
-}
-
-/* ════════ [JS-14] DUAL SKILLING — two-skill pairings ════════════════════════════ */
-/* =================================================================
-   DUAL SKILLING
-   Each pairing: two skills run simultaneously per action cycle.
-   XP rate:      xpMult of each skill's normal rate, credited to BOTH skills.
-   Mastery rate: mastMult of each skill's normal rate, credited to BOTH skills.
-   (Current values per pair: xpMult 0.50, mastMult 0.60.)
-   Speed: max of both action times × msMult (default ~1.2).
-   The secondary skill auto-picks its best unlocked act that consumes
-   the primary's output (e.g. chop pine → burn pine log).
-   ================================================================= */
-const DUAL_PAIRS=[
-  {
-    id:'wc_fm',
-    label:'Chop & Burn',
-    icon:'🪓🔥',
-    desc:'Fell a log and burn it in one motion. No base logs go to satchel — every chop feeds directly into the fire. Bonus logs from passive nodes (Timber!, Keen Edge, Ancient Grove, Heartwood) still land in your satchel. Lumberjack\'s Kin forage drops also proc normally.',
-    skillA:'woodcutting',
-    skillB:'firemaking',
-    // Maps each WC act to the FM act that burns its output
-    linkMap:{wc1:'fm1',wc2:'fm2',wc3:'fm3',wc4:'fm4',wc5:'fm5',wc6:'fm6',wc7:'fm7'},
-    xpMult:0.50,
-    mastMult:0.60,
-  },
-  {
-    id:'mi_sm',
-    label:'Mine & Smelt',
-    icon:'⛏️🔨',
-    desc:'Mine ore and smelt bars in one motion. Coal Seeker, Hardened Grip, Veinbreaker, and Motherlode all proc normally — bonus coal/ore drops to your satchel. Bar yield and double passives apply to smithing output.',
-    skillA:'mining',
-    skillB:'smithing',
-    // Maps mine act → smelt act (skip copper/tin — they pair separately)
-    linkMap:{mi3:'sm2',mi4:'sm3',mi5s:'sm5',mi5:'sm4',mi6:'sm6',mi7:'sm7',mi8:'sm8',mi9:'sm9'},
-    xpMult:0.50,
-    mastMult:0.60,
-    msMult:1.25, // slightly longer than the other duals — accounts for the implicit coal bonus from passives
-  },
-  {
-    id:'fi_co',
-    label:'Fish & Cook',
-    icon:'🎣🍳',
-    desc:'Catch a fish and cook it on the spot — no raw fish ever stored. Requires a lit fire (fuel consumed by the cooking side). Lucky Lure, Schooling, and Steady Hands bonus fish all drop to your satchel normally.',
-    skillA:'fishing',
-    skillB:'cooking',
-    linkMap:{fi1:'co1',fi2:'co2',fi3:'co3',fi4:'co4',fi5:'co5',fi6:'co6',fi7:'co7',fi8:'co8'},
-    xpMult:0.50,
-    mastMult:0.60,
-  },
-  {
-    id:'fo_al',
-    label:'Forage & Alchemize',
-    icon:'🌿⚗️',
-    desc:'Gather every ingredient the recipe requires, then brew the potion — all in one unified action. Cycle length scales with the full recipe gather time. Forager\'s Instinct (bonus wildberries) procs per implicit forage step. Note: Verdant Gift (3× base yield) does not multiply implicit herb gathering — base quantities are always used for the brew.',
-    skillA:'foraging',
-    skillB:'alchemy',
-    xpMult:0.50,
-    mastMult:0.60,
-    // Grouped by potion family; each tier = {foAct, alAct} pair.
-    // foAct is just the "primary" herb shown in the dropdown — the dual cycle gathers
-    // every herb the brew recipe needs (multi-herb recipes are no longer free).
-    potionFamilies:[
-      {name:'Swiftness', icon:'⚡', tiers:[
-        {foAct:'fo1',alAct:'al1'},  // wildberries:3
-        {foAct:'fo1',alAct:'al4'},  // wildberries:3 + thornvine:2 from satchel
-        {foAct:'fo2',alAct:'al7'},  // thornvine:3 + dewleaf:3 from satchel
-      ]},
-      {name:'Bountiful', icon:'🌿', tiers:[
-        {foAct:'fo2',alAct:'al2'},  // thornvine:3
-        {foAct:'fo2',alAct:'al5'},  // thornvine:3 + dewleaf:2 from satchel
-        {foAct:'fo5',alAct:'al8'},  // sunroot:2 + dewleaf:2 from satchel
-        {foAct:'fo6',alAct:'al11'}, // starfern:2 + sunroot:2 from satchel
-      ]},
-      {name:'Wisdom',   icon:'📖', tiers:[
-        {foAct:'fo3',alAct:'al3'},  // dewleaf:3
-        {foAct:'fo3',alAct:'al6'},  // dewleaf:3 + emberbloom:2 from satchel
-        {foAct:'fo4',alAct:'al9'},  // emberbloom:2 + sunroot:2 from satchel
-      ]},
-      {name:'Elixirs',  icon:'🔮', tiers:[
-        {foAct:'fo7',alAct:'al10'}, // moonpetal:2 + sunroot:2 from satchel
-        {foAct:'fo8',alAct:'al12'}, // voidmoss:2 + moonpetal:2 from satchel
-      ]},
-    ],
-  },
-];
-
-/* Check if a specific (foAct, alAct) pair is unlocked for fo_al */
-function dualFoAlTierUnlocked(foAct,alAct){
-  var fa=getAct('foraging',foAct);
-  var aa=getAct('alchemy',alAct);
-  if(!fa||!aa) return false;
-  return levelFromXp(state.xp['foraging'])>=fa.lvl && levelFromXp(state.xp['alchemy'])>=aa.lvl;
-}
-
-/* Get the paired skillB act for a given skillA act */
-function pairedActB(pair,actAId){
-  // fo_al: use explicitly stored alActId when available
-  if(pair.id==='fo_al'){
-    var stored=state.dualAction&&state.dualAction.pairId==='fo_al'&&state.dualAction.alActId;
-    if(stored) return getAct('alchemy',stored);
-  }
-  var actBId=pair.linkMap&&pair.linkMap[actAId];
-  if(!actBId) return null;
-  return getAct(pair.skillB,actBId);
-}
-
-/* Is a specific actA tier unlocked for dual? */
-function dualActUnlocked(pair,actAId){
-  var actA=getAct(pair.skillA,actAId);
-  if(!actA) return false;
-  if(levelFromXp(state.xp[pair.skillA])<actA.lvl) return false;
-  var actB=pairedActB(pair,actAId);
-  if(!actB) return false;
-  return levelFromXp(state.xp[pair.skillB])>=actB.lvl;
-}
-
-/* Is this dual pair available at all (at least one tier unlocked)? */
-function dualPairUnlocked(pair){
-  if(pair.potionFamilies){
-    for(var fi=0;fi<pair.potionFamilies.length;fi++){
-      var fam=pair.potionFamilies[fi];
-      for(var ti=0;ti<fam.tiers.length;ti++){
-        if(dualFoAlTierUnlocked(fam.tiers[ti].foAct,fam.tiers[ti].alAct)) return true;
-      }
-    }
-    return false;
-  }
-  var keys=Object.keys(pair.linkMap);
-  for(var i=0;i<keys.length;i++){ if(dualActUnlocked(pair,keys[i])) return true; }
-  return false;
-}
-
-/* Helper: total ms spent gathering EVERY ingredient for a brew recipe.
-   For each herb the recipe requires, find the foraging act that produces it
-   and multiply that act's base ms by the required quantity. Sum across all herbs. */
-function fo_al_gatherTotalMs(brewAct){
-  if(!brewAct||!brewAct.inp) return 0;
-  var total=0;
-  for(var herbId in brewAct.inp){
-    var qty=brewAct.inp[herbId]||0;
-    var foAct=SKILLS.foraging.acts.find(function(a){return a.out&&a.out[herbId];});
-    if(foAct) total+=actMs(foAct,'foraging')*qty;
-  }
-  return total;
-}
-
-/* Compute effective ms for the selected dual action */
-function dualActMs(pair){
-  if(!state.dualAction||!state.dualAction.actAId) return 5000;
-  var actA=getAct(pair.skillA,state.dualAction.actAId);
-  if(!actA) return 5000;
-  var actB=pairedActB(pair,actA.id);
-  if(!actB) return 5000;
-  var pen=pair.msMult||1.2;
-  // fo_al unified: gather EVERY ingredient + brew, all sequential — then apply the dual penalty.
-  // This guarantees the cycle is at least as long as crafting the potion from scratch would take.
-  if(pair.id==='fo_al'){
-    var gather=fo_al_gatherTotalMs(actB);
-    var brew=actMs(actB,pair.skillB);
-    return Math.round((gather+brew)*pen);
-  }
-  // wc_fm / fi_co: additive time × 0.75 — 25% faster than sequential, never faster than solo
-  if(pair.id==='wc_fm'||pair.id==='fi_co'){
-    var aMs2=actMs(actA,pair.skillA), bMs2=actMs(actB,pair.skillB);
-    var calc=Math.round((aMs2+bMs2)*0.75);
-    // Hard floor: dual must always be slower than the slowest individual skill
-    return Math.max(calc, Math.max(aMs2,bMs2)+200);
-  }
-  return Math.round(Math.max(actMs(actA,pair.skillA),actMs(actB,pair.skillB))*pen);
 }
 
 /* ════════ [JS-15] PERSISTENCE — localStorage save / load ════════════════════════ */
@@ -12672,263 +12483,7 @@ function completeAction(act,skillKey,times){
   return times;
 }
 
-/* ════ [JS-21d] dual & double-action completion ══════════════════════════════════ */
-function completeDualAction(pair,times){
-  // Use the player-selected act, not auto-best
-  const actAId=state.dualAction&&state.dualAction.actAId;
-  const actA=actAId?getAct(pair.skillA,actAId):null;
-  if(!actA||!times) return 0;
-  const actB=pairedActB(pair,actA.id);
-  if(!actB) return 0;
-
-  const XMULT=pair.xpMult;
-  const MMULT=pair.mastMult;
-  const mA=mods(pair.skillA);
-  const mB=mods(pair.skillB);
-
-  // ---- Skill A gathers resource ----
-  const outAId=Object.keys(actA.out)[0];
-  const baseQty=actA.out[outAId]*times;
-
-  // Extra yield from double-bonus passives (always to satchel)
-  const extraYield=IS_GATHER[pair.skillA]?binom(times,mA.double)*actA.out[outAId]:0;
-
-  // Rare drops from A always go to satchel
-  if(IS_GATHER[pair.skillA]){
-    const dropTable=DROPS[actA.id]||[];
-    for(var di=0;di<dropTable.length;di++){
-      var drop=dropTable[di];
-      var hits=binom(times,effDropChance(drop.chance));
-      if(hits>0){
-        state.items[drop.id]=(state.items[drop.id]||0)+hits;
-        markDiscovered(drop.id);
-        showItemPop(drop.id, hits);
-      }
-    }
-    if(extraYield>0){
-      state.items[outAId]=(state.items[outAId]||0)+extraYield;
-      markDiscovered(outAId);
-      showItemPop(outAId, extraYield);
-    }
-    // ── wc_fm: woodcutting bonus log passives → extra logs to satchel ──
-    if(pair.id==='wc_fm'){
-      var bonusLogs=0;
-      if(mA.master2) bonusLogs+=binom(times,0.15);  // Ancient Grove: 15% chance +1 log
-      bonusLogs+=binom(times,mA.wc_bark);        // Keen/Splinter Edge: bonus log chance
-      // Heartwood: every 10 chops = +1 bonus log (tracks wcStrikes shared with solo mode)
-      if(mA.wc_hwd){
-        state.wcStrikes=(state.wcStrikes||0)+times;
-        var hwdHits=Math.floor(state.wcStrikes/10);
-        if(hwdHits>0){ state.wcStrikes=state.wcStrikes%10; bonusLogs+=hwdHits*1; }
-      }
-      if(bonusLogs>0) grantItem(outAId,bonusLogs);
-      // Lumberjack's Kin: chance for forage drops per chop
-      if(mA.wc_kin>0){
-        var kinChance=mA.wc_kin*0.05;
-        for(var ki=0;ki<times;ki++){
-          if(Math.random()<kinChance){
-            var kinRoll=Math.random();
-            var kinDrop;
-            if(kinRoll<0.500) kinDrop='wildberries';
-            else if(kinRoll<0.720) kinDrop='thornvine';
-            else if(kinRoll<0.840) kinDrop='dewleaf';
-            else if(kinRoll<0.910) kinDrop='emberbloom';
-            else if(kinRoll<0.950) kinDrop='sunroot';
-            else if(kinRoll<0.980) kinDrop='starfern';
-            else if(kinRoll<0.995) kinDrop='moonpetal';
-            else kinDrop='voidmoss';
-            grantItem(kinDrop,1);
-          }
-        }
-      }
-    }
-    // ── fi_co: fishing bonus fish passives → extra fish to satchel ──
-    if(pair.id==='fi_co'){
-      var bonusFish=0;
-      if(mA.master2) bonusFish+=binom(times,0.30);   // Steady Hands: 30% chance +1 fish
-      // Lucky Lure (master1) + Schooling (fi_school): share the cast counter
-      if(mA.master1||mA.fi_school){
-        state.fishCasts=(state.fishCasts||0)+times;
-        var schoolHits=Math.floor(state.fishCasts/10);
-        if(schoolHits>0){
-          state.fishCasts=state.fishCasts%10;
-          if(mA.master1)    bonusFish+=schoolHits;     // Lucky Lure: +1 per 10th
-          if(mA.fi_school)  bonusFish+=schoolHits;     // Schooling: +1 per 10th
-        }
-      }
-      if(bonusFish>0) grantItem(outAId,bonusFish);
-    }
-    // ── fo_al: Forager's Instinct bonus wildberries ──
-    if(pair.id==='fo_al'&&mA.fo_berries&&actB&&actB.inp){
-      var foActMs2=actMs(actA,pair.skillA);
-      var gatherTot2=fo_al_gatherTotalMs(actB);
-      var foActions2=foActMs2>0?Math.round(times*(gatherTot2/foActMs2)):times;
-      if(foActions2>0) grantItem('wildberries',foActions2);
-    }
-    // ── Mining-specific passives in dual mode (mi_sm) ──
-    if(pair.id==='mi_sm'&&outAId!=='coal'){
-      // Coal Seeker (mi_coal): chance to also produce coal while mining any non-coal ore
-      if(mA.mi_coal>0){
-        var coalHitsDual=binom(times,mA.mi_coal);
-        if(coalHitsDual>0){
-          // Magma Core bonus
-          if(mA.mi_magma>0) coalHitsDual+=binom(coalHitsDual,mA.mi_magma);
-          state.items['coal']=(state.items['coal']||0)+coalHitsDual;
-          markDiscovered('coal'); showItemPop('coal',coalHitsDual);
-        }
-      }
-      // Hardened Grip (mi_hard / master1): +1 coal per any ore mined (reduced from +2)
-      if(mA.mi_hard){
-        var hardCoalDual=times;
-        state.items['coal']=(state.items['coal']||0)+hardCoalDual;
-        markDiscovered('coal'); showItemPop('coal',hardCoalDual);
-      }
-      // Veinbreaker: track strikes in dual mode too
-      if(mA.mi_vbreak){
-        state.mineStrikes=(state.mineStrikes||0)+times;
-        var vbHitsDual=Math.floor(state.mineStrikes/10);
-        if(vbHitsDual>0){
-          state.mineStrikes=state.mineStrikes%10;
-          var vbBonusDual=vbHitsDual*2;
-          state.items[outAId]=(state.items[outAId]||0)+vbBonusDual;
-          markDiscovered(outAId); showItemPop(outAId,vbBonusDual);
-        }
-      }
-      // Motherlode (mi_master2): 30% chance +1 ore — extra goes to satchel in dual mode
-      if(mA.master2){
-        var mlDual=binom(times,0.30);
-        if(mlDual>0){ state.items[outAId]=(state.items[outAId]||0)+mlDual;
-        markDiscovered(outAId); showItemPop(outAId,mlDual); }
-      }
-    }
-  }
-
-  // ---- Resolve timesB (how many skill-B actions fire this tick) ----
-  // fo_al and mi_sm use a unified model: one action bar completion = one full output.
-  // No ingredients are gathered into or consumed from the satchel.
-  // fo_al: herb gathering is implicit in the (longer) action bar time.
-  // mi_sm: coal/secondary ores are implicit in the dual workflow.
-  var timesB = 0;
-  if(pair.id==='fo_al'){
-    // Each action completion produces exactly one potion — no buffer, no ingredient tracking.
-    timesB=times;
-  } else if(pair.id==='mi_sm'){
-    // One ore mined = one bar smelted. Coal and secondary inputs are implicit — not consumed.
-    timesB=times;
-  } else {
-    // wc_fm, fi_co: primary output feeds directly into skill B, no secondary ingredients.
-    timesB=times;
-  }
-
-  // Cooking fuel: fi_co requires the fire to be lit.
-  // Continuous burn in tick() drains the fuel — here we just skip cooking
-  // if the fire isn't burning. Fishing side still produces normally.
-  if(pair.id==='fi_co'&&timesB>0&&!fireIsLit()){
-    timesB=0;
-  }
-
-  // B outputs go to satchel (only if we actually brewed this cycle)
-  if(timesB>0){
-    for(var outId in actB.out){
-      var outQ=actB.out[outId];
-      var qty=outQ*timesB;
-      if(mB.master2) qty=outQ*2*timesB;
-      if(mB.al_twin) qty+=outQ*timesB;        // Twin Cauldron: +1 guaranteed potion per brew
-      qty+=binom(timesB,mB.extraBar)*outQ;     // Double Brew bonus-potion chance
-      if(qty>0){
-        state.items[outId]=(state.items[outId]||0)+qty;
-        markDiscovered(outId);
-        showItemPop(outId, qty);
-      }
-    }
-  }
-
-  // ---- XP for both skills — bottleneck-aware so the faster side isn't punished ----
-  //   fo_al: forage XP credits EVERY herb in the recipe (3 of A + 2 of B = full XP for both),
-  //     scaled by how long foraging is "active" in the cycle. Alchemy XP scaled by how many
-  //     brews would have fit in the cycle. Result: both skills hit ~xpMult of solo focused.
-  //   wc_fm / mi_sm / fi_co: each side gets XP proportional to how many of its solo actions
-  //     could have completed during the dual cycle. Resources stay 1:1 — only XP reflects the
-  //     full time spent.
-  var aMs=Math.max(1,actMs(actA,pair.skillA));
-  var bMs=Math.max(1,actMs(actB,pair.skillB));
-  var dualMs=dualActMs2(pair,actA.id);
-
-  var xpA=0;
-  var masteryA=0;
-  if(pair.id==='fo_al'&&actB&&actB.inp){
-    // Sum forage XP across every herb in the recipe
-    var totalForageXp=0;
-    var gatherTotal=fo_al_gatherTotalMs(actB);
-    for(var hId in actB.inp){
-      var qty=actB.inp[hId]||0;
-      var fHerb=SKILLS.foraging.acts.find(function(a){return a.out&&a.out[hId];});
-      if(fHerb) totalForageXp+=fHerb.xp*qty;
-    }
-    // Bottleneck-aware scaling: foraging is "active" for gatherTotal of dualMs.
-    // Multiplying by (dualMs / gatherTotal) gives forage XP as if it ran continuously.
-    var aIters=gatherTotal>0?(dualMs/gatherTotal):1;
-    xpA=Math.round(totalForageXp*times*aIters*mA.xpMult*XMULT*(1+masteryXpBonus(actA.id)));
-    // Mastery: count each herb action (primary herb's mastery accumulates)
-    masteryA=Math.round((totalForageXp/Math.max(1,actA.xp))*times*MMULT);
-  } else {
-    var aMult=1;
-    if(pair.id==='wc_fm'||pair.id==='mi_sm'||pair.id==='fi_co') aMult=dualMs/aMs;
-    xpA=Math.round(actA.xp*times*aMult*mA.xpMult*XMULT*(1+masteryXpBonus(actA.id)));
-    masteryA=Math.round(times*aMult*MMULT);
-  }
-  var beforeA=levelFromXp(state.xp[pair.skillA]);
-  state.xp[pair.skillA]+=xpA;
-  recordXpGain(pair.skillA,xpA);
-  showXpPop(pair.skillA,xpA);
-  recordMastery(actA.id,masteryA);
-  var afterA=levelFromXp(state.xp[pair.skillA]);
-  if(afterA>beforeA) toast(SKILLS[pair.skillA].icon+' '+SKILLS[pair.skillA].name+' level '+afterA+'!');
-
-  // B gets XP only for what it actually processed
-  if(timesB>0){
-    var bMult=1;
-    if(pair.id==='wc_fm'||pair.id==='mi_sm'||pair.id==='fi_co'||pair.id==='fo_al') bMult=dualMs/bMs;
-    var beforeB=levelFromXp(state.xp[pair.skillB]);
-    var xpB=Math.round(actB.xp*timesB*bMult*mB.xpMult*XMULT*(1+masteryXpBonus(actB.id)));
-    state.xp[pair.skillB]+=xpB;
-    recordXpGain(pair.skillB,xpB);
-    showXpPop(pair.skillB,xpB);
-    recordMastery(actB.id,Math.round(timesB*bMult*MMULT));
-    var afterB=levelFromXp(state.xp[pair.skillB]);
-    if(afterB>beforeB) toast(SKILLS[pair.skillB].icon+' '+SKILLS[pair.skillB].name+' level '+afterB+'!');
-  }
-
-  // Skilling gear drops — both skills can drop their set pieces during dual
-  rollSkillingGear(pair.skillA, actA.lvl, times);
-  if(timesB>0) rollSkillingGear(pair.skillB, actB.lvl, timesB);
-
-  return times;
-}
-
-function setDualAction(pairId,actAId,alActId){
-  var stopping=state.dualAction&&state.dualAction.pairId===pairId
-    &&state.dualAction.actAId===actAId
-    &&(state.dualAction.alActId||null)===(alActId||null);
-  if(stopping){
-    state.dualAction=null;
-    state.herbBuffer={}; // discard any banked herbs when stopping
-  }else{
-    // fi_co (Fish & Cook) requires a lit fire to start
-    if(pairId==='fi_co'&&!fireIsLit()){
-      if(fireHasFuel()) toast('💨 The fire isn\'t lit — click "Light Fire" before starting.');
-      else toast('🔥 No fuel — load logs and light the fire first.');
-      return;
-    }
-    state.action=null;
-    // Clear herb buffer when switching dual pair or tier
-    if(!state.dualAction||state.dualAction.pairId!==pairId) state.herbBuffer={};
-    state.dualAction={pairId:pairId,actAId:actAId,alActId:alActId||null};
-    state.actionStart=Date.now();
-  }
-  renderAll(); saveGame();
-}
-
+/* ════ [JS-21d] woodcutting double-action helper ═════════════════════════════════ */
 function setWcDoubleAct(actId){
   if(state.wcDoubleAct&&state.wcDoubleAct.actId===actId){
     state.wcDoubleAct=null;
@@ -13167,21 +12722,6 @@ function tick(){
     state.fishDoubleAct=null;
   }
 
-  // Dual skill tick
-  if(state.dualAction){
-    var _dp=DUAL_PAIRS.find(function(p){return p.id===state.dualAction.pairId;});
-    var _daId=state.dualAction.actAId;
-    if(!_dp||!_daId||!dualActUnlocked(_dp,_daId)){ state.dualAction=null; renderAll(); return; }
-    var _dms=dualActMs2(_dp,_daId);
-    var _del=now-state.actionStart;
-    if(_del>=_dms){
-      var _dc=Math.floor(_del/_dms);
-      completeDualAction(_dp,_dc);
-      state.actionStart+=_dc*_dms;
-      saveGame(); renderAll();
-    }
-    return;
-  }
 
   // Solo skill tick
   if(!state.action) return;
@@ -13401,7 +12941,6 @@ function setAction(skillKey,actId){
       }
     }
     // Switching activity — don't wipe buffer, let the window absorb the new rate naturally
-    state.dualAction=null; // cancel any active dual when starting solo
     state.action={skill:skillKey,actId};
     state.actionStart=Date.now();
   }
@@ -13429,11 +12968,8 @@ function renderSkillList(){
   const box=$('skillList'); box.innerHTML='';
   // Active skill first, selected skill second, rest alphabetical
   const activeKey=(state.action&&state.action.skill)||null;
-  const dualKeys=state.dualAction
-    ?(DUAL_PAIRS.find(function(p){return p.id===state.dualAction.pairId;})||{skillA:null,skillB:null})
-    :{skillA:null,skillB:null};
   function skillSortRank(k){
-    if(k===activeKey||k===dualKeys.skillA||k===dualKeys.skillB) return 0;
+    if(k===activeKey) return 0;
     if(k===selectedSkill) return 1;
     return 2;
   }
@@ -13450,45 +12986,9 @@ function renderSkillList(){
     const pct=lvl>=MAX_LEVEL?100:Math.floor(100*(xp-lo)/(hi-lo));
     const pts=availPoints(key);
     const isActive=state.action&&state.action.skill===key;
-    // Dual awareness — check if this skill is part of the active dual pair
-    const isDualA=state.dualAction&&(DUAL_PAIRS.find(function(p){return p.id===state.dualAction.pairId&&p.skillA===key;})||null);
-    const isDualB=state.dualAction&&(DUAL_PAIRS.find(function(p){return p.id===state.dualAction.pairId&&p.skillB===key;})||null);
-    const isDual=!!(isDualA||isDualB);
-    const dualPair=isDualA||isDualB||null;
 
     // XP/hr — live from ring buffer (falls back to theoretical during warmup)
-    // For dual mode, use the theoretical dual rate instead of ring buffer
-    var xphNow=0;
-    if(isDual&&dualPair&&state.dualAction.actAId){
-      const dActA=getAct(dualPair.skillA,state.dualAction.actAId);
-      const dActB=dActA?pairedActB(dualPair,dActA.id):null;
-      if(dActA&&dActB){
-        const dMs=dualActMs2(dualPair,dActA.id);
-        const dAct=isDualA?dActA:dActB;
-        const dSk=isDualA?dualPair.skillA:dualPair.skillB;
-        // Bottleneck-aware: scale XP by how many of this skill's solo actions fit in the dual cycle.
-        // fo_al foraging side: credit every herb in the recipe, scaled by foraging-active time fraction.
-        if(dualPair.id==='fo_al'&&isDualA&&dActB.inp){
-          let totalForageXp=0;
-          let gatherTot=fo_al_gatherTotalMs(dActB);
-          for(const hId in dActB.inp){
-            const qty=dActB.inp[hId]||0;
-            const fHerb=SKILLS.foraging.acts.find(a=>a.out&&a.out[hId]);
-            if(fHerb) totalForageXp+=fHerb.xp*qty;
-          }
-          const itersFo=gatherTot>0?(dMs/gatherTot):1;
-          xphNow=Math.round(totalForageXp*itersFo*(3600000/dMs)*mods(dSk).xpMult*dualPair.xpMult);
-        } else {
-          let iters=1;
-          if(dualPair.id==='wc_fm'||dualPair.id==='mi_sm'||dualPair.id==='fi_co'||dualPair.id==='fo_al'){
-            iters=dMs/Math.max(1,actMs(dAct,dSk));
-          }
-          xphNow=Math.round(dAct.xp*iters*(3600000/dMs)*mods(dSk).xpMult*dualPair.xpMult);
-        }
-      }
-    } else {
-      xphNow=smoothXph(key); // use smoothed value — no jumpy display
-    }
+    var xphNow=smoothXph(key); // use smoothed value — no jumpy display
     const isEarning=xphNow>0;
     const maxXph=maxTheoreticalXph(key);
     const barPct=xphNow>0?Math.min(100,Math.round(xphNow/maxXph*100)):0;
@@ -13496,9 +12996,9 @@ function renderSkillList(){
     const lvlSpd=(0.0015*(lvl-1)*100).toFixed(1);
 
     const btn=document.createElement('button');
-    btn.className='skill-row'+(key===selectedSkill?' selected':'')+((isActive||isDual)?' working':'');
+    btn.className='skill-row'+(key===selectedSkill?' selected':'')+(isActive?' working':'');
     // Active skill gets a subtle top-of-list indicator
-    if((isActive||isDual)&&key!==selectedSkill){
+    if(isActive&&key!==selectedSkill){
       btn.style.borderColor='var(--ember)';
     }
     btn.setAttribute('data-skill',key);
@@ -13511,9 +13011,9 @@ function renderSkillList(){
     <div class="xp-bar" title="${xp.toLocaleString()} / ${lvl<MAX_LEVEL?hi.toLocaleString():'MAX'} xp">
       <i style="width:${pct}%"></i>
     </div>
-    ${(isActive||isDual)||isEarning
+    ${isActive||isEarning
       ?`<div class="xph-row">
-          <span class="xph-label">${isDual?'🔗 ':''}${fmtK(xphNow)} xp/hr</span>
+          <span class="xph-label">${fmtK(xphNow)} xp/hr</span>
           <div class="xph-bar-wrap"><span class="xph-bar-fill" style="width:${barPct}%"></span></div>
           <button class="xph-reset" title="Reset tracker" data-sk="${key}">↺</button>
         </div>`
@@ -14825,43 +14325,6 @@ function renderStats(){
     </div>`;
   }
 
-  // Dual mode info
-  let dualHtml='';
-  if(state.dualAction){
-    const pair=DUAL_PAIRS.find(p=>p.id===state.dualAction.pairId);
-    if(pair&&(pair.skillA===skill||pair.skillB===skill)){
-      const actA=getAct(pair.skillA, state.dualAction.actAId);
-      const actB=actA?pairedActB(pair, actA.id):null;
-      if(actA&&actB){
-        const msA=actMs(actA, pair.skillA);
-        const msB=actMs(actB, pair.skillB);
-        const slowerSkill=msA>=msB?pair.skillA:pair.skillB;
-        const slowerMs=Math.max(msA,msB);
-        const cycleMs=Math.round(slowerMs*1.2);
-        const skA=SKILLS[pair.skillA], skB=SKILLS[pair.skillB];
-        const lvlA=levelFromXp(state.xp[pair.skillA]), lvlB=levelFromXp(state.xp[pair.skillB]);
-        const mA=mods(pair.skillA), mB=mods(pair.skillB);
-        const xphA=Math.round(actA.xp*(3600000/cycleMs)*mA.xpMult*pair.xpMult);
-        const xphB=Math.round(actB.xp*(3600000/cycleMs)*mB.xpMult*pair.xpMult);
-
-        const row=(s,sk,act,ms,xph,lvl,isSlower,isSelected)=>`
-          <div class="stat-row tip-above" style="${isSelected?'background:#3a2a1722;':''}" data-tip="${_tt(`Lv ${lvl} · ${(ms/1000).toFixed(1)}s${isSlower?' ← bottleneck':''} · ${fmtK(xph)} xp/hr`)}">
-            <span class="sr-label">${sk.icon} ${sk.name}${isSelected?' <span style="font-size:11px;color:var(--ember);letter-spacing:1px">VIEWING</span>':''}</span>
-            <span class="sr-value" style="color:var(--ember);font-size:14px">${act.name}</span>
-          </div>`;
-
-        dualHtml=`
-        <div class="stat-section-label">🔗 Dual Mode — ${pair.label}</div>
-        <div class="stat-row tip-above" data-tip="${_tt(`Paced by ${SKILLS[slowerSkill].name} +20% dual penalty. XP ×${pair.xpMult.toFixed(2)} per skill.`)}">
-          <span class="sr-label">Cycle time</span>
-          <span class="sr-value bonus-spd">${(cycleMs/1000).toFixed(1)}s</span>
-        </div>
-        ${row(pair.skillA,skA,actA,msA,xphA,lvlA,msA>=msB,pair.skillA===skill)}
-        ${row(pair.skillB,skB,actB,msB,xphB,lvlB,msB>msA,pair.skillB===skill)}`;
-      }
-    }
-  }
-
   const mastUnlocked=[];
   if(TREES[skill]){
     const mn1=TREES[skill].find(n=>n.id===p+'_master1');
@@ -14928,7 +14391,6 @@ function renderStats(){
     <div class="stat-section-label">Skill Tree Bonuses</div>
     ${mastUnlocked.map(t=>`<div class="stat-row" style="align-items:flex-start"><span style="font-size:13px;color:var(--text);line-height:1.5">${t}</span></div>`).join('')}`:''}
 
-    ${dualHtml}
     ${actHtml}
 
     <div class="stat-section-label">Account</div>
@@ -17569,7 +17031,7 @@ document.addEventListener('click',e=>{
   }
 });
 
-/* ════════ [JS-24] COMPENDIUM / MASTERY / CENTER / DUAL / ENCHANT / FRAME LOOP ═══ */
+/* ════════ [JS-24] COMPENDIUM / MASTERY / CENTER / ENCHANT / FRAME LOOP ═══ */
 /* =================================================================
    COMPENDIUM
    ================================================================= */
@@ -18037,51 +17499,6 @@ function fmtTime(ms){
 function renderXpDetail(){
   const box=$('xpDetail');
 
-  // ---- DUAL MODE ----
-  if(state.dualAction){
-    box.className='xp-detail';
-    const pair=DUAL_PAIRS.find(function(p){return p.id===state.dualAction.pairId;});
-    if(!pair||!state.dualAction.actAId){ box.innerHTML=''; return; }
-    const actA=getAct(pair.skillA,state.dualAction.actAId);
-    const actB=actA?pairedActB(pair,actA.id):null;
-    if(!actA||!actB){ box.innerHTML=''; return; }
-
-    const ms=dualActMs2(pair,actA.id);
-    const mA=mods(pair.skillA), mB=mods(pair.skillB);
-    const xphA=Math.round(actA.xp*(3600000/ms)*mA.xpMult*pair.xpMult);
-    const xphB=Math.round(actB.xp*(3600000/ms)*mB.xpMult*pair.xpMult);
-    const combined=xphA+xphB;
-
-    function skillBar(sk,skill,xph){
-      const xp=state.xp[skill];
-      const lvl=levelFromXp(xp);
-      if(lvl>=MAX_LEVEL) return '<div class="dual-xp-row"><span class="dual-xp-label">'+sk.icon+' '+sk.name+' MAX</span></div>';
-      const lo=XP_CUM[lvl],hi=XP_CUM[lvl+1];
-      const pct=Math.round((xp-lo)/(hi-lo)*100);
-      const toNext=hi-xp;
-      const ttlMs=xph>0?(toNext/xph)*3600000:Infinity;
-      return '<div class="dual-xp-row">'
-        +'<div class="dual-xp-top"><span class="dual-xp-label">'+sk.icon+' '+sk.name+' Lv '+lvl+'</span><span class="dual-xp-rate">'+fmtK(xph)+' xp/hr</span></div>'
-        +'<div class="xp-detail-bar"><div class="xp-detail-fill" style="width:'+pct+'%;background:linear-gradient(90deg,var(--ember),#f0a040)"></div><span class="xp-detail-pct">'+pct+'%</span></div>'
-        +'<div class="dual-xp-eta">'+toNext.toLocaleString()+' to next · '+(isFinite(ttlMs)?fmtTime(ttlMs):'–')+'</div>'
-        +'</div>';
-    }
-
-    box.innerHTML='<div class="dual-detail-header">'
-      +'<span class="dual-detail-label">'+pair.label+'</span>'
-      +'<span class="dual-detail-combined">'+fmtK(combined)+' combined xp/hr</span>'
-      +'</div>'
-      +'<div id="dualXpBars">'+skillBar(SKILLS[pair.skillA],pair.skillA,xphA)+skillBar(SKILLS[pair.skillB],pair.skillB,xphB)+'</div>'
-      +'<div class="dual-action-timer">'
-      +'<div style="display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:2px">'
-      +'<span>'+actA.name+' → '+actB.name+'</span>'
-      +'<span id="dualTimerText">'+ms/1000+'s per action</span>'
-      +'</div>'
-      +'<div class="prog" id="dualProgBarTop"><i></i></div>'
-      +'</div>';
-    return;
-  }
-
   // ---- SOLO MODE — build stable DOM with IDs for animate() to update live ----
   // 1.0.88: new sk-banner layout. Container className is swapped so the legacy
   // .xp-detail container chrome (bg/border/padding) goes away — the banner
@@ -18201,7 +17618,6 @@ function renderCenter(){
   const pts=availPoints(selectedSkill);
   $('tabPts').textContent=pts>0?`(${pts})`:'';
   $('tabActs').classList.toggle('on',viewTab==='acts');
-  $('tabDual').classList.toggle('on',viewTab==='dual');
   $('tabTree').classList.toggle('on',viewTab==='tree');
   $('tabShop').classList.toggle('on',viewTab==='shop');
   $('tabMastery').classList.toggle('on',viewTab==='mastery');
@@ -18227,7 +17643,6 @@ function renderCenter(){
   var _actsDisplay = viewTab!=='acts' ? 'none'
                    : (selectedSkill==='farming' ? 'block' : '');
   $('activityGrid').style.display=_actsDisplay;
-  $('dualView').style.display=viewTab==='dual'?'':'none';
   $('treeView').style.display=viewTab==='tree'?'':'none';
   $('shopView').style.display=viewTab==='shop'?'':'none';
   $('masteryView').style.display=viewTab==='mastery'?'':'none';
@@ -18240,12 +17655,11 @@ function renderCenter(){
   // skipping a rebuild has no visible cost — the next tick (after the dropdown closes) refreshes.
   var _focused=document.activeElement;
   if(_focused && _focused.tagName==='SELECT'){
-    var _activeId=({acts:'activityGrid',dual:'dualView',tree:'treeView',shop:'shopView',mastery:'masteryView',comp:'compView',enchant:'enchantView',socket:'socketView'})[viewTab];
+    var _activeId=({acts:'activityGrid',tree:'treeView',shop:'shopView',mastery:'masteryView',comp:'compView',enchant:'enchantView',socket:'socketView'})[viewTab];
     var _activePanel=_activeId?$(_activeId):null;
     if(_activePanel && _activePanel.contains(_focused)) return;
   }
   if(viewTab==='acts') renderActivities();
-  else if(viewTab==='dual') renderDual();
   else if(viewTab==='tree') renderPassives();
   else if(viewTab==='shop') renderShop();
   else if(viewTab==='mastery') renderMastery();
@@ -18467,263 +17881,6 @@ function openOfflineOverlay(){
   const closeBtn=document.getElementById('offlineOverlayClose');
   if(closeBtn) closeBtn.addEventListener('click',()=>overlay.remove());
 }
-
-var _dualOpen={}; // pairId -> bool (which dual dropdowns are expanded)
-// fo_al selected tier index per family: {familyIndex: tierIndex}
-var _foAlSel={};
-// Same interaction-timestamp lock as farming — native dropdowns steal focus
-// from the document, so we track interaction events directly.
-var _dualInteractAt=0;
-function _wireDualSelInteraction(sel){
-  var mark=function(){ _dualInteractAt=Date.now(); };
-  sel.addEventListener('mousedown',mark);
-  sel.addEventListener('touchstart',mark,{passive:true});
-  sel.addEventListener('focus',mark);
-  sel.addEventListener('keydown',mark);
-}
-
-/* ════ [JS-24e] dual view ════════════════════════════════════════════════════════ */
-function renderDual(){
-  var box=$('dualView');
-  if(!box) return;
-  // Two-layer guard: skip rebuild if a select inside is focused, OR if the
-  // user interacted with a dual select in the last 3 seconds.
-  var _af=document.activeElement;
-  if(_af && _af.tagName==='SELECT' && box.contains(_af)) return;
-  if(Date.now()-_dualInteractAt<3000) return;
-  box.innerHTML='';
-
-  var hdr=document.createElement('div');
-  hdr.style.cssText='margin-bottom:14px;font-size:14px;color:var(--muted);line-height:1.7;padding:10px 12px;background:var(--raised);border-radius:6px;border:1px solid var(--trim-d)';
-  hdr.innerHTML='<b style="color:var(--trim)">Dual Skilling</b> — Two skills run in tandem. Each side earns about <b style="color:var(--ember)">50% of solo XP/hr</b> and <b style="color:var(--ember)">60% mastery</b>.'
-    +'<br><b style="color:var(--text)">Chop &amp; Burn / Fish &amp; Cook:</b> cycle = (A time + B time) × 0.75, always at least 200ms slower than the slowest skill solo — you can never be faster than either skill individually.'
-    +'<br><b style="color:var(--text)">Mine &amp; Smelt:</b> max(mine, smelt) × 1.25. &nbsp;<b style="color:var(--text)">Forage &amp; Alchemize:</b> (gather all herbs + brew) × 1.2.'
-    +'<br><span style="font-size:13px;color:var(--muted)">Bonus resource passives drop to satchel. Speed &amp; XP potions apply to both sides. XP bonuses are now fully additive (tree + potion + gear sum together, not compounded).</span>';
-  box.appendChild(hdr);
-
-  for(var pi=0;pi<DUAL_PAIRS.length;pi++){
-    var pair=DUAL_PAIRS[pi];
-    var isActivePair=state.dualAction&&state.dualAction.pairId===pair.id;
-    var isOpen=isActivePair||!!_dualOpen[pair.id];
-
-    var wrap=document.createElement('div');
-    wrap.style.cssText='margin-bottom:10px;border:1px solid '+(isActivePair?'var(--ember)':'var(--trim-d)')+';border-radius:6px;overflow:hidden';
-
-    var pairHdr=document.createElement('button');
-    pairHdr.style.cssText='width:100%;text-align:left;padding:10px 12px;background:var(--raised-s);display:flex;align-items:center;gap:10px;border:none;cursor:pointer;color:inherit';
-    pairHdr.innerHTML='<span style="font-size:15px;color:var(--trim);font-variant:small-caps;letter-spacing:1px;flex:1">'+pair.label+'</span>'
-      +(isActivePair?'<span style="font-size:13px;color:var(--ember);margin-right:6px">● Running</span>':'')
-      +'<span style="font-size:14px;color:var(--muted);transform:rotate('+(isOpen?'90':'0')+'deg)">▶</span>';
-    (function(pid){ pairHdr.addEventListener('click',function(){ _dualOpen[pid]=!_dualOpen[pid]; renderDual(); }); })(pair.id);
-    wrap.appendChild(pairHdr);
-
-    if(isOpen){
-      var descEl=document.createElement('div');
-      descEl.style.cssText='font-size:14px;color:var(--muted);padding:8px 12px 4px;border-top:1px solid var(--trim-d)';
-      descEl.textContent=pair.desc;
-      wrap.appendChild(descEl);
-
-      // ── fo_al: grouped by potion family with tier dropdown ──
-      if(pair.potionFamilies){
-        for(var fi=0;fi<pair.potionFamilies.length;fi++){
-          var fam=pair.potionFamilies[fi];
-          // Find best (highest) unlocked tier index
-          var bestTi=-1;
-          for(var ti=0;ti<fam.tiers.length;ti++){
-            if(dualFoAlTierUnlocked(fam.tiers[ti].foAct,fam.tiers[ti].alAct)) bestTi=ti;
-          }
-          // Find currently active tier in this family
-          var activeTi=-1;
-          if(isActivePair&&state.dualAction.alActId){
-            for(var ti2=0;ti2<fam.tiers.length;ti2++){
-              if(fam.tiers[ti2].alAct===state.dualAction.alActId&&fam.tiers[ti2].foAct===state.dualAction.actAId) activeTi=ti2;
-            }
-          }
-          var isActiveFam=activeTi>=0;
-          // Selected display tier: active > saved > best
-          var savedTi=(_foAlSel[fi]!=null)?_foAlSel[fi]:bestTi;
-          var displayTi=isActiveFam?activeTi:(savedTi>=0?savedTi:bestTi);
-
-          var famRow=document.createElement('div');
-          famRow.style.cssText='padding:9px 12px;border-top:1px solid var(--trim-d);'+(isActiveFam?'background:#2a1a0844':'');
-
-          if(bestTi<0){
-            // All tiers locked — show lowest req
-            var t0=fam.tiers[0];
-            var fa0=getAct('foraging',t0.foAct); var aa0=getAct('alchemy',t0.alAct);
-            famRow.innerHTML='<div style="display:flex;align-items:center;gap:8px">'
-              +'<span style="font-size:14px;color:var(--muted);flex:1">'+fam.name+' Potions</span>'
-              +'<span style="font-size:13px;color:var(--red)">🌿 Lv'+(fa0?fa0.lvl:1)+' &amp; ⚗️ Lv'+(aa0?aa0.lvl:1)+' needed</span>'
-              +'</div>';
-          } else {
-            var selT=fam.tiers[displayTi>=0?displayTi:bestTi];
-            var selFoAct=getAct('foraging',selT.foAct);
-            var selAlAct=getAct('alchemy',selT.alAct);
-            // Sequential timing: gather every required herb, then brew. (gather + brew) × penalty.
-            var msFoAl=dualActMs2(pair,selT.foAct);
-            var mFo=mods('foraging'); var mAl=mods('alchemy');
-            // Forage XP credits every herb in the recipe, scaled by bottleneck-aware iters
-            var totalForageXp=0;
-            var gatherTotal=fo_al_gatherTotalMs(selAlAct);
-            for(var _hid in selAlAct.inp){
-              var _hq=selAlAct.inp[_hid]||0;
-              var _fh=SKILLS.foraging.acts.find(function(a){return a.out&&a.out[_hid];});
-              if(_fh) totalForageXp+=_fh.xp*_hq;
-            }
-            var foIters=gatherTotal>0?(msFoAl/gatherTotal):1;
-            var alIters=msFoAl/Math.max(1,actMs(selAlAct,'alchemy'));
-            var xphFo=Math.round(totalForageXp*foIters*(3600000/msFoAl)*mFo.xpMult*pair.xpMult);
-            var xphAl=Math.round(selAlAct.xp*alIters*(3600000/msFoAl)*mAl.xpMult*pair.xpMult);
-            var potionName=Object.keys(selAlAct.out).map(function(id){return ITEMS[id]?iconHTML(id)+' '+ITEMS[id].name:id;}).join(', ');
-            // Build the ingredient list so the player can see what each cycle gathers
-            var ingrParts=[];
-            for(var _ihid in selAlAct.inp){
-              var _iq=selAlAct.inp[_ihid]||0;
-              var _it=ITEMS[_ihid];
-              if(_it&&_iq>0) ingrParts.push(_iq+'× '+iconHTML(_ihid)+' '+_it.name);
-            }
-            var bufHtml=ingrParts.length>1?'<br><span style="color:var(--ember);font-size:12px">gathers: '+ingrParts.join(' + ')+'</span>':'';
-            var secHtml='';
-
-            var topRow=document.createElement('div');
-            topRow.style.cssText='display:flex;align-items:center;gap:8px;margin-bottom:5px';
-            topRow.innerHTML='<span style="font-size:14px;color:var(--trim);flex:1">'+fam.name+' Potions</span>';
-
-            // Tier dropdown
-            var sel=document.createElement('select');
-            sel.style.cssText='background:#0d0905;color:var(--text);border:1px solid var(--trim-d);border-radius:4px;padding:3px 7px;font-size:13px;cursor:pointer';
-            if(isActiveFam) sel.disabled=true;
-            for(var ti3=fam.tiers.length-1;ti3>=0;ti3--){
-              var t3=fam.tiers[ti3];
-              var aa3=getAct('alchemy',t3.alAct);
-              var unlk3=dualFoAlTierUnlocked(t3.foAct,t3.alAct);
-              var opt=document.createElement('option');
-              opt.value=ti3;
-              opt.disabled=!unlk3;
-              opt.textContent=(aa3?aa3.name.replace('Brew ',''):t3.alAct)+(unlk3?'':' 🔒');
-              if(ti3===displayTi) opt.selected=true;
-              sel.appendChild(opt);
-            }
-            (function(famIdx,famRef){ sel.addEventListener('change',function(){
-              _foAlSel[famIdx]=parseInt(this.value);
-              _dualInteractAt=0; // clear lock since user committed a choice
-              renderDual();
-            }); })(fi,fam);
-            _wireDualSelInteraction(sel);
-            topRow.appendChild(sel);
-
-            var btn=document.createElement('button');
-            btn.className='nbuy';
-            btn.style.cssText='width:55px;font-size:14px;padding:5px 0'+(isActiveFam?';background:var(--red);border-color:var(--red)':'');
-            btn.textContent=isActiveFam?'Stop':'Start';
-            (function(captFamIdx,captFam,captBestTi,captIsActive){ btn.addEventListener('click',function(){
-              if(captIsActive){
-                // Stop: toggle off using the current live state values
-                setDualAction('fo_al',state.dualAction.actAId,state.dualAction.alActId);
-                return;
-              }
-              var ti4=(_foAlSel[captFamIdx]!=null)?_foAlSel[captFamIdx]:captBestTi;
-              if(ti4<0) return;
-              var tier=captFam.tiers[ti4];
-              if(!tier) return;
-              setDualAction('fo_al',tier.foAct,tier.alAct);
-            }); })(fi,fam,bestTi,isActiveFam);
-            topRow.appendChild(btn);
-            famRow.appendChild(topRow);
-
-            var infoRow=document.createElement('div');
-            infoRow.style.cssText='font-size:13px;color:var(--muted);padding-left:24px';
-            infoRow.innerHTML=fmtK(xphFo)+' xp/hr 🌿  ·  '+fmtK(xphAl)+' xp/hr ⚗️  ·  '+potionName
-              +bufHtml+secHtml;
-            if(isActiveFam){
-              var pb=document.createElement('div'); pb.className='prog'; pb.id='dualProgBarTab'; pb.style.cssText='margin-top:5px';
-              pb.innerHTML='<i></i>';
-              var tt=document.createElement('div'); tt.id='dualTabTimerText';
-              tt.style.cssText='font-size:12px;color:var(--muted);font-family:\'Courier New\',monospace;margin-top:2px';
-              infoRow.appendChild(pb); infoRow.appendChild(tt);
-            }
-            famRow.appendChild(infoRow);
-          }
-          wrap.appendChild(famRow);
-        }
-      } else {
-        // ── Standard dual pairs (wc/fm, mi/sm, fi/co) ──
-        var tierList=document.createElement('div');
-        tierList.style.cssText='max-height:380px;overflow-y:auto';
-
-        var tierKeys=Object.keys(pair.linkMap);
-        for(var ti4b=0;ti4b<tierKeys.length;ti4b++){
-          var actAId=tierKeys[ti4b];
-          var actA=getAct(pair.skillA,actAId);
-          var actB=pairedActB(pair,actAId);
-          if(!actA||!actB) continue;
-
-          var unlocked=dualActUnlocked(pair,actAId);
-          var isActive=isActivePair&&state.dualAction.actAId===actAId;
-
-          var row=document.createElement('div');
-          row.style.cssText='display:flex;align-items:center;gap:10px;padding:8px 12px;border-top:1px solid var(--trim-d)'+(isActive?';background:#2a1a0844':'');
-
-          if(!unlocked){
-            var lvlA=levelFromXp(state.xp[pair.skillA]);
-            var lvlB=levelFromXp(state.xp[pair.skillB]);
-            var needA=actA.lvl>lvlA?SKILLS[pair.skillA].icon+' Lv'+actA.lvl:'';
-            var needB=actB.lvl>lvlB?SKILLS[pair.skillB].icon+' Lv'+actB.lvl:'';
-            var needs=[needA,needB].filter(function(x){return x;}).join(' & ');
-            row.innerHTML='<span style="font-size:14px;color:var(--muted);flex:1">'+actA.name+' → '+actB.name+'</span>'
-              +'<span style="font-size:13px;color:var(--red)">Requires '+needs+'</span>';
-          } else {
-            var ms=dualActMs2(pair,actAId);
-            var mA=mods(pair.skillA); var mB=mods(pair.skillB);
-            // Bottleneck-aware XP: each side scales by how many of its solo actions fit in the dual cycle
-            var aIters=ms/Math.max(1,actMs(actA,pair.skillA));
-            var bIters=ms/Math.max(1,actMs(actB,pair.skillB));
-            var xphA=Math.round(actA.xp*aIters*(3600000/ms)*mA.xpMult*pair.xpMult);
-            var xphB=Math.round(actB.xp*bIters*(3600000/ms)*mB.xpMult*pair.xpMult);
-            var outBName=Object.keys(actB.out).map(function(id){return (ITEMS[id]&&iconHTML(id)+' '+ITEMS[id].name)||id;}).join(', ');
-            row.innerHTML='<div style="flex:1;min-width:0">'
-              +'<div style="font-size:14px;color:var(--text)">'+SKILLS[pair.skillA].icon+' '+actA.name+' → '+SKILLS[pair.skillB].icon+' '+actB.name+'</div>'
-              +'<div style="font-size:13px;color:var(--muted);margin-top:2px">'+fmtK(xphA)+' xp/hr '+SKILLS[pair.skillA].icon+'  ·  '+fmtK(xphB)+' xp/hr '+SKILLS[pair.skillB].icon+'  ·  '+(ms/1000).toFixed(1)+'s  ·  '+outBName+'</div>'
-              +(isActive?'<div class="prog" id="dualProgBarTab" style="margin-top:6px"><i></i></div><div id="dualTabTimerText" style="font-size:12px;color:var(--muted);font-family:\'Courier New\',monospace;margin-top:2px"></div>':'')
-              +'</div>';
-            var btn2=document.createElement('button');
-            btn2.className='nbuy'; btn2.style.cssText='width:60px;font-size:14px;padding:5px 0';
-            btn2.textContent=isActive?'Stop':'Start';
-            if(isActive) btn2.style.cssText+=';background:var(--red);border-color:var(--red)';
-            (function(pid,aid){ btn2.addEventListener('click',function(){setDualAction(pid,aid);}); })(pair.id,actAId);
-            row.appendChild(btn2);
-          }
-          tierList.appendChild(row);
-        }
-        wrap.appendChild(tierList);
-      }
-    }
-    box.appendChild(wrap);
-  }
-}
-
-// Helper: dualActMs without needing state.dualAction set
-function dualActMs2(pair,actAId){
-  var actA=getAct(pair.skillA,actAId);
-  if(!actA) return 5000;
-  var actB=pairedActB(pair,actAId);
-  if(!actB) return 5000;
-  var pen=pair.msMult||1.2;
-  // fo_al: gather all herbs + brew, sequential
-  if(pair.id==='fo_al'){
-    var gather=fo_al_gatherTotalMs(actB);
-    var brew=actMs(actB,pair.skillB);
-    return Math.round((gather+brew)*pen);
-  }
-  // wc_fm / fi_co: additive time × 0.75 — 25% faster than sequential, never faster than solo
-  if(pair.id==='wc_fm'||pair.id==='fi_co'){
-    var aMs2=actMs(actA,pair.skillA), bMs2=actMs(actB,pair.skillB);
-    var calc=Math.round((aMs2+bMs2)*0.75);
-    return Math.max(calc, Math.max(aMs2,bMs2)+200);
-  }
-  return Math.round(Math.max(actMs(actA,pair.skillA),actMs(actB,pair.skillB))*pen);
-}
-
 
 /* ════ [JS-24f] enchanting view ══════════════════════════════════════════════════ */
 function renderEnchanting(){
@@ -19435,7 +18592,6 @@ function engageCombat(){
     return;
   }
   if(state.action){ state.action=null; }
-  state.dualAction=null;
   _combatGearSlot=null;          // close gear drawer — no mid-fight swapping
   state.cmbSubTab='arena';       // force Arena view so the player sees the fight
   refreshCombatStats();          // pull current atk/maxHp/swingMs from worn gear + levels
@@ -21082,30 +20238,8 @@ function animate(){
     }
   }
 
-  // ---- Dual action progress ----
-  if(state.dualAction){
-    var _pair=DUAL_PAIRS.find(function(p){return p.id===state.dualAction.pairId;});
-    if(_pair&&state.dualAction.actAId){
-      var _ms=dualActMs2(_pair,state.dualAction.actAId);
-      var _el=now-state.actionStart;
-      var _cyc=_el%_ms;
-      var _pct=Math.min(100,100*(_cyc/_ms));
-      var _b1=document.querySelector('#dualProgBarTop i');
-      if(_b1) _b1.style.width=_pct+'%';
-      var _b2=document.querySelector('#dualProgBarTab i');
-      if(_b2) _b2.style.width=_pct+'%';
-      var _tt=$('dualTimerText');
-      if(_tt){
-        var _tl=_ms-_cyc;
-        _tt.textContent=fmtDuration(Math.max(0,_tl))+' left · '+(_ms/1000).toFixed(1)+'s per action';
-      }
-      var _tabTT=$('dualTabTimerText');
-      if(_tabTT){ _tabTT.textContent=fmtDuration(Math.max(0,_ms-_cyc))+' left'; }
-    }
-  }
-
   // ---- Solo action progress + live xpDetail updates ----
-  if(state.action&&!state.dualAction){
+  if(state.action){
     var _act=getAct(state.action.skill,state.action.actId);
     if(_act){
       var _ms2=actMs(_act,state.action.skill);
@@ -21303,7 +20437,6 @@ $('tabStatsLeft').addEventListener('click',()=>{
   renderStats();
 });
 $('tabActs').addEventListener('click',()=>{ closeCombatPanel(); viewTab='acts'; renderCenter(); });
-$('tabDual').addEventListener('click',()=>{ closeCombatPanel(); viewTab='dual'; renderCenter(); });
 $('tabTree').addEventListener('click',()=>{ closeCombatPanel(); viewTab='tree'; renderCenter(); });
 $('tabShop').addEventListener('click',()=>{ closeCombatPanel(); viewTab='shop'; renderCenter(); });
 $('tabMastery').addEventListener('click',()=>{ closeCombatPanel(); viewTab='mastery'; renderCenter(); });
