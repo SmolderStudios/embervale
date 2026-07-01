@@ -2431,7 +2431,7 @@ header h1 .flame{color:var(--ember)}
   <div class="mm-btns">
     <button class="mm-btn mm-primary" id="mmPlay">▶ Play</button>
   </div>
-  <div class="mm-ver">v1.0.33</div>
+  <div class="mm-ver">v1.0.34</div>
 </div>
 
 <!-- ===== CHARACTER SELECT (added) ===== -->
@@ -2540,7 +2540,7 @@ header h1 .flame{color:var(--ember)}
     <div id="xpDetail" class="xp-detail"></div>
     <div class="tabs">
       <button class="tab" id="tabActs">Activities</button>
-      <button class="tab" id="tabDual">Dual</button>
+      <button class="tab" id="tabDual" style="display:none">Dual</button>
       <button class="tab" id="tabTree">Skill Tree <span id="tabPts" style="color:var(--ember);font-family:monospace"></span></button>
       <button class="tab" id="tabEnchant">Enchant</button>
       <button class="tab" id="tabSocket">Socket</button>
@@ -9872,7 +9872,10 @@ function normalizeState(){
   }
   if(!state.newlyDiscovered||typeof state.newlyDiscovered!=='object'||Array.isArray(state.newlyDiscovered)) state.newlyDiscovered={};
   if(state.action!==null&&typeof state.action!=='object') state.action=null;
-  if(state.dualAction!==null&&typeof state.dualAction!=='object') state.dualAction=null;
+  // Dual skilling retired (v1.0.34) — force-clear any saved pairing so a legacy
+  // dual never resumes. The Dual tab is hidden; DUAL_PAIRS/completeDualAction and
+  // the rest of the plumbing are left dormant in case we revisit it later.
+  state.dualAction=null;
   if(typeof state.actionStart!=='number') state.actionStart=0;
   if(typeof state.offlineXp!=='number') state.offlineXp=0;
   if(state.offlineConfig!==null&&state.offlineConfig!==undefined&&typeof state.offlineConfig!=='object') state.offlineConfig=null;
@@ -17144,6 +17147,17 @@ function openGearSlotModal(slotKey,def,currentId){
     }
   }
 
+  // Tool slots: only surface the highest-tier tool the player owns for this slot —
+  // no point listing a Bronze Pick once an Eclipse Pick is owned. Non-tool slots
+  // are untouched. The currently-equipped tool is shown separately (it's excluded
+  // from `available` via currentId), so it never needs to appear in this list.
+  var toolAlts=available.filter(function(id){ return ITEMS[id]&&ITEMS[id].tool; });
+  if(toolAlts.length>1){
+    var toolTier=function(id){ var sh=SHOP.find(function(s){return s.id===id;}); return (sh&&sh.tier)||0; };
+    var bestTool=toolAlts.reduce(function(a,b){ return toolTier(b)>toolTier(a)?b:a; });
+    available=available.filter(function(id){ return !(ITEMS[id]&&ITEMS[id].tool)||id===bestTool; });
+  }
+
   // Source deep-link button — tool slots route to Crafting (v1.0.47+); jewelry
   // and cape slots still route to Shop. Body slots like helmet/chest have no
   // direct source link (they come from Crafting's other categories already).
@@ -20660,7 +20674,7 @@ function renderCombat(){
         <div class="cmb-fighter you">
           <div class="cmb-fight-head">
             <div class="face" title="${playerFaceLabel}">${iconHTML(playerFaceId)}</div>
-            <div class="nm">You<span class="lv">Lv ${playerCl}</span></div>
+            <div class="nm">${mmEsc(state.charName||'You')}<span class="lv">Lv ${playerCl}</span></div>
             <div class="hp-val" id="cmbYouHpText">${active?combat.youHp:combat.youMaxHp}<span class="max"> / ${combat.youMaxHp}</span></div>
           </div>
           <div class="cmb-hpbar you" id="cmbYouBar" title="Your health"><i style="width:${youPct}%"></i></div>
@@ -21586,7 +21600,10 @@ function mmStartEngine(){
 /* ===== BOOT — show the menu; game starts when a character is chosen ===== */
 $('mmPlay').addEventListener('click',mmShowChars);
 $('mmBackToMenu').addEventListener('click',mmShowMenu);
-$('btnMenu').addEventListener('click',mmQuitToMenu);
+$('btnMenu').addEventListener('click',async()=>{
+  const ok=await showConfirm('Return to Menu','Head back to the title screen?','Your progress is saved automatically.');
+  if(ok) mmQuitToMenu();
+});
 $('mmNameOk').addEventListener('click',mmConfirmName);
 $('mmNameCancel').addEventListener('click',()=>$('mmNameModal').classList.add('mm-hidden'));
 $('mmdConfirm').addEventListener('click',mmConfirmDestiny);
