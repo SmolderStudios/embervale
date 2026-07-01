@@ -2420,7 +2420,7 @@ header h1 .flame{color:var(--ember)}
   <div class="mm-btns">
     <button class="mm-btn mm-primary" id="mmPlay">▶ Play</button>
   </div>
-  <div class="mm-ver">v1.0.35</div>
+  <div class="mm-ver">v1.0.36</div>
 </div>
 
 <!-- ===== CHARACTER SELECT (added) ===== -->
@@ -3806,6 +3806,28 @@ function removeSocketGem(itemId, slotIdx){
   sd.gems[slotIdx]=null;
   saveGame();
   return true;
+}
+
+/* True if the player currently possesses this item in ANY inventory or loadout. */
+function ownsItemAnywhere(id){
+  if((state.items&&state.items[id]||0)>0) return true;
+  if(Array.isArray(state.gear)&&state.gear.indexOf(id)>=0) return true;
+  if(state.skillingGear&&state.skillingGear[id]) return true;
+  var maps=[state.equipped,state.combatEquipped,state.skillingEquipped];
+  for(var mi=0;mi<maps.length;mi++){ var mp=maps[mi]; if(mp){ for(var s in mp){ if(mp[s]===id) return true; } } }
+  return false;
+}
+
+/* An item left the player's possession (sold / fully consumed): pop every gem
+   still socketed in it back to the satchel, then drop the socket record so the
+   item stops lingering in the Socket panel. */
+function reclaimSocketsFor(itemId){
+  var sd=state.sockets&&state.sockets[itemId];
+  if(!sd) return;
+  if(Array.isArray(sd.gems)){
+    for(var i=0;i<sd.gems.length;i++){ var g=sd.gems[i]; if(g){ state.items[g]=(state.items[g]||0)+1; markDiscovered(g); } }
+  }
+  delete state.sockets[itemId];
 }
 
 /* Total SKILLING socket bonuses across all EQUIPPED gear. Only skilling keys
@@ -9898,6 +9920,12 @@ function normalizeState(){
     for(var __gi=0;__gi<__sd.gems.length;__gi++){
       if(__sd.gems[__gi]&&!SOCKET_GEMS[__sd.gems[__gi]]) __sd.gems[__gi]=null;
     }
+    // Item no longer owned (e.g. sold before reclaim existed) — refund its gems
+    // to the satchel and drop the orphaned record so it stops showing up.
+    if(!ownsItemAnywhere(__sid)){
+      for(var __ri=0;__ri<__sd.gems.length;__ri++){ if(__sd.gems[__ri]) state.items[__sd.gems[__ri]]=(state.items[__sd.gems[__ri]]||0)+1; }
+      delete state.sockets[__sid]; continue;
+    }
     // Enforce per-item slot cap. Pop excess sockets from the end; refund any gems.
     var __cap=maxSocketsFor(__sid);
     if(__cap>MAX_SOCKETS_PER_ITEM) __cap=MAX_SOCKETS_PER_ITEM;
@@ -14632,6 +14660,7 @@ function sellShopItem(id){
   }
   const refund=Math.floor(item.cost*0.5);
   state.gear=state.gear.filter(g=>g!==id);
+  if(!ownsItemAnywhere(id)) reclaimSocketsFor(id); // socketed jewelry: refund gems, clear record
   state.coins+=refund*SILVER_PER_GOLD;
   renderAll(); saveGame();
   toast(`Sold ${item.name} for 🪙 ${refund.toLocaleString()}g.`);
@@ -15945,6 +15974,9 @@ function openSellModal(id, sv, maxQty){
     const qty=readQty();
     if(qty<=0){ $('sellModal').classList.add('hidden'); return; }
     state.items[id]=Math.max(0,(state.items[id]||0)-qty);
+    // Sold the last one — pop any socketed gems back to the satchel so they
+    // aren't lost and the item stops showing in the Socket panel.
+    if((state.items[id]||0)===0) reclaimSocketsFor(id);
     state.coins+=sv*qty;
     showCoinPop(sv*qty);
     $('sellModal').classList.add('hidden');
@@ -18128,8 +18160,9 @@ function _socketOwnedList(){
   if(state.skillingGear){ for(var sid in state.skillingGear){ if(state.skillingGear[sid]) add(sid); } }
   // Equipped (just in case it's somehow not in items/skillingGear)
   if(state.equipped){ for(var slot in state.equipped) add(state.equipped[slot]); }
-  // Items with non-zero sockets that may not be currently owned (defensive — keep visible)
-  if(state.sockets){ for(var oid in state.sockets){ if(state.sockets[oid]&&state.sockets[oid].slots>0) add(oid); } }
+  // Items with non-zero sockets — only surface ones the player still owns, so a
+  // sold item never lingers in the panel.
+  if(state.sockets){ for(var oid in state.sockets){ if(state.sockets[oid]&&state.sockets[oid].slots>0&&ownsItemAnywhere(oid)) add(oid); } }
   return out;
 }
 
