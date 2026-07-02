@@ -433,8 +433,24 @@ header h1 .flame{color:var(--ember)}
 .cmb-foodmenu .fm-at{font-size:11.5px;color:var(--muted)}
 .cmb-foodmenu .fm-status{font-size:11.5px;color:var(--muted);margin-left:auto}
 .cmb-foodmenu .fm-status.on{color:#a8e066}
-.cmb-foodmenu .fm-div{height:1px;background:var(--trim-d);opacity:.5;margin:2px 0}
+.cmb-foodmenu .fm-div{height:1px;background:var(--trim-d);opacity:.5;margin:4px 0}
 .cmb-foodmenu .fm-empty{font-size:12px;color:var(--muted);font-style:italic;line-height:1.4}
+/* Icon-grid food/potion picker (1.0.60) — replaces the confusing dropdowns */
+.cmb-foodmenu .fm-sub{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin:2px 0 3px}
+.cmb-foodmenu .fm-icons{display:flex;flex-wrap:wrap;gap:4px;max-height:88px;overflow-y:auto;padding:1px;align-content:flex-start}
+.cmb-foodmenu .fm-icon{position:relative;width:34px;height:34px;padding:0;flex:none;display:inline-flex;
+  align-items:center;justify-content:center;background:#241410;border:1px solid var(--trim-d);border-radius:5px;cursor:pointer}
+.cmb-foodmenu .fm-icon:hover:not(:disabled){border-color:#c89b4e;background:#33240f}
+.cmb-foodmenu .fm-icon:disabled{opacity:.42;cursor:not-allowed}
+.cmb-foodmenu .fm-icon .fm-ic{font-size:18px;width:22px;height:22px;display:flex;align-items:center;justify-content:center;line-height:1}
+.cmb-foodmenu .fm-icon .fm-ic svg{width:20px;height:20px}
+.cmb-foodmenu .fm-icon .ct{position:absolute;bottom:-4px;right:-4px;min-width:14px;height:14px;padding:0 2px;
+  font-size:9.5px;line-height:13px;text-align:center;background:#1a0e07;border:1px solid var(--trim-d);
+  border-radius:7px;color:#f0c772;font-family:'Courier New',monospace}
+.cmb-foodmenu .fm-icon.buff-atk{border-color:#a06818}
+.cmb-foodmenu .fm-icon.buff-def{border-color:#5878b8}
+.cmb-foodmenu .fm-icon.buff-str{border-color:#6028a0}
+.cmb-foodmenu .fm-icon.buff-triple{border-color:#c79b4e}
 @media(max-width:720px){
   .cmb-fightwrap{grid-template-columns:1fr}
   .cmb-logfood{grid-template-columns:1fr}
@@ -483,11 +499,13 @@ header h1 .flame{color:var(--ember)}
 .cd-stat[data-tip],
 .cmb-chip[data-tip],
 .st-ic[data-tip],
+.fm-icon[data-tip],
 .cmb-slot[data-tip]{position:relative}
 .cmb-stat[data-tip]:hover::after,
 .cd-stat[data-tip]:hover::after,
 .cmb-chip[data-tip]:hover::after,
 .st-ic[data-tip]:hover::after,
+.fm-icon[data-tip]:hover::after,
 .cmb-slot[data-tip]:hover::after{
   content:attr(data-tip);
   position:absolute;
@@ -523,7 +541,8 @@ header h1 .flame{color:var(--ember)}
 .cmb-slot[data-tip]:hover::after{min-width:0;max-width:220px;white-space:nowrap;font-size:13px;padding:5px 9px}
 /* Status chip tooltips — compact, sit right under the small chip (1.0.60) */
 .st-ic[data-tip]{cursor:help}
-.st-ic[data-tip]:hover::after{min-width:0;max-width:260px;white-space:nowrap;font-size:13px;padding:5px 9px}
+.st-ic[data-tip]:hover::after,
+.fm-icon[data-tip]:hover::after{min-width:0;max-width:260px;white-space:pre;font-size:13px;padding:5px 9px}
 .cmb-fighter.foe .st-ic[data-tip]:hover::after{left:auto;right:0}
 /* Right-edge slots (auto-heal pill at the end of the hotbar) anchor their tip
    to the right edge so it doesn't spill past the panel. */
@@ -2488,7 +2507,7 @@ header h1 .flame{color:var(--ember)}
   <div class="mm-btns">
     <button class="mm-btn mm-primary" id="mmPlay">▶ Play</button>
   </div>
-  <div class="mm-ver">v1.0.60</div>
+  <div class="mm-ver">v1.0.61</div>
 </div>
 
 <!-- ===== CHARACTER SELECT (added) ===== -->
@@ -6278,8 +6297,25 @@ function combatGearStatBlock(itemId){
     reqLine='<div style="font-size:12px;margin-top:6px;color:'+(met?'#7da33f':'#d04848')+'">'
       +(met?'✓':'🔒')+' Requires '+req.level+' '+statName+(met?'':' (you have '+cmbLvl(req.stat)+')')+'</div>';
   }
+  // On-hit effect (1.0.60) — poison / stun procs from the weapon's wfx field.
+  var fxLine=(typeof wfxTipHTML==='function')?wfxTipHTML(itemId):'';
   return '<div style="color:var(--ember);font-size:12px;letter-spacing:.5px;margin-bottom:6px">⚔ '+tierName+' · Tier '+it.ctier+' · '+slotLabel+'</div>'
-    +'<div style="font-size:14px;line-height:1.7">'+statLine+'</div>'+reqLine;
+    +'<div style="font-size:14px;line-height:1.7">'+statLine+'</div>'+fxLine+reqLine;
+}
+
+/* Human-readable on-hit effect block for a weapon's `wfx` (poison / stun).
+   Returns '' if the item has no proc. Shared by every gear/inventory tooltip
+   and the combat drop hover so any debuff weapon advertises what it does. */
+function wfxTipHTML(itemId){
+  var it=ITEMS[itemId];
+  if(!it||!it.wfx) return '';
+  var fx=it.wfx, parts=[];
+  if(fx.poison){ var p=fx.poison;
+    parts.push('<span style="color:#8fd44a">☠ '+Math.round(p.chance*100)+'% on hit to <b>poison</b> — '+p.dmg+' dmg every '+(p.every||2)+'s for '+p.dur+'s</span>'); }
+  if(fx.stun){ var s=fx.stun;
+    parts.push('<span style="color:#ffd24a">💫 '+Math.round(s.chance*100)+'% on hit to <b>stun</b> — skips its next '+s.dur+'s of attacks</span>'); }
+  if(!parts.length) return '';
+  return '<div style="font-size:12.5px;line-height:1.5;margin-top:6px;padding-top:6px;border-top:1px solid #3a2a18">'+parts.join('<br>')+'</div>';
 }
 
 /* Build a reusable enchant/gem block for gem-tier jewelry (ring/amulet/pendant/jewel).
@@ -19156,38 +19192,59 @@ function _statusGlyph(key,color){
   return `<svg viewBox="0 0 16 16" width="12" height="12" fill="${color}" stroke="${color}" stroke-linecap="round" stroke-linejoin="round" pointer-events="none">${p}</svg>`;
 }
 
-/* Row of buff/debuff chips under a fighter's health bar (1.0.60).
-   'foe' → poison / stun debuffs from combat.foeStatus.
-   'you' → active combat potion buffs (atk/str/def) + food regen.
-   Each chip carries a hoverable data-tip with the effect name + time left. */
-function statusIconsHTML(side){
-  if(!combat.active) return '';
+/* Buff/debuff chip DATA for a fighter (1.0.60). Returns an array of
+   {key,glyph,color,tip}. `key` identifies the effect TYPE (not its countdown)
+   so updateCombatBars can tell when the SET of chips changes vs. just the
+   seconds ticking — the fix for the chip row flickering every tick.
+   'foe' → poison / stun debuffs; 'you' → potion buffs + food regen. */
+function statusChips(side){
+  if(!combat.active) return [];
   const now=Date.now();
-  const chips=[];
+  const out=[];
   const secs=ms=>Math.max(0,Math.ceil(ms/1000))+'s';
-  const chip=(key,color,tip)=>`<span class="st-ic" style="border-color:${color}" data-tip="${tip}">${_statusGlyph(key,color)}</span>`;
   if(side==='foe'){
     const fs=combat.foeStatus||{};
-    if(fs.poison&&fs.poison.until>now){
-      chips.push(chip('blood','#8fd44a',`Poisoned — ${fs.poison.dmg} dmg / ${fs.poison.every||2}s · ${secs(fs.poison.until-now)} left`));
-    }
-    if(fs.stun&&fs.stun.until>now){
-      chips.push(chip('bolt','#ffd24a',`Stunned — skipping attacks · ${secs(fs.stun.until-now)} left`));
-    }
+    if(fs.poison&&fs.poison.until>now)
+      out.push({key:'poison',glyph:'blood',color:'#8fd44a',tip:`Poisoned — ${fs.poison.dmg} dmg / ${fs.poison.every||2}s · ${secs(fs.poison.until-now)} left`});
+    if(fs.stun&&fs.stun.until>now)
+      out.push({key:'stun',glyph:'bolt',color:'#ffd24a',tip:`Stunned — skipping attacks · ${secs(fs.stun.until-now)} left`});
   } else {
     for(const e of (state.effects||[])){
       if(e.expires<=now) continue;
       const t=secs(e.expires-now);
-      if(e.atk) chips.push(chip('sword','#6fa8ff',`Attack +${e.atk} · ${t}`));
-      if(e.str) chips.push(chip('flame','#ff8a5c',`Strength +${e.str} · ${t}`));
-      if(e.def) chips.push(chip('shield','#7bd88a',`Defence +${e.def} · ${t}`));
+      if(e.atk) out.push({key:'atk:'+(e._itemId||''),glyph:'sword',color:'#6fa8ff',tip:`Attack +${e.atk} · ${t}`});
+      if(e.str) out.push({key:'str:'+(e._itemId||''),glyph:'flame',color:'#ff8a5c',tip:`Strength +${e.str} · ${t}`});
+      if(e.def) out.push({key:'def:'+(e._itemId||''),glyph:'shield',color:'#7bd88a',tip:`Defence +${e.def} · ${t}`});
     }
     if(combat.regens&&combat.regens.length){
       const until=Math.max.apply(null,combat.regens.map(r=>r.until));
-      if(until>now) chips.push(chip('heart','#8fe08f',`Regenerating HP · ${secs(until-now)}`));
+      if(until>now) out.push({key:'regen',glyph:'heart',color:'#8fe08f',tip:`Regenerating HP · ${secs(until-now)}`});
     }
   }
-  return chips.join('');
+  return out;
+}
+function _chipHTML(c){
+  return `<span class="st-ic" style="border-color:${c.color}" data-tip="${c.tip}">${_statusGlyph(c.glyph,c.color)}</span>`;
+}
+function statusIconsHTML(side){
+  return statusChips(side).map(_chipHTML).join('');
+}
+/* Cached chip-set signatures so the tick loop only rebuilds the row when a chip
+   is added/removed — otherwise it just refreshes tooltips in place (no flicker,
+   no re-triggered entrance animation). */
+let _foeChipSig='', _youChipSig='';
+function _syncChipRow(el, side, prevSig, setSig){
+  if(!el) return;
+  const chips=statusChips(side);
+  const sig=chips.map(c=>c.key).join('|');
+  if(sig!==prevSig()){
+    setSig(sig);
+    el.innerHTML=chips.map(_chipHTML).join('');
+  } else {
+    // Same set — only the countdowns changed; patch data-tip attributes in place.
+    const nodes=el.children;
+    for(let i=0;i<chips.length&&i<nodes.length;i++) nodes[i].setAttribute('data-tip',chips[i].tip);
+  }
 }
 
 function updateCombatBars(){
@@ -19200,8 +19257,8 @@ function updateCombatBars(){
   const yb=document.querySelector('#cmbYouBar i'); if(yb) yb.style.width=youPct+'%';
   const ft=$('cmbFoeHpText'); if(ft) ft.textContent=combat.active?`${combat.foeHp} / ${mon.hp}`:`${mon.hp} / ${mon.hp}`;
   const yt=$('cmbYouHpText'); if(yt) yt.textContent=`${combat.youHp} / ${combat.youMaxHp}`;
-  const fst=$('cmbFoeStatus'); if(fst) fst.innerHTML=statusIconsHTML('foe');
-  const yst=$('cmbYouStatus'); if(yst) yst.innerHTML=statusIconsHTML('you');
+  _syncChipRow($('cmbFoeStatus'),'foe',()=>_foeChipSig,v=>_foeChipSig=v);
+  _syncChipRow($('cmbYouStatus'),'you',()=>_youChipSig,v=>_youChipSig=v);
   const logEl=$('cmbLog');
   if(logEl){
     // Sticky scroll: if the user is already at (or near) the bottom, auto-scroll
@@ -20041,6 +20098,9 @@ function renderCombat(){
   // The dropdown is BOTH the manual-use selection AND the auto-eat target
   // (state.autoHeal.itemId) so "which one" is chosen in a single place. "Smart"
   // = least-waste auto-pick across instant heals. ─────────────────────────────
+  // ── Food/heal picker (1.0.60) — icon grid (was a dropdown). Click an icon to
+  // eat/drink it; hover for name + effect + count. Scrolls if it overflows. ────
+  const _fmEsc=s=>String(s).replace(/"/g,'&quot;');
   const healPickHTML=(function(){
     const heals=combatHealItems();          // instant heals (draughts/food/poultices)
     const regens=combatRegenFoods();        // heal-over-time foods
@@ -20048,14 +20108,12 @@ function renderCombat(){
     if(!heals.length&&!regens.length){
       return '<div class="fm-empty">No food or potions yet — cook fish or brew draughts to heal here.</div>';
     }
-    let opts=`<option value=""${!ah.itemId?' selected':''}>🩹 Smart — best fit</option>`;
-    opts+=heals.map(h=>`<option value="${h.id}"${h.id===ah.itemId?' selected':''}>${h.it.name} · +${h.heal} HP (×${h.cnt})</option>`).join('');
-    opts+=regens.map(r=>`<option value="${r.id}"${r.id===ah.itemId?' selected':''}>${r.it.name} · +${r.total} HP/${r.dur}s (×${r.cnt})</option>`).join('');
+    const healIco=h=>`<button class="fm-icon cmb-pot-btn" data-heal="${h.id}" data-tip="${_fmEsc(h.it.name)}&#10;+${h.heal} HP · instant&#10;${h.cnt} in satchel"${active?'':' disabled'}><span class="fm-ic">${iconHTML(h.id)}</span><span class="ct">${h.cnt}</span></button>`;
+    const regenIco=r=>`<button class="fm-icon cmb-pot-btn" data-regen="${r.id}" data-tip="${_fmEsc(r.it.name)}&#10;+${r.total} HP over ${r.dur}s&#10;${r.cnt} in satchel"${active?'':' disabled'}><span class="fm-ic">${iconHTML(r.id)}</span><span class="ct">${r.cnt}</span></button>`;
+    const icons=heals.map(healIco).join('')+regens.map(regenIco).join('');
     const thr=[10,20,30,40,50,60,75].map(t=>`<option value="${t}"${t===ah.thresholdPct?' selected':''}>≤ ${t}%</option>`).join('');
-    return `<div class="fm-row">
-        <select id="cmbHealPick" class="fm-sel" title="Which food/potion to use & auto-eat">${opts}</select>
-        <button id="cmbUseHeal" class="fm-use"${active?'':' disabled'}>Use</button>
-      </div>
+    return `<div class="fm-sub">Food &amp; Heals</div>
+      <div class="fm-icons">${icons}</div>
       <div class="fm-row fm-auto">
         <label class="fm-toggle"><input type="checkbox" id="cmbAutoHealChk"${ah.enabled?' checked':''}/><span>Auto-eat</span></label>
         <span class="fm-at">at HP</span>
@@ -20063,23 +20121,21 @@ function renderCombat(){
       </div>`;
   })();
 
-  // ── Buff picker (1.0.31) — dropdown of owned buff potions + a Use button. The
-  // dropdown also picks which buff Auto-buff keeps topped up ("Keep all" = every
-  // owned brew). Only rendered when at least one buff potion is owned. ─────────
+  // ── Buff picker (1.0.60) — icon grid of owned buff potions, split from food by
+  // a divider. Click to drink; hover for the stat bonus + count. ───────────────
   const buffPickHTML=(function(){
     const buffs=combatBuffItems();          // owned buff potions, strongest total first
     if(!buffs.length) return '';
     const ab=state.autoBuff||{enabled:false,itemId:''};
-    const shortOf=it=>{const p=it.potion||{};return [p.atk?'+'+p.atk+' Atk':'',p.str?'+'+p.str+' Str':'',p.def?'+'+p.def+' Def':''].filter(Boolean).join('/');};
-    let opts=`<option value=""${!ab.itemId?' selected':''}>Keep all up</option>`;
-    opts+=buffs.map(b=>`<option value="${b.id}"${b.id===ab.itemId?' selected':''}>${b.it.name} · ${shortOf(b.it)} (×${(state.items[b.id]||0)})</option>`).join('');
+    const shortOf=it=>{const p=it.potion||{};return [p.atk?'+'+p.atk+' Atk':'',p.str?'+'+p.str+' Str':'',p.def?'+'+p.def+' Def':''].filter(Boolean).join(' / ');};
+    const tintOf=it=>{const p=it.potion||{};const n=(p.atk?1:0)+(p.str?1:0)+(p.def?1:0);return n>1?'buff-triple':p.atk?'buff-atk':p.str?'buff-str':p.def?'buff-def':'';};
+    const buffIco=b=>`<button class="fm-icon ${tintOf(b.it)} cmb-pot-btn" data-buff="${b.id}" data-tip="${_fmEsc(b.it.name)}&#10;${_fmEsc(shortOf(b.it))}&#10;${(state.items[b.id]||0)} in satchel"${active?'':' disabled'}><span class="fm-ic">${iconHTML(b.id)}</span><span class="ct">${(state.items[b.id]||0)}</span></button>`;
+    const icons=buffs.map(buffIco).join('');
     const nowT=Date.now();
     const activeBuffs=(state.effects||[]).filter(e=>e.expires>nowT&&(e.atk||e.str||e.def)).length;
     return `<div class="fm-div"></div>
-      <div class="fm-row">
-        <select id="cmbBuffPick" class="fm-sel" title="Which buff potion to use & keep topped up">${opts}</select>
-        <button id="cmbUseBuff" class="fm-use"${active?'':' disabled'}>Use</button>
-      </div>
+      <div class="fm-sub">Combat Potions</div>
+      <div class="fm-icons">${icons}</div>
       <div class="fm-row fm-auto">
         <label class="fm-toggle"><input type="checkbox" id="cmbAutoBuffChk"${ab.enabled?' checked':''}/><span>Auto-buff</span></label>
         <span class="fm-status${activeBuffs?' on':''}">${activeBuffs?('✦ '+activeBuffs+' active'):'none active'}</span>
@@ -20272,6 +20328,7 @@ function renderCombat(){
     b.addEventListener('click',function(){
       const id=b.getAttribute('data-heal');
       useHealPotion(id);
+      renderCombat();   // refresh the icon count badge
     });
   });
   // Regen foods (1.0.21) — heal-over-time, separate use path.
@@ -20279,6 +20336,7 @@ function renderCombat(){
     if(b.disabled) return;
     b.addEventListener('click',function(){
       useRegenFood(b.getAttribute('data-regen'));
+      renderCombat();   // refresh the icon count badge
     });
   });
   // Buff potions — route through usePotion so conflict + stacking logic runs.
