@@ -2443,7 +2443,7 @@ header h1 .flame{color:var(--ember)}
   <div class="mm-btns">
     <button class="mm-btn mm-primary" id="mmPlay">▶ Play</button>
   </div>
-  <div class="mm-ver">v1.0.48</div>
+  <div class="mm-ver">v1.0.49</div>
 </div>
 
 <!-- ===== CHARACTER SELECT (added) ===== -->
@@ -3017,7 +3017,7 @@ const ITEMS={
   golden_spore:    {name:'Golden Spore',       icon:'✨',sell:1485, rare:true},
   void_essence:    {name:'Void Essence',       icon:'💜',sell:7480, rare:true},
   // Enchanting materials
-  arcane_dust:     {name:'Arcane Dust',        icon:'🌟',sell:165, desc:'Powdered residue of raw magic — the core enchanting reagent. Crafted in Alchemy (coming soon).'},
+  arcane_dust:     {name:'Arcane Dust',        icon:'🌟',sell:165, desc:'Powdered residue of raw magic — the core enchanting reagent. Transmuted in Alchemy (Lv 15) from gem dust, wildberries and ash.'},
   mana_essence:    {name:'Mana Essence',       icon:'🫧',sell:990, desc:'A trembling bead of liquid mana. Rare drop while foraging moonpetal or voidmoss.'},
   rune_fragment:   {name:'Rune Fragment',      icon:'🗿',sell:330, desc:'A chipped shard of old rune-stone, still humming faintly. Rare drop from mining any ore.'},
   // Rare potions
@@ -4017,6 +4017,8 @@ const SKILLS={
     {id:'al1', name:'Brew Swiftness I',      lvl:1, ms:9800, xp:61,  spdMult:0.600,minMs:1706, inp:{wildberries:3},                        out:{swiftness_i:1}},
     {id:'al2', name:'Brew Bountiful I',      lvl:8, ms:10300,xp:75,  spdMult:0.620,minMs:1755, inp:{thornvine:3},                          out:{bountiful_i:1}},
     {id:'al3', name:'Brew Wisdom I',         lvl:10,ms:11000,xp:83,  spdMult:0.640,minMs:1804, inp:{dewleaf:3},                            out:{wisdom_i:1}},
+    // Transmutation — the enchanting-reagent source (was "coming soon" since the enchant system shipped)
+    {id:'al_ad',name:'Transmute Arcane Dust', lvl:15,ms:12000,xp:95,  spdMult:0.650,minMs:1950, inp:{gem_dust:1,wildberries:2,ash:2},       out:{arcane_dust:1}},
     {id:'al7', name:'Brew Swiftness III',    lvl:38,ms:15900,xp:264, spdMult:0.700,minMs:2560, inp:{thornvine:3,dewleaf:3},                out:{swiftness_iii:1}},
     {id:'al8', name:'Brew Bountiful III',    lvl:45,ms:17200,xp:351, spdMult:0.720,minMs:2730, inp:{sunroot:2,dewleaf:2},                  out:{bountiful_iii:1}},
     {id:'al9', name:'Brew Wisdom III',       lvl:55,ms:18400,xp:483, spdMult:0.735,minMs:2925, inp:{emberbloom:2,sunroot:2},               out:{wisdom_iii:1}},
