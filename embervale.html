@@ -2444,7 +2444,7 @@ header h1 .flame{color:var(--ember)}
   <div class="mm-btns">
     <button class="mm-btn mm-primary" id="mmPlay">▶ Play</button>
   </div>
-  <div class="mm-ver">v1.0.56</div>
+  <div class="mm-ver">v1.0.57</div>
 </div>
 
 <!-- ===== CHARACTER SELECT (added) ===== -->
@@ -17409,43 +17409,20 @@ function renderCompendium(){
   }
 
   if(compCat==='all'){
-    // Paginated flat list. The rare divider is inserted only on the page where
-    // the non-rare → rare transition actually happens, so it doesn't appear
-    // orphaned on rare-only pages.
+    // One continuous paginated grid — rares flow inline with everything else
+    // (they keep their ✦ star badge on the tile). No separate rare section or
+    // divider, so the grid stays a clean 6 rows and never splits mid-page.
     const totalPages=Math.max(1,Math.ceil(allItems.length/COMP_PAGE_SIZE));
     if(compPage>=totalPages) compPage=totalPages-1;
     if(compPage<0) compPage=0;
     const start=compPage*COMP_PAGE_SIZE;
     const pageItems=allItems.slice(start,start+COMP_PAGE_SIZE);
 
-    const pageNonRare=pageItems.filter(id=>!ITEMS[id].rare);
-    const pageRare=pageItems.filter(id=>ITEMS[id].rare);
-
-    if(pageNonRare.length){
-      const grid=document.createElement('div'); grid.className='comp-grid';
-      for(const id of pageNonRare){
-        const card=buildCard(id); if(card) grid.appendChild(card);
-      }
-      box.appendChild(grid);
+    const grid=document.createElement('div'); grid.className='comp-grid';
+    for(const id of pageItems){
+      const card=buildCard(id); if(card) grid.appendChild(card);
     }
-    if(pageRare.length){
-      // Divider only when the current page actually mixes both
-      if(pageNonRare.length){
-        const allRare=allItems.filter(id=>ITEMS[id].rare);
-        const divider=document.createElement('div');
-        divider.style.cssText='font-size:13px;color:#ffd700;text-transform:uppercase;letter-spacing:2px;'
-          +'margin:18px 0 8px;padding-top:10px;border-top:1px solid #ffd70044;'
-          +'display:flex;align-items:center;gap:8px';
-        divider.innerHTML='<span>✦ Rare Collection</span>'
-          +`<span style="font-size:12px;color:var(--muted);font-family:Courier New,monospace;font-weight:normal;letter-spacing:.5px">${allRare.filter(id=>state.discovered[id]).length} / ${allRare.length} found</span>`;
-        box.appendChild(divider);
-      }
-      const rareGrid=document.createElement('div'); rareGrid.className='comp-grid';
-      for(const id of pageRare){
-        const card=buildCard(id); if(card) rareGrid.appendChild(card);
-      }
-      box.appendChild(rareGrid);
-    }
+    box.appendChild(grid);
     const pager=buildPager(totalPages); if(pager) box.appendChild(pager);
   } else if(compCat==='skilling_gear'){
     // Special skilling gear tab — show by skill set with progress
