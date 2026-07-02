@@ -482,10 +482,12 @@ header h1 .flame{color:var(--ember)}
 .cmb-stat[data-tip],
 .cd-stat[data-tip],
 .cmb-chip[data-tip],
+.st-ic[data-tip],
 .cmb-slot[data-tip]{position:relative}
 .cmb-stat[data-tip]:hover::after,
 .cd-stat[data-tip]:hover::after,
 .cmb-chip[data-tip]:hover::after,
+.st-ic[data-tip]:hover::after,
 .cmb-slot[data-tip]:hover::after{
   content:attr(data-tip);
   position:absolute;
@@ -519,6 +521,10 @@ header h1 .flame{color:var(--ember)}
 /* Hotbar slot tooltips — tighter min-width so the bubble sits under the slot
    rather than spanning a third of the panel for a 2-word label. */
 .cmb-slot[data-tip]:hover::after{min-width:0;max-width:220px;white-space:nowrap;font-size:13px;padding:5px 9px}
+/* Status chip tooltips — compact, sit right under the small chip (1.0.60) */
+.st-ic[data-tip]{cursor:help}
+.st-ic[data-tip]:hover::after{min-width:0;max-width:260px;white-space:nowrap;font-size:13px;padding:5px 9px}
+.cmb-fighter.foe .st-ic[data-tip]:hover::after{left:auto;right:0}
 /* Right-edge slots (auto-heal pill at the end of the hotbar) anchor their tip
    to the right edge so it doesn't spill past the panel. */
 .cmb-slot.cmb-auto[data-tip]:hover::after{left:auto;right:0}
@@ -857,6 +863,13 @@ header h1 .flame{color:var(--ember)}
 .cmb-swbar i{display:block;height:100%;transition:width .1s linear}
 .cmb-swbar.foe i{background:linear-gradient(90deg,#a02818,#d87858)}
 .cmb-swbar.you i{background:linear-gradient(90deg,#5a8028,#a8c868)}
+/* Buff/debuff chip row under each health bar (1.0.60) */
+.cmb-status{display:flex;gap:3px;flex-wrap:wrap;margin-top:4px;min-height:0}
+.cmb-status:empty{display:none}
+.cmb-status .st-ic{width:18px;height:18px;border:1px solid #555;border-radius:4px;
+  background:#0e0906;display:inline-flex;align-items:center;justify-content:center;
+  cursor:help;box-shadow:inset 0 0 4px rgba(0,0,0,.5);animation:st-ic-in .18s ease}
+@keyframes st-ic-in{from{transform:scale(.5);opacity:0}to{transform:scale(1);opacity:1}}
 .cmb-fighter .rareBadge{position:absolute;top:-7px;left:11px;right:auto;background:#1a0e04;
   border:1px solid #c89b4e;color:#fbd24e;font-size:10px;letter-spacing:1.4px;
   padding:1px 6px;border-radius:2px;font-weight:700;font-family:'Courier New',monospace;
@@ -1119,6 +1132,30 @@ header h1 .flame{color:var(--ember)}
 .tab.on{color:var(--trim);border-color:var(--trim)}
 .tab.has-new:not(.on){animation:new-pulse 1.6s ease-in-out infinite;color:var(--ember)}
 .activity-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:7px}
+/* Cooking fire panel (1.0.60) — warm themed card with a live fuel gauge */
+.cook-fire{grid-column:1/-1;margin-bottom:10px;display:flex;align-items:center;gap:12px;
+  padding:11px 13px 11px 15px;border-radius:9px;position:relative;overflow:hidden;
+  background:linear-gradient(135deg,#2a1608,#160c05 72%);border:1px solid #4a2a12;
+  box-shadow:inset 0 1px 0 rgba(224,118,47,.14),0 2px 8px rgba(0,0,0,.4)}
+.cook-fire::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--muted)}
+.cook-fire.burning::before{background:linear-gradient(180deg,#ffd24a,#e0762f)}
+.cook-fire.stored::before{background:linear-gradient(180deg,#5fa8e0,#2f6ea5)}
+.cook-fire.out::before{background:#7a2418}
+.cook-fire.burning{border-color:#7a4418;box-shadow:inset 0 0 24px rgba(224,118,47,.16),0 2px 10px rgba(0,0,0,.5)}
+.cook-fire .cf-flame{font-size:30px;line-height:1;display:inline-flex;width:38px;height:38px;
+  align-items:center;justify-content:center;flex-shrink:0;color:#e0762f;filter:drop-shadow(0 0 6px rgba(224,118,47,.5))}
+.cook-fire.stored .cf-flame{color:#5fa8e0;filter:drop-shadow(0 0 5px rgba(95,168,224,.4))}
+.cook-fire.out .cf-flame{color:#6a5a4a;filter:grayscale(1) brightness(.7);opacity:.65}
+.cook-fire.burning .cf-flame{animation:cf-flicker 1.5s ease-in-out infinite;transform-origin:50% 90%}
+@keyframes cf-flicker{0%,100%{transform:scale(1) rotate(-1.5deg)}50%{transform:scale(1.09) rotate(1.5deg)}}
+.cook-fire .cf-body{flex:1;min-width:168px}
+.cook-fire .cf-title{font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(--ember);font-weight:600;margin-bottom:2px}
+.cook-fire .cf-status{font-size:13px;color:var(--text);font-family:'Courier New',monospace;margin-bottom:6px}
+.cook-fire .cf-gauge{height:6px;background:#0a0604;border-radius:3px;overflow:hidden;box-shadow:inset 0 1px 2px rgba(0,0,0,.7)}
+.cook-fire .cf-gauge i{display:block;height:100%;border-radius:3px;transition:width .35s ease}
+.cook-fire .cf-actions{display:flex;gap:6px;flex-wrap:wrap;flex-shrink:0}
+.cook-fire .cf-actions .m-btn{white-space:nowrap}
+@media (prefers-reduced-motion: reduce){.cook-fire.burning .cf-flame{animation:none}}
 .act{position:relative;background:var(--raised);border:1px solid var(--trim-d);border-radius:6px;
   padding:7px 9px 7px 12px;text-align:left;color:var(--text);
   display:flex;flex-direction:row;gap:9px;align-items:flex-start;}
@@ -2451,7 +2488,7 @@ header h1 .flame{color:var(--ember)}
   <div class="mm-btns">
     <button class="mm-btn mm-primary" id="mmPlay">▶ Play</button>
   </div>
-  <div class="mm-ver">v1.0.59</div>
+  <div class="mm-ver">v1.0.60</div>
 </div>
 
 <!-- ===== CHARACTER SELECT (added) ===== -->
@@ -3257,7 +3294,7 @@ const ITEMS={
   // Each weapon sits between two standard tiers, granted ~10-20% stat advantage
   // over the lower tier as a reward for grinding the source zone. Tagged with
   // dmgType so the damage-type matchup system works; subcat handled in recipe.
-  plague_fang_dagger:{name:'Plague Fang Dagger', icon:'🗡️', sell:280,  cgear:true, ctier:2, cslot:'weapon', dmgType:'stab',  desc:'A rat fang the length of a finger, lashed to a rough iron tang. The wounds it leaves sour and weep.'},
+  plague_fang_dagger:{name:'Plague Fang Dagger', icon:'🗡️', sell:280,  cgear:true, ctier:2, cslot:'weapon', dmgType:'stab',  wfx:{poison:{chance:0.35, dmg:2, every:2, dur:8}}, desc:'A rat fang the length of a finger, lashed to a rough iron tang. The wounds it leaves sour and weep — every cut carries the warren\'s rot.'},
   chitin_maul:       {name:'Chitin Maul',        icon:'🔨', sell:720,  cgear:true, ctier:3, cslot:'weapon', dmgType:'crush', desc:'A weighted ball of jagged spider plates bound in spinneret silk. Sounds like crunching shell when it lands.'},
   warcleaver:        {name:'Warcleaver',         icon:'⚔️', sell:1400, cgear:true, ctier:4, cslot:'weapon', dmgType:'slash', desc:'A crude goblin cleaver, reforged proper around a steel core and wrapped in tanned hide. Still smells faintly of the cave.'},
   bone_reaper:       {name:'Bone Reaper',        icon:'⚔️', sell:2800, cgear:true, ctier:4, cslot:'weapon', dmgType:'slash', desc:'A curved blade carved from a single rib plate, edged with ground bone-shard and steel. Hums when undead are near.'},
@@ -3357,7 +3394,7 @@ const ITEMS={
   granite_core:     {name:'Granite Core',      icon:'🪨',sell:600,  desc:'A dense nugget of living rock pried from a troll\'s gut. Warm, and faintly veined with gold.'},
   granite_sigil:    {name:'Granite Sigil',     icon:'🔱',sell:12000,rare:true, desc:'A rune-carved menhir shard. Set it at the cavern mouth and the Troll King stirs to meet you.'},
   mountain_heart:   {name:'Mountain Heart',    icon:'💎',sell:26000,rare:true, desc:"A fist-sized geode that beats like a slow drum — torn from the Troll King's chest."},
-  troll_maul:       {name:'Troll Maul',        icon:'🔨',sell:9200, cgear:true,ctier:7,cslot:'weapon', dmgType:'crush', desc:'A boulder lashed to an ironwood haft. Swings like an avalanche — if you can lift it.'},
+  troll_maul:       {name:'Troll Maul',        icon:'🔨',sell:9200, cgear:true,ctier:7,cslot:'weapon', dmgType:'crush', wfx:{stun:{chance:0.14, dur:1.8}}, desc:'A boulder lashed to an ironwood haft. Swings like an avalanche — if you can lift it. A solid hit leaves the foe reeling.'},
   troll_king_skull: {name:"Troll King's Skull",icon:'💀',sell:92000,rare:true, cgear:true,ctier:7,cslot:'helmet', desc:"The crowned granite skull of the Troll King, eye-sockets still glowing with stubborn life."},
   // ─── Combat drops · Wyvern Roost (1.0.4) ─── molten scales, fang, fire glands
   wyrmscale:        {name:'Wyrmscale',         icon:'🟧',sell:700,  desc:'An obsidian scale veined with cooling gold. Still warm hours after the kill.'},
@@ -3472,7 +3509,7 @@ const COMBAT_GEAR_STATS={
   starsteel_cape: {atk:2, str:1, def:11},
   // ─── Themed combat-drop weapons (1.0.95) ── slotted between standard tiers.
   // ~10-20% stat budget premium over the lower-tier baseline as a grinding reward.
-  plague_fang_dagger:{atk:5, str:2, def:0},   // T1.5 stab — between bronze (5) and iron (9) dagger
+  plague_fang_dagger:{atk:6, str:2, def:0},   // T1.5 stab — near iron dagger; poison DoT is the real draw (1.0.60)
   chitin_maul:       {atk:4, str:7, def:0},   // T2.5 crush — between iron (9) and steel (14) hammer
   warcleaver:        {atk:9, str:8, def:0},   // T3.5 slash — between steel (14) and mithril (21) sword
   bone_reaper:       {atk:14,str:11,def:0},   // T4   slash — between mithril (21) and cobalt (30) sword
@@ -8473,8 +8510,8 @@ function buildFarmerPanel(){
   var activeDef=f.tier>0?FARMER_TIERS[f.tier-1]:null;
   var lvl=farmingLvl();
 
-  wrap.style.cssText='margin-bottom:12px;border:1px solid '+(activeDef&&f.enabled?'var(--green)':'var(--trim-d)')
-    +';border-radius:7px;background:var(--raised);padding:9px 11px';
+  wrap.style.cssText='margin-bottom:8px;border:1px solid '+(activeDef&&f.enabled?'var(--green)':'var(--trim-d)')
+    +';border-radius:7px;background:var(--raised);padding:8px 11px';
 
   // ── Header: title left · live status chip right ──
   var head=document.createElement('div');
@@ -8634,8 +8671,8 @@ function renderFarming(){
 
   // Info bar — full width, sits above patches
   var hdr=document.createElement('div');
-  hdr.style.cssText='margin-bottom:10px;font-size:13px;color:var(--muted);line-height:1.5;'
-    +'padding:6px 10px;background:transparent;border-bottom:1px solid var(--trim-d);display:flex;align-items:center;gap:8px';
+  hdr.style.cssText='margin-bottom:7px;font-size:13px;color:var(--muted);line-height:1.4;'
+    +'padding:4px 10px 6px;background:transparent;border-bottom:1px solid var(--trim-d);display:flex;align-items:center;gap:8px';
   hdr.innerHTML='<span style="font-size:17px">🌾</span>'
     +'<span>Plant seeds, tend to speed growth, harvest when ready. Patches grow passively.</span>';
   box.appendChild(hdr);
@@ -8645,7 +8682,7 @@ function renderFarming(){
 
   // Harvest All / Tend All / Plant All action bar
   var bulkBar=document.createElement('div');
-  bulkBar.style.cssText='display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap';
+  bulkBar.style.cssText='display:flex;gap:8px;margin-bottom:6px;flex-wrap:wrap';
 
   var harvAllBtn=document.createElement('button');
   harvAllBtn.className='tab on';
@@ -8685,7 +8722,7 @@ function renderFarming(){
 
   // Plant All row — seed dropdown + button
   var plantBar=document.createElement('div');
-  plantBar.style.cssText='display:flex;gap:8px;margin-bottom:12px;align-items:center';
+  plantBar.style.cssText='display:flex;gap:8px;margin-bottom:8px;align-items:center';
   var availSeeds=CROPS.filter(function(c){ return farmingLvl()>=c.lvl&&(state.items[c.id]||0)>0; });
   if(availSeeds.length>0){
     var seedSel=document.createElement('select');
@@ -8764,7 +8801,7 @@ function renderFarming(){
 
   // Patch grid — uniform columns so all patches are the same width/height baseline
   var patchGrid=document.createElement('div');
-  patchGrid.style.cssText='display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:7px;margin-bottom:12px';
+  patchGrid.style.cssText='display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:7px;margin-bottom:8px';
 
   for(var pi=0;pi<PATCHES.length;pi++){
     var patch=PATCHES[pi];
@@ -8907,13 +8944,13 @@ function renderFarming(){
   // Crop guide — at the bottom, with tabs grouping crops by tier so the list
   // stays manageable. Tiers: Early (1-25), Mid (26-50), Late (51-99).
   var guideLabel=document.createElement('div');
-  guideLabel.style.cssText='font-size:12px;color:var(--ember);text-transform:uppercase;letter-spacing:2px;margin-bottom:8px';
+  guideLabel.style.cssText='font-size:12px;color:var(--ember);text-transform:uppercase;letter-spacing:2px;margin-bottom:6px';
   guideLabel.textContent='Crops & Grow Times';
   box.appendChild(guideLabel);
 
   // Pagination — top tab slot is reserved for future category tabs (Herbs,
   // Food, etc.), so pagination goes as a small control below the grid instead.
-  var CROPS_PER_PAGE=6;
+  var CROPS_PER_PAGE=8;
   var pagedCrops=CROPS.slice().sort(function(a,b){return a.lvl-b.lvl;});
   var pageCount=Math.max(1,Math.ceil(pagedCrops.length/CROPS_PER_PAGE));
   if(_farmCropGuidePage<0||_farmCropGuidePage>=pageCount) _farmCropGuidePage=0;
@@ -13723,17 +13760,25 @@ function renderActivities(){
         toggleBtnHtml=`<button class="m-btn primary" id="toggleFireBtn" style="white-space:nowrap">🔥 Light Fire</button>`;
       }
     }
+    // Fuel gauge — fills toward a 10-minute "healthy fire" reference so a
+    // freshly-stoked fire reads full and a dying one reads near-empty.
+    const fuelPct=burnSec>0?Math.max(4,Math.min(100,Math.round(burnSec/600*100))):0;
+    const gaugeFill=status==='burning'?(lowFuel?'linear-gradient(90deg,#e0762f,#ff5028)':'linear-gradient(90deg,#e0762f,#ffd24a)')
+                   :status==='stored'?'linear-gradient(90deg,#2f6ea5,#5fa8e0)'
+                   :'#3a1810';
     const fuelPanel=document.createElement('div');
-    fuelPanel.style.cssText='grid-column:1/-1;margin-bottom:10px;border:1px solid '+borderColor
-      +';border-radius:7px;padding:10px 12px;background:#0d0905aa;display:flex;align-items:center;gap:10px;flex-wrap:wrap';
+    fuelPanel.className='cook-fire '+status;
     fuelPanel.innerHTML=`
-      <span style="font-size:24px;line-height:1">${iconChar}</span>
-      <div style="flex:1;min-width:180px">
-        <div style="font-size:13px;letter-spacing:2px;text-transform:uppercase;color:var(--ember)">Cooking Fire</div>
-        <div style="font-size:14px;color:var(--text);font-family:'Courier New',monospace">${statusText}</div>
+      <div class="cf-flame">${iconHTML('firemaking')}</div>
+      <div class="cf-body">
+        <div class="cf-title">Cooking Fire</div>
+        <div class="cf-status">${statusText}</div>
+        <div class="cf-gauge" title="Fuel remaining"><i style="width:${fuelPct}%;background:${gaugeFill}"></i></div>
       </div>
-      ${toggleBtnHtml}
-      <button class="m-btn" id="loadFuelBtn" style="white-space:nowrap">＋ Load Logs</button>
+      <div class="cf-actions">
+        ${toggleBtnHtml}
+        <button class="m-btn cf-load" id="loadFuelBtn">＋ Load Logs</button>
+      </div>
     `;
     grid.appendChild(fuelPanel);
     fuelPanel.querySelector('#loadFuelBtn').addEventListener('click',openFuelModal);
@@ -16030,6 +16075,8 @@ const combat={
   foeSwingStart:0,  // timestamp of foe's current swing
   foeSwingMs:1100,  // foe swing interval — pulled from monster.swingMs on engage
   regens:[],        // (1.0.21) active heal-over-time food effects: {rate,until,last,acc}
+  foeStatus:{},     // (1.0.60) debuffs on the foe: {poison:{dmg,every,until,last,acc}, stun:{until}}
+  youStatus:{},     // (1.0.60) reserved for debuffs the player receives (future monster poison)
   log:[],
 };
 let _combatTimer=null;
@@ -18746,6 +18793,7 @@ function engageCombat(){
   combat.foeHp=effMon.hp;
   combat.youHp=combat.youMaxHp;
   combat.regens=[];   // (1.0.21) fresh fight — no carried-over food regen
+  combat.foeStatus={}; // (1.0.60) clean foe — no carried-over poison/stun
   combat.foeSwingMs=mon.swingMs||COMBAT_BASE_SWING_MS;
   // Both sides start their first swing cycle now — no opener advantage.
   combat.youSwingStart=Date.now();
@@ -18766,6 +18814,7 @@ function fleeCombat(){
   combat.active=false;
   combat.rare=false;  // disengage clears rare — re-engaging rerolls (1.0.70)
   combat.regens=[];   // (1.0.21) drop any active food regen on disengage
+  combat.foeStatus={}; // (1.0.60) clear poison/stun on disengage
   combat.youSwingStart=0;
   combat.foeSwingStart=0;
   cmbLog('🏃 You disengage.','sys');
@@ -18816,6 +18865,27 @@ function combatTick(){
     combat.regens=combat.regens.filter(rg=>now<rg.until);
   }
 
+  // ── Foe poison damage-over-time (1.0.60) ────────────────────────────────
+  // Poison weapons (e.g. Plague Fang Dagger) stack a bleed on the foe. It ticks
+  // `dmg` every `every` seconds until `until`. Poison never lands the killing
+  // blow (clamped to min 1 HP) so all kill/reward logic stays in the swing path.
+  if(!combat.foeStatus) combat.foeStatus={};
+  const _psn=combat.foeStatus.poison;
+  if(_psn){
+    if(now>=_psn.until){ delete combat.foeStatus.poison; }
+    else {
+      const stepMs=(_psn.every||2)*1000;
+      while(now-_psn.last>=stepMs){
+        _psn.last+=stepMs;
+        if(combat.foeHp>1){
+          const pd=Math.min(_psn.dmg, combat.foeHp-1);
+          combat.foeHp-=pd;
+          cmbLog(`☠ Poison saps the ${mon.name} for ${pd}.`,'');
+        }
+      }
+    }
+  }
+
   // ── Player swing — only when their own swing timer has elapsed ───────────
   if(now-combat.youSwingStart>=combat.youSwingMs){
     combat.youSwingStart=now;
@@ -18858,6 +18928,25 @@ function combatTick(){
       if(cb2&&cb2.lifesteal>0&&combat.youHp<combat.youMaxHp){
         const heal=Math.max(1,Math.floor(youDmg*cb2.lifesteal));
         combat.youHp=Math.min(combat.youMaxHp, combat.youHp+heal);
+      }
+      // ── Weapon on-hit effects (1.0.60) — poison / stun procs ─────────────
+      // The equipped weapon may carry a `wfx` proc. Poison stacks a bleed;
+      // stun delays the foe's next swing. Both roll only on a landed hit.
+      const _fxId=(state.equipped&&state.equipped.weapon)||'';
+      const _wfx=_fxId&&ITEMS[_fxId]&&ITEMS[_fxId].wfx;
+      if(_wfx){
+        if(!combat.foeStatus) combat.foeStatus={};
+        if(_wfx.poison&&Math.random()<_wfx.poison.chance){
+          const fresh=!combat.foeStatus.poison;
+          combat.foeStatus.poison={dmg:_wfx.poison.dmg, every:_wfx.poison.every||2,
+            until:now+_wfx.poison.dur*1000, last:now, acc:0};
+          if(fresh) cmbLog(`☠ The ${mon.name} is poisoned!`,'hit');
+        }
+        if(_wfx.stun&&Math.random()<_wfx.stun.chance){
+          combat.foeStatus.stun={until:now+_wfx.stun.dur*1000};
+          combat.foeSwingStart=now;   // reset the foe's swing so the stun costs it a full cycle
+          cmbLog(`💫 You stun the ${mon.name}!`,'hit');
+        }
       }
     } else {
       cmbLog(`You miss the ${mon.name}.`,'');
@@ -18955,6 +19044,7 @@ function combatTick(){
       combat.rare=rollRare(baseMon);
       const nextEff=rareModify(baseMon,combat.rare);
       combat.foeHp=nextEff.hp;
+      combat.foeStatus={};   // (1.0.60) fresh foe — poison/stun don't carry to the respawn
       if(combat.rare){
         cmbLog(`⚡ A rare ${baseMon.name} materializes from the shadows!`,'rare-spawn');
         if(!combatMode && typeof toast==='function'){ toast(`⚡ Rare ${baseMon.name} appears!`); }
@@ -18976,8 +19066,15 @@ function combatTick(){
     }
   }
 
+  // ── Stun (1.0.60) — a stunned foe forfeits its swing until the stun ends ──
+  const _stun=combat.foeStatus&&combat.foeStatus.stun;
+  if(_stun){
+    if(now>=_stun.until){ delete combat.foeStatus.stun; }
+    else { combat.foeSwingStart=now; }   // hold its swing timer while stunned
+  }
+
   // ── Monster swing — only when foe's own swing timer has elapsed ──────────
-  if(now-combat.foeSwingStart>=combat.foeSwingMs){
+  if(!(combat.foeStatus&&combat.foeStatus.stun) && now-combat.foeSwingStart>=combat.foeSwingMs){
     combat.foeSwingStart=now;
     // 1.0.26 — foe uses the same hit/miss model. Foe hit chance = foeAtk/(foeAtk+yourDef);
     // a lost roll deals 0. On a hit, it rolls HIT_MIN..1.0 of its max hit (str).
@@ -18993,6 +19090,7 @@ function combatTick(){
       combat.active=false;
       combat.rare=false;  // death clears rare encounter (1.0.70)
       combat.regens=[];   // (1.0.21) wipe food regen on death
+      combat.foeStatus={}; // (1.0.60) wipe foe poison/stun on death
       combat.youHp=combat.youMaxHp;
       stopCombatTimer();
       renderCombat();
@@ -19051,6 +19149,47 @@ function grantCombatXp(stat,amount){
 }
 
 /* Lightweight per-tick DOM refresh — avoids rebuilding the whole panel each second. */
+/* Small inline status glyph — reuses the 16×16 CMAST_ICON_SVG path set so the
+   buff/debuff chips share the game's icon language (no emoji). (1.0.60) */
+function _statusGlyph(key,color){
+  const p=CMAST_ICON_SVG[key]||'';
+  return `<svg viewBox="0 0 16 16" width="12" height="12" fill="${color}" stroke="${color}" stroke-linecap="round" stroke-linejoin="round" pointer-events="none">${p}</svg>`;
+}
+
+/* Row of buff/debuff chips under a fighter's health bar (1.0.60).
+   'foe' → poison / stun debuffs from combat.foeStatus.
+   'you' → active combat potion buffs (atk/str/def) + food regen.
+   Each chip carries a hoverable data-tip with the effect name + time left. */
+function statusIconsHTML(side){
+  if(!combat.active) return '';
+  const now=Date.now();
+  const chips=[];
+  const secs=ms=>Math.max(0,Math.ceil(ms/1000))+'s';
+  const chip=(key,color,tip)=>`<span class="st-ic" style="border-color:${color}" data-tip="${tip}">${_statusGlyph(key,color)}</span>`;
+  if(side==='foe'){
+    const fs=combat.foeStatus||{};
+    if(fs.poison&&fs.poison.until>now){
+      chips.push(chip('blood','#8fd44a',`Poisoned — ${fs.poison.dmg} dmg / ${fs.poison.every||2}s · ${secs(fs.poison.until-now)} left`));
+    }
+    if(fs.stun&&fs.stun.until>now){
+      chips.push(chip('bolt','#ffd24a',`Stunned — skipping attacks · ${secs(fs.stun.until-now)} left`));
+    }
+  } else {
+    for(const e of (state.effects||[])){
+      if(e.expires<=now) continue;
+      const t=secs(e.expires-now);
+      if(e.atk) chips.push(chip('sword','#6fa8ff',`Attack +${e.atk} · ${t}`));
+      if(e.str) chips.push(chip('flame','#ff8a5c',`Strength +${e.str} · ${t}`));
+      if(e.def) chips.push(chip('shield','#7bd88a',`Defence +${e.def} · ${t}`));
+    }
+    if(combat.regens&&combat.regens.length){
+      const until=Math.max.apply(null,combat.regens.map(r=>r.until));
+      if(until>now) chips.push(chip('heart','#8fe08f',`Regenerating HP · ${secs(until-now)}`));
+    }
+  }
+  return chips.join('');
+}
+
 function updateCombatBars(){
   if(!combatMode) return;
   const baseMon=getMonster(combat.monId);
@@ -19061,6 +19200,8 @@ function updateCombatBars(){
   const yb=document.querySelector('#cmbYouBar i'); if(yb) yb.style.width=youPct+'%';
   const ft=$('cmbFoeHpText'); if(ft) ft.textContent=combat.active?`${combat.foeHp} / ${mon.hp}`:`${mon.hp} / ${mon.hp}`;
   const yt=$('cmbYouHpText'); if(yt) yt.textContent=`${combat.youHp} / ${combat.youMaxHp}`;
+  const fst=$('cmbFoeStatus'); if(fst) fst.innerHTML=statusIconsHTML('foe');
+  const yst=$('cmbYouStatus'); if(yst) yst.innerHTML=statusIconsHTML('you');
   const logEl=$('cmbLog');
   if(logEl){
     // Sticky scroll: if the user is already at (or near) the bottom, auto-scroll
@@ -19965,6 +20106,7 @@ function renderCombat(){
           </div>
           <div class="cmb-hpbar foe" id="cmbFoeBar" title="${mon.name}'s health"><i style="width:${foePct}%"></i></div>
           <div class="cmb-swbar foe" title="${mon.name}'s next swing"><i id="cmbFoeSwing" style="width:0%"></i></div>
+          <div class="cmb-status" id="cmbFoeStatus">${statusIconsHTML('foe')}</div>
         </div>
         <div class="cmb-scd foe">
           <div class="cmb-srow" data-tip="${mon.name}'s attack — biases its damage rolls upward against your defence."><span class="lbl">Attack</span><span class="val">${mon.atk}</span></div>
@@ -19980,6 +20122,7 @@ function renderCombat(){
           </div>
           <div class="cmb-hpbar you" id="cmbYouBar" title="Your health"><i style="width:${youPct}%"></i></div>
           <div class="cmb-swbar you" title="Your next swing"><i id="cmbYouSwing" style="width:0%"></i></div>
+          <div class="cmb-status" id="cmbYouStatus">${statusIconsHTML('you')}</div>
         </div>
         <div class="cmb-scd you">
           <div class="cmb-srow" data-tip="From Attack lvl ${aLvl}${accGear>0?` + ${accGear} from gear`:''}"><span class="lbl">Attack</span><span class="val">${accBase+accGear}${accGear>0?`<span class="gear">+${accGear}</span>`:''}</span></div>
