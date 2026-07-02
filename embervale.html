@@ -2492,6 +2492,69 @@ header h1 .flame{color:var(--ember)}
 .mtip-droplink{padding:6px 9px;font-size:11px;color:var(--muted);font-style:italic;
   letter-spacing:.3px;text-align:center;font-family:'Crimson Pro',serif}
 /* ════════ [CSS-31 END] MONSTER LOG ═══════════════════════════════════════════════ */
+
+/* ════════ [CSS-32] RAIDS (1.0.66) ═════════════════════════════════════════════════ */
+.raid-panel{display:flex;flex-direction:column;gap:12px;padding:4px 0}
+.raid-intro{font-size:12.5px;line-height:1.55;color:var(--muted);background:linear-gradient(180deg,#171f1e,#101615);border:1px solid var(--trim-d);border-left:3px solid #4a9a8a;border-radius:7px;padding:10px 13px}
+.raid-intro b{color:#bfe6db}
+.raid-list{display:flex;flex-direction:column;gap:12px}
+.raid-card{background:linear-gradient(180deg,#161c1b,#0e1312);border:1px solid var(--trim-d);border-radius:10px;padding:13px 15px;position:relative;overflow:hidden}
+.raid-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--raid-accent,#4a9a8a)}
+.raid-card.locked{opacity:.62;filter:saturate(.5)}
+.rc-head{display:flex;align-items:center;gap:11px;margin-bottom:7px}
+.rc-ic{font-size:34px;line-height:1;filter:drop-shadow(0 2px 4px rgba(0,0,0,.6))}
+.rc-title{display:flex;flex-direction:column;flex:1;min-width:0}
+.rc-nm{font-family:'Cinzel',serif;font-size:18px;color:#e7efe9;letter-spacing:.4px}
+.rc-lv{font-size:11px;color:var(--muted);letter-spacing:.6px}
+.rc-clears{font-size:11px;color:#8fbfb2;font-family:'Courier New',monospace;white-space:nowrap}
+.rc-blurb{font-size:12px;line-height:1.5;color:var(--muted);font-style:italic;margin-bottom:9px}
+.rc-row{display:flex;align-items:center;gap:8px;margin:5px 0;flex-wrap:wrap}
+.rc-lbl{font-size:10px;letter-spacing:1.2px;text-transform:uppercase;color:#6d8079;min-width:58px}
+.rc-dots{display:inline-flex;gap:5px;align-items:center}
+.rd-dot{width:13px;height:13px;border-radius:50%;background:#31403c;border:1px solid #5a736c;display:inline-flex;align-items:center;justify-content:center;font-size:9px;color:#0e1312;cursor:default}
+.rd-dot.mini{background:#c9a24a;border-color:#f0d59a;width:15px;height:15px}
+.rd-dot.boss{background:#c44a45;border-color:#ffb0aa;width:17px;height:17px;font-size:10px}
+.rc-gicons{display:inline-flex;gap:4px}
+.rd-gi{font-size:22px;line-height:1;cursor:default;filter:drop-shadow(0 1px 2px rgba(0,0,0,.5))}
+.rc-meta{font-size:10.5px;color:#6d8079;margin-left:auto}
+.rc-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px;padding-top:9px;border-top:1px solid var(--trim-d)}
+.rc-best{font-size:12px;color:#a9c4bc;font-family:'Courier New',monospace}
+.raid-enter{background:linear-gradient(180deg,#2c4a44,#183029);color:#dff2ec;border:1px solid #4a9a8a;border-radius:6px;padding:8px 16px;font-family:'Cinzel',serif;font-size:14px;letter-spacing:.6px;cursor:pointer;white-space:nowrap;transition:filter .12s}
+.raid-enter:hover:not(:disabled){filter:brightness(1.22)}
+.raid-enter:disabled{opacity:.5;cursor:default}
+.raid-enter.locked{background:#20201c;border-color:#4a4438;color:#8a8270}
+/* Result box */
+.raid-result{border-radius:9px;padding:11px 14px;font-size:12.5px}
+.raid-result.fail{background:linear-gradient(180deg,#241416,#180d0e);border:1px solid #5a2c2c;color:#e0b0aa}
+.raid-result.win{background:linear-gradient(180deg,#1c2320,#12100a);border:1px solid var(--rr-col,#ffe27a);box-shadow:inset 0 0 22px rgba(255,226,122,.07)}
+.rr-top{display:flex;align-items:center;gap:11px;margin-bottom:8px}
+.rr-rank{font-family:'Cinzel',serif;font-size:30px;font-weight:700;color:var(--rr-col,#ffe27a);line-height:1;text-shadow:0 0 12px rgba(255,226,122,.4);min-width:34px;text-align:center}
+.rr-h{font-family:'Cinzel',serif;font-size:16px;color:#eef2ea;flex:1}
+.rr-time{font-family:'Courier New',monospace;font-size:14px;color:#bcd0c8}
+.rr-loot{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:5px}
+.rr-gold{color:#fbd24e;font-weight:700;font-family:'Courier New',monospace}
+.rr-mat{font-size:22px;line-height:1;position:relative;display:inline-flex;align-items:flex-end}
+.rr-mat i{font-style:normal;font-size:11px;color:#cfe0d8;margin-left:1px}
+.rr-gear{margin-top:5px;font-size:13px;color:#ffe27a;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.rr-gear span{display:inline-flex;align-items:center;gap:3px}
+.rr-nogear{margin-top:4px;font-size:11.5px;color:#7d8f88;font-style:italic}
+/* Active-run progress strip */
+.raid-progress{background:linear-gradient(180deg,#1a2422,#0e1614);border:1px solid var(--raid-accent,#4a9a8a);border-radius:9px;padding:9px 13px;margin-bottom:10px;box-shadow:inset 0 0 18px rgba(74,154,138,.09)}
+.rp-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.rp-l{font-size:13px;color:#dff2ec;display:flex;align-items:center;gap:7px}
+.rp-l b{font-family:'Cinzel',serif}
+.rp-ic{font-size:20px;line-height:1}
+.rp-r{display:flex;align-items:center;gap:9px}
+.rp-curse{font-size:11px;color:#f0d59a;background:rgba(201,162,74,.14);border:1px solid #7a5f2a;border-radius:5px;padding:2px 8px;cursor:default}
+.rp-timer{font-family:'Courier New',monospace;font-size:16px;color:#9fe6d6;font-weight:700;min-width:56px;text-align:right}
+.rp-dots{display:flex;gap:6px;margin:8px 0 6px}
+.rp-dot{flex:1;height:6px;border-radius:3px;background:#2a3835;border:1px solid #3a4d48}
+.rp-dot.done{background:#4a9a8a;border-color:#7fd8c8}
+.rp-dot.cur{background:#9fe6d6;border-color:#dff8f0;box-shadow:0 0 8px rgba(159,230,214,.6)}
+.rp-dot.mini.cur,.rp-dot.mini.todo{border-color:#c9a24a}
+.rp-dot.boss.cur,.rp-dot.boss.todo{border-color:#c44a45}
+.rp-warn{font-size:11px;color:#d9a86a;letter-spacing:.3px}
+/* ════════ [CSS-32 END] RAIDS ══════════════════════════════════════════════════════ */
 </style>
 </head>
 <body>
@@ -2512,7 +2575,7 @@ header h1 .flame{color:var(--ember)}
   <div class="mm-btns">
     <button class="mm-btn mm-primary" id="mmPlay">▶ Play</button>
   </div>
-  <div class="mm-ver">v1.0.65</div>
+  <div class="mm-ver">v1.0.66</div>
 </div>
 
 <!-- ===== CHARACTER SELECT (added) ===== -->
@@ -3438,6 +3501,17 @@ const ITEMS={
   hellheart:        {name:'Hellheart',         icon:'💎',sell:55000,rare:true, desc:"The black-cored heart of the Demon Lord, wreathed in fire that answers to no one now."},
   doomblade:        {name:'Doomblade',         icon:'🗡️',sell:24000,cgear:true,ctier:8,cslot:'weapon', dmgType:'slash', wfx:{burn:{mult:0.16}}, desc:'A jagged greatsword forged in the Sanctum, its black edge running with a seam of live hellfire — every wound it opens catches alight.'},
   demonlord_skull:  {name:"Demon Lord's Skull",icon:'💀',sell:175000,rare:true, cgear:true,ctier:9,cslot:'helmet', desc:"The horned, fire-eyed skull of the Demon Lord himself — the ultimate trophy of Embervale."},
+  // ─── RAID: The Sunken Barrow (1.0.66) ── T7 warrior set + first 2H weapon + mats.
+  // Gear drops ONLY from a full raid clear; chance scales with clear rating. These
+  // sit at/above starsteel (T7) — the reward for pushing past the crafted ladder.
+  barrow_blade:     {name:'Barrow Blade',      icon:'🗡️',sell:19000,rare:true, cgear:true,ctier:7,cslot:'weapon', dmgType:'slash', desc:'A pale longsword raised from a warden-knight\'s tomb, its fuller etched with cold runes that never quite stop glowing. A warrior\'s blade, honed past any crafted steel.'},
+  barrow_shield:    {name:'Barrow Shield',     icon:'🛡️',sell:17500,rare:true, cgear:true,ctier:7,cslot:'shield', desc:'A grave-knight\'s kite shield, its boss set with a shard of drowned light. Heavier than starsteel and colder to the touch — nothing crafted turns a blow so well.'},
+  barrow_dagger:    {name:'Barrow Dagger',     icon:'🗡️',sell:16500,rare:true, cgear:true,ctier:7,cslot:'weapon', dmgType:'stab',  desc:'A curved bone fang from the barrow\'s honour guard, wickedly quick and unnervingly precise. The rogue\'s prize of the Sunken Barrow.'},
+  grave_cleaver:    {name:'Grave Cleaver',     icon:'🪓',sell:34000,rare:true, cgear:true,ctier:7,cslot:'weapon', dmgType:'crush', twoHanded:true, wfx:{cleave:{chance:0.25}}, desc:'A colossal double-bladed greataxe torn from the Barrow Warden\'s grip — the first true two-hander to reach mortal hands. Its Reaping Arc catches a second foe-stroke on the backswing: 25% chance to strike twice. Forgoes a shield.'},
+  grave_iron:       {name:'Grave Iron',        icon:'⬛',sell:900,  desc:'A dark, cold ingot smelted from barrow-nails and coffin bands. Faintly green at the seams. A T7 crafting metal for smiths who reach past starsteel.'},
+  barrow_dust:      {name:'Barrow Dust',       icon:'🌫️',sell:820,  desc:'Fine grey ash swept from a tomb never meant to be opened. Alchemists swear it steadies volatile brews.'},
+  wraithcloth:      {name:'Wraithcloth',       icon:'🧵',sell:1050, desc:'A tattered grave-shroud that refuses to rot, threaded through with a faint spectral shimmer. Prized by crafters for banners and light armour trim.'},
+  runed_bone:       {name:'Runed Bone',        icon:'🦴',sell:1300, rare:true, desc:'A femur carved end to end with warden-runes, still humming with the cold that kept its owner walking. A rare T7 reagent.'},
 };
 
 /* ════════ COMBAT GEAR STATS ════════════════════════════════════════════════════
@@ -3569,6 +3643,11 @@ const COMBAT_GEAR_STATS={
   emberwyrm_skull:   {atk:5, str:4, def:40},  // T8   helmet (1.0.4) — above troll king (34); Wyvern Roost apex trophy
   doomblade:         {atk:49,str:40,def:0},   // T9   slash greatsword — Demon Lord endgame, best 1H in the game (budget 89, +65% over starsteel)
   demonlord_skull:   {atk:6, str:5, def:48},  // T9   helmet (1.0.5) — above emberwyrm (40); Demon Sanctum apex trophy
+  // ─── RAID gear · The Sunken Barrow (1.0.66) — T7 warrior set + first 2H ───
+  barrow_blade:      {atk:35,str:29,def:0},   // T7.5 slash sword  — budget 64, above starsteel (54) & troll_maul (62); warrior staple
+  barrow_dagger:     {atk:36,str:28,def:0},   // T7.5 stab dagger  — budget 64, atk-slant per dagger convention; rogue pick
+  barrow_shield:     {atk:0, str:0, def:47},  // T7.5 shield       — best shield in game (above starsteel 43, runite 34)
+  grave_cleaver:     {atk:50,str:46,def:0},   // 2H crush greataxe — budget 96; huge, but no shield + the Reaping Arc cleave is the draw (berserker heavy)
 };
 
 /* ---- skills ---- */
@@ -5977,6 +6056,23 @@ const ICONS = {
   troll_caverns: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><radialGradient id="z_t1" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#2a2520"/><stop offset="1" stop-color="#0a0805"/></radialGradient></defs><path d="M0 58 Q14 6 32 6 Q50 6 64 58 Z" fill="#5a5048"/><path d="M4 58 Q14 14 32 14 Q50 14 60 58 Z" fill="url(#z_t1)"/><path d="M14 14 L18 26 L22 14 M28 6 L32 22 L36 6 M42 14 L46 26 L50 14" fill="#3a3530"/><path d="M14 58 L18 46 L22 58 M28 58 L32 50 L36 58 M42 58 L46 46 L50 58" fill="#3a3530"/></svg>',
   wyvern_roost: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><linearGradient id="z_wy1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a3030"/><stop offset="1" stop-color="#0a0608"/></linearGradient><radialGradient id="z_wy2" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#fbd24e"/><stop offset="0.6" stop-color="#e0762f"/><stop offset="1" stop-color="#a32d2d"/></radialGradient></defs><path d="M0 58 L18 22 L26 38 L32 18 L38 38 L46 22 L64 58 Z" fill="url(#z_wy1)"/><path d="M28 24 L32 14 L36 24" stroke="#a32d2d" stroke-width="0.8" fill="none" opacity="0.7"/><ellipse cx="32" cy="34" rx="10" ry="6" fill="url(#z_wy2)" opacity="0.85"/><path d="M14 18 Q18 4 22 16 M50 18 Q46 4 42 16" stroke="#5fb8e0" stroke-width="0.8" fill="none" opacity="0.6"/><path d="M30 36 Q28 28 32 24 Q36 28 34 36" fill="#fff" opacity="0.5"/></svg>',
   demon_sanctum: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><radialGradient id="z_d1" cx="0.5" cy="0.5" r="0.6"><stop offset="0" stop-color="#fbd24e"/><stop offset="0.3" stop-color="#e0762f"/><stop offset="0.7" stop-color="#a32d2d"/><stop offset="1" stop-color="#1a0404"/></radialGradient></defs><circle cx="32" cy="32" r="28" fill="#1a0404"/><circle cx="32" cy="32" r="22" fill="url(#z_d1)" opacity="0.7"/><path d="M32 14 L38 30 L54 30 L42 40 L46 56 L32 46 L18 56 L22 40 L10 30 L26 30 Z" fill="none" stroke="#fbd24e" stroke-width="1.4"/><path d="M32 14 L32 46 M10 30 L54 30 M18 56 L46 56" stroke="#fbd24e" stroke-width="0.6" opacity="0.5"/></svg>',
+
+  /* ─── RAID: The Sunken Barrow (1.0.66) — zone + 6 revenant foes + gear + mats ─── */
+  sunken_barrow: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><linearGradient id="sbz1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6a6458"/><stop offset="0.5" stop-color="#38342c"/><stop offset="1" stop-color="#14120e"/></linearGradient><radialGradient id="sbz2" cx="0.5" cy="0.35" r="0.7"><stop offset="0" stop-color="#2a3a38"/><stop offset="1" stop-color="#060a0a"/></radialGradient><linearGradient id="sbz3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4a9a8a" stop-opacity="0.5"/><stop offset="1" stop-color="#173028" stop-opacity="0.9"/></linearGradient></defs><path d="M2 40 Q10 12 32 10 Q54 12 62 40 L62 46 L2 46 Z" fill="url(#sbz1)"/><path d="M16 46 L16 26 L22 26 L22 46 M42 46 L42 26 L48 26 L48 46 M14 26 L50 26 L50 22 L14 22 Z" fill="#4a453a"/><path d="M22 46 L22 30 Q32 22 42 30 L42 46 Z" fill="url(#sbz2)"/><ellipse cx="32" cy="38" rx="5" ry="7" fill="#8ff0d8" opacity="0.35"/><rect x="0" y="46" width="64" height="18" fill="url(#sbz3)"/><path d="M0 50 Q16 46 32 50 Q48 54 64 50" stroke="#7fd8c8" stroke-width="0.8" fill="none" opacity="0.5"/><path d="M0 56 Q16 52 32 56 Q48 60 64 56" stroke="#4a9a8a" stroke-width="0.8" fill="none" opacity="0.45"/><path d="M12 22 L14 16 M50 22 L52 16" stroke="#2a3a34" stroke-width="1.4"/></svg>',
+  barrow_sentry: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><linearGradient id="bsry1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7a6a54"/><stop offset="0.5" stop-color="#443a2c"/><stop offset="1" stop-color="#1a140c"/></linearGradient><linearGradient id="bsry2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d8ccae"/><stop offset="1" stop-color="#8a7c58"/></linearGradient></defs><ellipse cx="32" cy="58" rx="16" ry="3" fill="#000" opacity="0.35"/><path d="M20 14 Q20 6 32 6 Q44 6 44 14 L44 22 L20 22 Z" fill="url(#bsry1)"/><rect x="30" y="4" width="4" height="8" fill="#6a5a44"/><path d="M22 22 Q22 40 32 46 Q42 40 42 22 Z" fill="url(#bsry2)"/><path d="M22 24 L42 24" stroke="#5a4c34" stroke-width="1"/><ellipse cx="27" cy="30" rx="3" ry="3.4" fill="#0a0c0a"/><ellipse cx="37" cy="30" rx="3" ry="3.4" fill="#0a0c0a"/><circle cx="27" cy="30" r="1.4" fill="#8ff0d8"/><circle cx="37" cy="30" r="1.4" fill="#8ff0d8"/><path d="M28 38 L30 42 L32 38 L34 42 L36 38" stroke="#3a3024" stroke-width="1" fill="none"/><path d="M12 30 L20 34 L12 54" stroke="#5a4c38" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M12 30 L8 24 L16 28 Z" fill="#9a8a6a"/></svg>',
+  drowned_footman: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><linearGradient id="dfmn1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5a7a72"/><stop offset="0.5" stop-color="#2c443e"/><stop offset="1" stop-color="#0c1614"/></linearGradient><radialGradient id="dfmn2" cx="0.5" cy="0.4" r="0.6"><stop offset="0" stop-color="#9ac8be"/><stop offset="1" stop-color="#4a6a62"/></radialGradient></defs><ellipse cx="32" cy="58" rx="15" ry="3" fill="#000" opacity="0.35"/><path d="M18 22 Q18 8 32 8 Q46 8 46 22 L44 30 Q38 26 32 26 Q26 26 20 30 Z" fill="url(#dfmn1)"/><path d="M22 26 Q22 44 32 50 Q42 44 42 26 Q37 30 32 30 Q27 30 22 26 Z" fill="url(#dfmn2)"/><path d="M22 28 L42 28" stroke="#3a544c" stroke-width="1"/><ellipse cx="27" cy="34" rx="3" ry="3.2" fill="#0a1210"/><ellipse cx="37" cy="34" rx="3" ry="3.2" fill="#0a1210"/><circle cx="27" cy="34" r="1.3" fill="#7fe0d0"/><circle cx="37" cy="34" r="1.3" fill="#7fe0d0"/><path d="M26 42 L38 42" stroke="#2a3a34" stroke-width="1"/><path d="M20 30 L18 44 M44 30 L46 44 M32 50 L32 56" stroke="#4a9a8a" stroke-width="0.8" opacity="0.6" fill="none"/><circle cx="18" cy="46" r="1.2" fill="#7fd8c8" opacity="0.7"/><circle cx="46" cy="47" r="1.2" fill="#7fd8c8" opacity="0.7"/></svg>',
+  barrow_champion: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><radialGradient id="bchp_a" cx="0.5" cy="0.5" r="0.7"><stop offset="0" stop-color="#8ff0d8" stop-opacity="0.32"/><stop offset="1" stop-color="#8ff0d8" stop-opacity="0"/></radialGradient><linearGradient id="bchp1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8a7a5e"/><stop offset="0.5" stop-color="#4c4030"/><stop offset="1" stop-color="#1c160e"/></linearGradient><linearGradient id="bchp2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e4d8b8"/><stop offset="1" stop-color="#8a7a54"/></linearGradient></defs><circle cx="32" cy="32" r="30" fill="url(#bchp_a)"/><path d="M10 20 L6 8 L16 16 Z M54 20 L58 8 L48 16 Z" fill="#3a3222"/><path d="M18 18 Q18 6 32 6 Q46 6 46 18 L46 26 L18 26 Z" fill="url(#bchp1)"/><path d="M14 20 L18 14 L20 22 M50 20 L46 14 L44 22" fill="#9a8a68"/><rect x="29" y="2" width="6" height="8" fill="#6a5a40"/><path d="M20 26 Q20 46 32 52 Q44 46 44 26 Z" fill="url(#bchp2)"/><path d="M20 28 L44 28" stroke="#5a4c34" stroke-width="1.2"/><path d="M30 26 L30 40 M34 26 L34 40" stroke="#4a3c28" stroke-width="0.7" opacity="0.5"/><ellipse cx="26" cy="33" rx="3.4" ry="4" fill="#0a0c0a"/><ellipse cx="38" cy="33" rx="3.4" ry="4" fill="#0a0c0a"/><circle cx="26" cy="33" r="1.8" fill="#8ff0d8"/><circle cx="38" cy="33" r="1.8" fill="#8ff0d8"/><path d="M27 42 L29 46 L32 42 L35 46 L37 42" stroke="#3a3024" stroke-width="1.2" fill="none"/><path d="M8 40 L20 36 L8 58" stroke="#6a5a40" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M8 40 L2 32 L14 36 Z" fill="#b8a880"/></svg>',
+  tomb_revenant: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><radialGradient id="trev_a" cx="0.5" cy="0.45" r="0.6"><stop offset="0" stop-color="#7fd8c8" stop-opacity="0.4"/><stop offset="1" stop-color="#7fd8c8" stop-opacity="0"/></radialGradient><linearGradient id="trev1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a8e0d4" stop-opacity="0.9"/><stop offset="0.6" stop-color="#4a8a7e" stop-opacity="0.75"/><stop offset="1" stop-color="#1a3830" stop-opacity="0.2"/></linearGradient></defs><circle cx="32" cy="30" r="28" fill="url(#trev_a)"/><path d="M32 8 Q48 8 48 28 Q48 38 42 44 L44 56 L38 50 L32 58 L26 50 L20 56 L22 44 Q16 38 16 28 Q16 8 32 8 Z" fill="url(#trev1)"/><ellipse cx="26" cy="28" rx="4" ry="5" fill="#0a1a16"/><ellipse cx="38" cy="28" rx="4" ry="5" fill="#0a1a16"/><circle cx="26" cy="28" r="1.8" fill="#c8fff0"/><circle cx="38" cy="28" r="1.8" fill="#c8fff0"/><path d="M27 38 Q32 42 37 38" stroke="#0a1a16" stroke-width="1.6" fill="none"/><path d="M24 20 Q28 16 32 20 M32 20 Q36 16 40 20" stroke="#2a4a42" stroke-width="1" fill="none" opacity="0.6"/></svg>',
+  wardens_herald: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><linearGradient id="whld1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8a7a5e"/><stop offset="0.5" stop-color="#4c4030"/><stop offset="1" stop-color="#1c160e"/></linearGradient><linearGradient id="whld2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4a9a8a"/><stop offset="0.5" stop-color="#2a5a50"/><stop offset="1" stop-color="#0e201c"/></linearGradient><linearGradient id="whld3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e4d8b8"/><stop offset="1" stop-color="#8a7a54"/></linearGradient></defs><ellipse cx="32" cy="58" rx="15" ry="3" fill="#000" opacity="0.35"/><rect x="30" y="8" width="3" height="48" fill="#5a4c38"/><path d="M33 10 L56 14 Q52 20 56 26 L33 30 Z" fill="url(#whld2)"/><path d="M40 16 L48 18 M40 22 L48 24" stroke="#8ff0d8" stroke-width="0.8" opacity="0.6"/><circle cx="31" cy="8" r="2.5" fill="#b8a880"/><path d="M22 26 Q20 18 24 14 Q28 12 32 14 L32 30 Q26 30 22 26 Z" fill="url(#whld1)"/><path d="M22 30 Q22 46 30 52 Q34 48 34 30 Z" fill="url(#whld3)"/><ellipse cx="26" cy="35" rx="2.6" ry="3" fill="#0a0c0a"/><circle cx="26" cy="35" r="1.2" fill="#8ff0d8"/><path d="M14 40 Q10 34 14 30 Q18 34 18 40 Q22 42 20 46 Q16 46 14 42 Z" fill="url(#whld3)" opacity="0.9"/><path d="M14 34 Q16 36 17 39" stroke="#5a4c34" stroke-width="0.7" fill="none"/></svg>',
+  barrow_warden: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><radialGradient id="bwrd_a" cx="0.5" cy="0.5" r="0.72"><stop offset="0" stop-color="#8ff0d8" stop-opacity="0.4"/><stop offset="1" stop-color="#8ff0d8" stop-opacity="0"/></radialGradient><linearGradient id="bwrd_c" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fbe478"/><stop offset="0.5" stop-color="#b89440"/><stop offset="1" stop-color="#6a4e1c"/></linearGradient><linearGradient id="bwrd1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e8dcbc"/><stop offset="0.55" stop-color="#a8966a"/><stop offset="1" stop-color="#4a3e26"/></linearGradient></defs><circle cx="32" cy="33" r="31" fill="url(#bwrd_a)"/><path d="M8 16 L4 2 L14 10 Z M56 16 L60 2 L50 10 Z" fill="#2c3630"/><path d="M12 22 L8 10 L18 16 L24 8 L28 15 L32 6 L36 15 L40 8 L46 16 L56 10 L52 22 Z" fill="url(#bwrd_c)" stroke="#4a3810" stroke-width="0.7" stroke-linejoin="round"/><circle cx="32" cy="10" r="2.2" fill="#8ff0d8"/><circle cx="18" cy="15" r="1.6" fill="#4a9a8a"/><circle cx="46" cy="15" r="1.6" fill="#4a9a8a"/><path d="M16 26 Q16 50 32 58 Q48 50 48 26 Q40 32 32 32 Q24 32 16 26 Z" fill="url(#bwrd1)"/><path d="M16 28 L48 28" stroke="#5a4a2c" stroke-width="1.2"/><path d="M30 32 L30 46 M34 32 L34 46" stroke="#4a3c24" stroke-width="0.8" opacity="0.5"/><ellipse cx="25" cy="34" rx="4.2" ry="5" fill="#080a08"/><ellipse cx="39" cy="34" rx="4.2" ry="5" fill="#080a08"/><circle cx="25" cy="34" r="2.2" fill="#8ff0d8"/><circle cx="39" cy="34" r="2.2" fill="#8ff0d8"/><circle cx="25" cy="34" r="0.9" fill="#fff"/><circle cx="39" cy="34" r="0.9" fill="#fff"/><path d="M26 44 L29 49 L32 44 L35 49 L38 44" stroke="#3a3020" stroke-width="1.4" fill="none"/><path d="M27 51 L26 57 L29 55 M37 51 L38 57 L35 55" stroke="#c8bc98" stroke-width="1" fill="none"/></svg>',
+  barrow_blade: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><linearGradient id="bbld1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#eef2ee"/><stop offset="0.5" stop-color="#a8b4ac"/><stop offset="1" stop-color="#5a645e"/></linearGradient><linearGradient id="bbld2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d8ccae"/><stop offset="1" stop-color="#7a6c48"/></linearGradient></defs><ellipse cx="32" cy="58" rx="9" ry="2.2" fill="#000" opacity="0.35"/><path d="M32 4 L37 12 L36 42 L32 48 L28 42 L27 12 Z" fill="url(#bbld1)" stroke="#3a423e" stroke-width="0.7" stroke-linejoin="round"/><path d="M32 8 L32 44" stroke="#7fd8c8" stroke-width="0.8" opacity="0.6"/><path d="M31 16 L33 16 M30 24 L34 24 M31 32 L33 32" stroke="#4a9a8a" stroke-width="0.7" opacity="0.7"/><path d="M20 46 L44 46 L40 50 L24 50 Z" fill="url(#bbld2)" stroke="#3a3018" stroke-width="0.6"/><circle cx="20" cy="46" r="2.4" fill="#8ff0d8" opacity="0.8"/><circle cx="44" cy="46" r="2.4" fill="#8ff0d8" opacity="0.8"/><rect x="30" y="50" width="4" height="10" rx="1" fill="url(#bbld2)"/><circle cx="32" cy="61" r="2.4" fill="#b8a878"/></svg>',
+  barrow_shield: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><linearGradient id="bshd1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9aa49c"/><stop offset="0.5" stop-color="#5a645c"/><stop offset="1" stop-color="#282e2a"/></linearGradient><radialGradient id="bshd2" cx="0.5" cy="0.42" r="0.55"><stop offset="0" stop-color="#8ff0d8"/><stop offset="1" stop-color="#2a5a50"/></radialGradient></defs><path d="M32 4 L54 12 L52 38 Q50 54 32 62 Q14 54 12 38 L10 12 Z" fill="url(#bshd1)" stroke="#202622" stroke-width="1.4" stroke-linejoin="round"/><path d="M32 9 L49 15 L47 37 Q45 49 32 56 Q19 49 17 37 L15 15 Z" fill="none" stroke="#c8d0c8" stroke-width="0.8" opacity="0.5"/><path d="M32 16 L38 28 L52 30 L42 40 L32 34 L22 40 L12 30 L26 28 Z" fill="#2a322e" opacity="0.6"/><circle cx="32" cy="32" r="7" fill="url(#bshd2)"/><circle cx="32" cy="32" r="7" fill="none" stroke="#b8c0b8" stroke-width="1"/><circle cx="32" cy="32" r="2.4" fill="#d8fff4"/></svg>',
+  barrow_dagger: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><linearGradient id="bdgr1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f0f4ec"/><stop offset="0.5" stop-color="#b0bcae"/><stop offset="1" stop-color="#606a62"/></linearGradient><linearGradient id="bdgr2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d8ccae"/><stop offset="1" stop-color="#7a6c48"/></linearGradient></defs><ellipse cx="34" cy="58" rx="8" ry="2" fill="#000" opacity="0.3"/><path d="M40 6 Q46 18 40 34 L34 40 L30 34 Q32 20 34 10 Z" fill="url(#bdgr1)" stroke="#3a423e" stroke-width="0.7" stroke-linejoin="round"/><path d="M36 12 Q40 22 36 32" stroke="#7fd8c8" stroke-width="0.7" fill="none" opacity="0.6"/><path d="M24 38 L44 38 L40 43 L28 43 Z" fill="url(#bdgr2)" stroke="#3a3018" stroke-width="0.6"/><circle cx="24" cy="38" r="2.2" fill="#8ff0d8" opacity="0.8"/><circle cx="44" cy="38" r="2.2" fill="#8ff0d8" opacity="0.8"/><rect x="32" y="43" width="4" height="14" rx="1" fill="url(#bdgr2)"/><circle cx="34" cy="58" r="2.4" fill="#b8a878"/></svg>',
+  grave_cleaver: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><linearGradient id="gclv1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#c8d0c6"/><stop offset="0.5" stop-color="#78847a"/><stop offset="1" stop-color="#333a35"/></linearGradient><linearGradient id="gclv2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5a4a34"/><stop offset="1" stop-color="#281c10"/></linearGradient><radialGradient id="gclv3" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#8ff0d8"/><stop offset="1" stop-color="#1a4a40"/></radialGradient></defs><ellipse cx="32" cy="59" rx="11" ry="2.2" fill="#000" opacity="0.35"/><rect x="30" y="12" width="4.5" height="46" rx="1.6" fill="url(#gclv2)" stroke="#160e06" stroke-width="0.6"/><path d="M32 14 Q10 10 6 30 Q18 30 32 24 Z" fill="url(#gclv1)" stroke="#232a25" stroke-width="0.9" stroke-linejoin="round"/><path d="M32 14 Q54 10 58 30 Q46 30 32 24 Z" fill="url(#gclv1)" stroke="#232a25" stroke-width="0.9" stroke-linejoin="round"/><path d="M12 22 Q20 20 30 22 M52 22 Q44 20 34 22" stroke="#8ff0d8" stroke-width="0.7" fill="none" opacity="0.6"/><path d="M10 27 Q20 25 31 26 M54 27 Q44 25 33 26" stroke="#4a9a8a" stroke-width="0.6" fill="none" opacity="0.5"/><circle cx="32" cy="18" r="3.4" fill="url(#gclv3)"/><circle cx="32" cy="18" r="1.3" fill="#d8fff4"/><rect x="29" y="52" width="6" height="4" rx="1" fill="#4a3a24"/></svg>',
+  grave_iron: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><linearGradient id="giron1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8a948e"/><stop offset="0.5" stop-color="#4a544e"/><stop offset="1" stop-color="#1c2420"/></linearGradient></defs><path d="M8 40 L20 30 L44 30 L56 40 L44 50 L20 50 Z" fill="url(#giron1)" stroke="#121814" stroke-width="1"/><path d="M20 30 L24 40 L20 50 M44 30 L40 40 L44 50 M24 40 L40 40" stroke="#121814" stroke-width="0.7" opacity="0.5" fill="none"/><path d="M22 34 L38 34" stroke="#aab4ac" stroke-width="1.2" opacity="0.55"/><circle cx="28" cy="40" r="1.6" fill="#8ff0d8" opacity="0.7"/><circle cx="36" cy="43" r="1.2" fill="#4a9a8a" opacity="0.6"/></svg>',
+  barrow_dust: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><radialGradient id="bdst1" cx="0.5" cy="0.7" r="0.7"><stop offset="0" stop-color="#a8a898"/><stop offset="0.6" stop-color="#5a5a4c"/><stop offset="1" stop-color="#26261e"/></radialGradient></defs><path d="M10 50 Q20 34 32 34 Q44 34 54 50 Z" fill="url(#bdst1)"/><path d="M14 48 Q22 40 30 46 M34 46 Q42 40 50 48" stroke="#3a3a2e" stroke-width="0.6" fill="none" opacity="0.5"/><circle cx="26" cy="20" r="1.6" fill="#c8c8b4" opacity="0.85"/><circle cx="36" cy="14" r="1.2" fill="#a8a898" opacity="0.7"/><circle cx="42" cy="24" r="1.4" fill="#8ff0d8" opacity="0.55"/><circle cx="20" cy="28" r="1" fill="#c8c8b4" opacity="0.6"/><circle cx="32" cy="24" r="1.1" fill="#88988a" opacity="0.6"/></svg>',
+  wraithcloth: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><linearGradient id="wcth1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7a8a86"/><stop offset="0.5" stop-color="#3e4a46"/><stop offset="1" stop-color="#161e1c"/></linearGradient></defs><path d="M18 8 Q32 4 46 8 L44 40 L48 54 L40 48 L36 58 L32 50 L28 58 L24 48 L16 54 L20 40 Z" fill="url(#wcth1)"/><path d="M22 12 Q32 10 42 12 M22 22 Q32 20 42 22 M24 32 Q32 30 40 32" stroke="#8ff0d8" stroke-width="0.6" fill="none" opacity="0.45"/><path d="M18 8 L20 40 M46 8 L44 40" stroke="#242c2a" stroke-width="0.6" opacity="0.6"/><circle cx="26" cy="18" r="1" fill="#7fd8c8" opacity="0.5"/><circle cx="38" cy="26" r="1" fill="#7fd8c8" opacity="0.5"/></svg>',
+  runed_bone: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><linearGradient id="rbne1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f0e8d0"/><stop offset="0.5" stop-color="#c0b088"/><stop offset="1" stop-color="#6a5c38"/></linearGradient></defs><ellipse cx="16" cy="16" rx="6" ry="5" fill="url(#rbne1)" transform="rotate(-32 16 16)"/><ellipse cx="48" cy="48" rx="6" ry="5" fill="url(#rbne1)" transform="rotate(-32 48 48)"/><rect x="18" y="22" width="28" height="8" fill="url(#rbne1)" transform="rotate(45 32 32)"/><ellipse cx="16" cy="16" rx="2" ry="1.4" fill="#3a3018" transform="rotate(-32 16 16)"/><ellipse cx="48" cy="48" rx="2" ry="1.4" fill="#3a3018" transform="rotate(-32 48 48)"/><path d="M26 30 L30 34 M30 26 L36 32 M34 28 L38 32" stroke="#4a9a8a" stroke-width="1" opacity="0.75"/><circle cx="32" cy="32" r="1.4" fill="#8ff0d8" opacity="0.7"/></svg>',
 
   /* ─── Combat: Rat Warrens drop items (6) — misc + key + trophy. ─── */
   rat_tail: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><linearGradient id="it_1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e8a888"/><stop offset="0.5" stop-color="#a87858"/><stop offset="1" stop-color="#5a3828"/></linearGradient></defs><path d="M14 8 L20 12 L22 22 L26 30 L34 36 L42 38 L52 36 L58 32 L52 38 L42 44 L34 42 L26 36 L22 28 L20 16 L16 12 Z" fill="url(#it_1)"/><path d="M14 10 L18 14 L20 22 L24 30 L32 34" stroke="#3a2010" stroke-width="0.6" fill="none" opacity="0.5"/><circle cx="56" cy="32" r="2" fill="#7a4838"/><path d="M50 38 L48 42 M44 42 L42 46 M38 42 L36 46" stroke="#3a2010" stroke-width="0.5"/></svg>',
@@ -9383,6 +9479,11 @@ function equipBodyItem(id,slot,scope){
   for(var oSlot in loadout){
     if(oSlot!==slot&&loadout[oSlot]===id) delete loadout[oSlot];
   }
+  // Two-handed weapons (1.0.66) occupy both hands — equipping one drops the
+  // shield, and equipping a shield drops a worn two-hander. Only relevant to the
+  // combat loadout, where weapon+shield coexist.
+  if(ITEMS[id]&&ITEMS[id].twoHanded&&slot==='weapon'&&loadout.shield){ delete loadout.shield; }
+  if(slot==='shield'){ var _w=loadout.weapon; if(_w&&ITEMS[_w]&&ITEMS[_w].twoHanded) delete loadout.weapon; }
   loadout[slot]=id;
   if(scope==='combat') refreshCombatStats();
   renderAll();saveGame();
@@ -10242,6 +10343,15 @@ function normalizeState(){
   // saves may have 'zones' (the now-renamed value); roll them forward to
   // 'dungeons'. Anything else falls back to 'dungeons' as default.
   if(!state.zoneMode||!['dungeons','raids'].includes(state.zoneMode)) state.zoneMode='dungeons';
+  // Raids (1.0.66) — per-raid best rating/time + clear counts. Well-formed guards
+  // so a hand-edited or older save never throws when the raids panel renders.
+  if(!state.raidBest||typeof state.raidBest!=='object'||Array.isArray(state.raidBest)) state.raidBest={};
+  for(const k in state.raidBest){
+    const b=state.raidBest[k];
+    if(!b||typeof b!=='object'||typeof b.timeMs!=='number'||typeof b.rating!=='string'){ delete state.raidBest[k]; }
+  }
+  if(!state.raidClears||typeof state.raidClears!=='object'||Array.isArray(state.raidClears)) state.raidClears={};
+  for(const k in state.raidClears){ if(typeof state.raidClears[k]!=='number'||state.raidClears[k]<0) state.raidClears[k]=0; }
   // Monster Log (1.0.76) — kill/drop counters + UI selection.
   if(!state.monKills||typeof state.monKills!=='object'||Array.isArray(state.monKills)) state.monKills={};
   for(const k in state.monKills){ if(typeof state.monKills[k]!=='number'||state.monKills[k]<0) state.monKills[k]=0; }
@@ -11159,6 +11269,16 @@ function refreshCombatStats(){
   combat.youMaxHit=playerMaxHit();
   combat.youDef=playerDefence();
   combat.youSwingMs=playerSwingMs();
+  // ── Raid debuffs (1.0.66) — a mini-boss / boss curse applied for the current
+  // raid stage. Idempotent: always re-derived from the freshly computed base, so
+  // repeated refreshes mid-stage don't stack. Cleared automatically when the raid
+  // ends (combat.raidDebuff is nulled) or when a stage carries no curse.
+  if(combat.raid && combat.raidDebuff){
+    const d=combat.raidDebuff;
+    if(d.swingMult) combat.youSwingMs=Math.min(6000, Math.round(combat.youSwingMs*d.swingMult));
+    if(d.defMult)   combat.youDef=Math.max(1, Math.round(combat.youDef*d.defMult));
+    if(d.accMult)   combat.youAcc=Math.max(1, Math.round(combat.youAcc*d.accMult));
+  }
 }
 
 /* ════════ CHARACTER DESTINY — type (XP/drop dial) + class (combat/skill focus) ═══
@@ -16150,6 +16270,216 @@ const PETS={
 };
 function getPetForZone(zoneId){ return PETS[zoneId]||null; }
 function hasPet(petId){ return !!(state && state.pets && state.pets[petId]); }
+
+/* ════ RAIDS (1.0.66) ═══════════════════════════════════════════════════════════
+   A raid is a no-retreat gauntlet: fight every stage back-to-back on ONE health
+   bar (no full heal between fights — food & auto-eat still work). Die at any
+   stage and the run ends with NOTHING. Beat the final boss and you roll loot,
+   with quantity + gear-chance scaling to how fast you cleared (the clear rating).
+
+   Mid-raid mini-bosses and the final boss carry a `raidfx` curse — a mild player
+   debuff (slower swings, weaker guard) that adds risk without being punishing.
+
+   Raid foes reuse the standard monster shape so the arena renders them with no
+   special-case code (getMonster falls back to RAID_MON_BY_ID). They never roll
+   rare, and their per-kill loot is suppressed — all spoils come from the clear.  */
+const RAID_MAT_POOL=[
+  {id:'grave_iron',  qty:[1,3]},
+  {id:'barrow_dust', qty:[1,3]},
+  {id:'wraithcloth', qty:[1,2]},
+  {id:'runed_bone',  qty:[1,1]},
+];
+const RAIDS=[
+  {
+    id:'sunken_barrow', name:'The Sunken Barrow', icon:'sunken_barrow',
+    accent:'#4a9a8a', unlockLvl:70,
+    blurb:"A warrior-king's tomb, drowned when the old dam broke. His honour guard never stopped their vigil — and they do not open the door for the living.",
+    // Sequence — 4 revenants + 1 mini-boss + 1 final boss. HP totals ~9.4k with no
+    // heal between stages; a geared Lv70 raider clears in ~3.5–5 min.
+    stages:[
+      {id:'barrow_sentry',   zone:'sunken_barrow', name:'Barrow Sentry',    icon:'barrow_sentry',   lvl:68, hp:900,  atk:200, str:150, def:100, coins:0, xp:1400, swingMs:2300, dmgType:'slash', weakTo:'crush'},
+      {id:'drowned_footman', zone:'sunken_barrow', name:'Drowned Footman',  icon:'drowned_footman', lvl:69, hp:980,  atk:206, str:158, def:104, coins:0, xp:1500, swingMs:2500, dmgType:'stab',  weakTo:'crush'},
+      {id:'barrow_champion', zone:'sunken_barrow', name:'Barrow Champion',  icon:'barrow_champion', lvl:71, hp:2100, atk:300, str:230, def:150, coins:0, xp:2600, swingMs:2600, dmgType:'slash', weakTo:'stab',  miniBoss:true,
+        raidfx:{name:'Grave Chill', desc:'Cold seeps into your limbs — your attacks are 25% slower.', swingMult:1.25}},
+      {id:'tomb_revenant',   zone:'sunken_barrow', name:'Tomb Revenant',    icon:'tomb_revenant',   lvl:70, hp:1050, atk:212, str:166, def:108, coins:0, xp:1550, swingMs:2200, dmgType:'crush', weakTo:'slash'},
+      {id:'wardens_herald',  zone:'sunken_barrow', name:"Warden's Herald",  icon:'wardens_herald',  lvl:72, hp:1200, atk:226, str:182, def:122, coins:0, xp:1800, swingMs:2400, dmgType:'slash', weakTo:'crush'},
+      {id:'barrow_warden',   zone:'sunken_barrow', name:'The Barrow Warden', icon:'barrow_warden',  lvl:74, hp:3200, atk:360, str:290, def:200, coins:0, xp:4200, swingMs:2800, dmgType:'crush', weakTo:'slash', boss:true, raidBoss:true,
+        raidfx:{name:"Warden's Curse", desc:'His death-cold saps you — −20% Defence and your strikes drag 15% slower.', defMult:0.80, swingMult:1.15}},
+    ],
+    // Rating tiers — faster clear = better rank = more materials + higher gear odds.
+    // maxMs is the upper time bound for that rank (first tier that fits wins).
+    ratingTiers:[
+      {key:'S', maxMs:180000,   mult:3.0, gold:4200, mats:8, col:'#ffe27a'},
+      {key:'A', maxMs:240000,   mult:2.2, gold:3400, mats:6, col:'#a8e0ff'},
+      {key:'B', maxMs:300000,   mult:1.7, gold:2700, mats:5, col:'#9be89b'},
+      {key:'C', maxMs:390000,   mult:1.3, gold:2100, mats:4, col:'#d8c8a0'},
+      {key:'D', maxMs:Infinity, mult:1.0, gold:1500, mats:3, col:'#b0a494'},
+    ],
+    // Gear table — base chance PER PIECE, multiplied by the clear-rating mult and
+    // clamped. The 2H Grave Cleaver is the marquee super-rare.
+    gearDrops:[
+      {id:'barrow_blade',  chance:0.05},
+      {id:'barrow_shield', chance:0.05},
+      {id:'barrow_dagger', chance:0.05},
+      {id:'grave_cleaver', chance:0.008},
+    ],
+    matPool:RAID_MAT_POOL,
+  },
+];
+const RAID_BY_ID=(function(){ const m={}; for(const r of RAIDS) m[r.id]=r; return m; })();
+const RAID_MON_BY_ID=(function(){ const m={}; for(const r of RAIDS) for(const s of r.stages) m[s.id]=s; return m; })();
+function getRaid(id){ return RAID_BY_ID[id]||RAIDS[0]; }
+function raidUnlocked(raid){ return combatLevel()>=raid.unlockLvl; }
+const _RAID_RANK_ORDER=['S','A','B','C','D'];
+function ratingIndex(k){ const i=_RAID_RANK_ORDER.indexOf(k); return i<0?99:i; }
+function raidRating(raid, timeMs){
+  const tiers=raid.ratingTiers;
+  for(const t of tiers){ if(timeMs<=t.maxMs) return t; }
+  return tiers[tiers.length-1];
+}
+function _fmtRaidTime(ms){ const s=Math.max(0,Math.round(ms/1000)); const m=Math.floor(s/60); return m>0?`${m}m ${s%60}s`:`${s}s`; }
+
+/* Last-run summary for the raids panel — session-only (not saved). Holds either a
+   clear result {gold,mats,gear,rating,timeMs} or a fail marker {failed,stage,n}. */
+let _raidResult=null;
+
+/* Grant all raid spoils on a clear. Returns a summary for the log + panel. */
+function grantRaidRewards(raid, timeMs){
+  const rt=raidRating(raid, timeMs);
+  const res={ raidId:raid.id, timeMs, rating:rt.key, ratingCol:rt.col, gold:0, mats:[], gear:[] };
+  // Gold — flat by rank (multiplied for the character drop dial's flavour? no —
+  // gold is a fixed rank payout so the rating stays the headline reward).
+  state.coins += rt.gold * SILVER_PER_GOLD;
+  res.gold=rt.gold;
+  // Materials — rt.mats random picks from the pool, aggregated.
+  const pool=raid.matPool||RAID_MAT_POOL;
+  const agg={};
+  for(let i=0;i<rt.mats;i++){
+    const pick=pool[Math.floor(Math.random()*pool.length)];
+    const q=Array.isArray(pick.qty)?(pick.qty[0]+Math.floor(Math.random()*(pick.qty[1]-pick.qty[0]+1))):1;
+    agg[pick.id]=(agg[pick.id]||0)+q;
+  }
+  if(!state.discovered) state.discovered={};
+  for(const id in agg){ grantItem(id, agg[id]); state.discovered[id]=1; res.mats.push({id, qty:agg[id]}); }
+  // Gear — each piece: base chance × rating mult, clamped. Character drop dial
+  // nudges it too so hardcore/accelerated feel consistent with the rest of loot.
+  for(const g of raid.gearDrops){
+    const c=Math.min(0.6, g.chance * rt.mult * charDropMult());
+    if(Math.random()<c){ grantItem(g.id,1); state.discovered[g.id]=1; res.gear.push(g.id); }
+  }
+  // Clears + best rating/time.
+  if(!state.raidClears) state.raidClears={};
+  state.raidClears[raid.id]=(state.raidClears[raid.id]||0)+1;
+  if(!state.raidBest) state.raidBest={};
+  const prev=state.raidBest[raid.id];
+  const bestRating = !prev ? rt.key : (ratingIndex(rt.key)<ratingIndex(prev.rating)?rt.key:prev.rating);
+  const bestTime   = !prev ? timeMs : Math.min(prev.timeMs, timeMs);
+  state.raidBest[raid.id]={rating:bestRating, timeMs:bestTime};
+  return res;
+}
+
+/* Enter a raid — sets up the run and engages stage 1. No-op mid-fight. */
+function startRaid(id){
+  if(combat.active) return;
+  const raid=getRaid(id); if(!raid) return;
+  if(combatLevel()<raid.unlockLvl){ toast(`🔒 Requires Combat Lv ${raid.unlockLvl} to enter ${raid.name}.`); return; }
+  if(state.action){ state.action=null; }
+  if(typeof _combatGearSlot!=='undefined') _combatGearSlot=null;
+  state.cmbSubTab='arena';
+  state.zoneMode='raids';
+  combat.rare=false;
+  combat.raid={ id:raid.id, stage:0, startMs:Date.now(), n:raid.stages.length };
+  _raidResult=null;
+  refreshCombatStats();
+  _beginRaidStage(raid, 0, true);
+  cmbLog(`⚔ You breach ${raid.name}. No retreat — fall here and you leave with nothing.`,'sys');
+  startCombatTimer();
+  renderAll();
+  renderCombat();
+  refreshCombatTabIndicator();
+}
+
+/* Set up a single raid stage's foe. fullHeal only on stage 1; later stages carry
+   your current HP forward (the risk). Applies the stage's raidfx curse. */
+function _beginRaidStage(raid, stage, fullHeal){
+  const mon=raid.stages[stage];
+  combat.monId=mon.id;
+  combat.active=true;
+  combat.foeHp=mon.hp;
+  combat.foeStatus={};
+  combat.foeSwingMs=mon.swingMs||COMBAT_BASE_SWING_MS;
+  combat.raidDebuff=mon.raidfx||null;
+  if(fullHeal){ combat.youHp=combat.youMaxHp; combat.regens=[]; }
+  refreshCombatStats();               // re-applies (or clears) the stage debuff
+  const now=Date.now();
+  combat.youSwingStart=now;
+  combat.foeSwingStart=now;
+  const tag=mon.raidBoss?'★ FINAL BOSS':(mon.miniBoss?'◆ MINI-BOSS':`Stage ${stage+1}/${raid.stages.length}`);
+  cmbLog(`— ${tag}: ${mon.name} rises to meet you. —`, (mon.raidBoss||mon.miniBoss)?'rare-spawn':'sys');
+  if(mon.raidfx){ cmbLog(`✦ ${mon.raidfx.name} — ${mon.raidfx.desc}`,'hit'); }
+}
+
+/* Called from combatTick when a raid foe dies (before normal loot logic runs).
+   Grants per-kill combat XP, then either advances the stage or wins the raid. */
+function handleRaidKill(baseMon){
+  const raid=getRaid(combat.raid.id);
+  const style=(state.combatStyle==='strength'||state.combatStyle==='defence')?state.combatStyle:'attack';
+  grantCombatXp(style, Math.round((baseMon.xp||0)*0.75));
+  grantCombatXp('hitpoints', Math.round((baseMon.xp||0)*0.25));
+  if(state.monKills) state.monKills[baseMon.id]=(state.monKills[baseMon.id]||0)+1;
+  const stage=combat.raid.stage;
+  cmbLog(`✔ ${baseMon.name} falls.`, 'win');
+  if(stage+1>=raid.stages.length){
+    // Final boss down — victory + spoils.
+    const timeMs=Date.now()-combat.raid.startMs;
+    const res=grantRaidRewards(raid, timeMs);
+    _raidResult=res;
+    combat.active=false; combat.raid=null; combat.raidDebuff=null;
+    combat.foeStatus={}; combat.regens=[];
+    combat.youHp=combat.youMaxHp;
+    _resetCombatTargetAfterRaid();
+    stopCombatTimer();
+    cmbLog(`🏆 ${raid.name} CLEARED — ${res.rating} rank · ${_fmtRaidTime(res.timeMs)}`,'rare-win');
+    cmbLog(`   Spoils: +${res.gold}g${res.mats.length?' · '+res.mats.map(m=>(m.qty>1?m.qty+'× ':'')+(ITEMS[m.id]?ITEMS[m.id].name:m.id)).join(', '):''}`,'win');
+    if(res.gear.length) res.gear.forEach(id=>{ cmbLog(`   ★ ${ITEMS[id]?ITEMS[id].name:id} recovered!`,'rare-win'); if(typeof toast==='function') toast(`★ ${ITEMS[id]?ITEMS[id].name:id}!`); });
+    else cmbLog('   No relic gear this run — a faster clear improves the odds.','');
+    if(typeof toast==='function') toast(`🏆 ${raid.name} cleared — ${res.rating} rank!`);
+    if(typeof logNotification==='function') logNotification('rare','🏆',`Cleared ${raid.name} — ${res.rating} rank in ${_fmtRaidTime(timeMs)}.`);
+    refreshCombatStats();
+    if(typeof saveGame==='function') saveGame();
+    renderAll();
+    renderCombat();
+    refreshCombatTabIndicator();
+    return;
+  }
+  // Advance — carry current HP into the next stage.
+  combat.raid.stage=stage+1;
+  _beginRaidStage(raid, stage+1, false);
+  if(typeof renderHeader==='function') renderHeader();
+  updateCombatBars();
+  if(combatMode) renderCombat();
+}
+
+/* Reset the arena's idle target to a real zone foe once a raid ends, so a raid
+   monster (which lives outside the zone roster) doesn't linger as the target. */
+function _resetCombatTargetAfterRaid(){
+  const z=(typeof monstersInZone==='function')?monstersInZone(state.zone):[];
+  const first=(z&&(z.find(m=>!m.boss)||z[0]))||MONSTERS[0];
+  if(first) combat.monId=first.id;
+}
+
+/* Called from the player-death path when a raid is active — the run is lost. */
+function handleRaidFail(){
+  const raid=getRaid(combat.raid.id);
+  const stage=combat.raid.stage;
+  _raidResult={ raidId:combat.raid.id, failed:true, stage:stage+1, n:combat.raid.n };
+  combat.raid=null; combat.raidDebuff=null;
+  _resetCombatTargetAfterRaid();
+  cmbLog(`💀 You fall in ${raid.name} at stage ${stage+1}/${raid.stages.length}. The barrow keeps its treasures.`,'lose');
+  if(typeof toast==='function') toast(`💀 Raid failed — ${raid.name}.`);
+  if(typeof logNotification==='function') logNotification('combat','💀',`Fell in ${raid.name} (stage ${stage+1}/${raid.stages.length}).`);
+}
+
 const combat={
   monId:'rat',
   active:false,
@@ -16167,6 +16497,8 @@ const combat={
   regens:[],        // (1.0.21) active heal-over-time food effects: {rate,until,last,acc}
   foeStatus:{},     // (1.0.60) debuffs on the foe: {poison:{dmg,every,until,last,acc}, stun:{until}}
   youStatus:{},     // (1.0.60) reserved for debuffs the player receives (future monster poison)
+  raid:null,        // (1.0.66) active raid run: {id, stage, startMs, n} or null
+  raidDebuff:null,  // (1.0.66) current raid stage's player curse (from monster.raidfx) or null
   log:[],
 };
 let _combatTimer=null;
@@ -18778,7 +19110,7 @@ function renderGemExchange(box){
 }
 
 /* ════ COMBAT MODULE (base scaffold) ═════════════════════════════════════════════ */
-function getMonster(id){ return MONSTERS.find(m=>m.id===id)||MONSTERS[0]; }
+function getMonster(id){ return MONSTERS.find(m=>m.id===id)||(typeof RAID_MON_BY_ID!=='undefined'&&RAID_MON_BY_ID[id])||MONSTERS[0]; }
 
 function cmbLog(text,cls){
   combat.log.push({t:text,c:cls||''});
@@ -18900,6 +19232,14 @@ function engageCombat(){
 }
 
 function fleeCombat(){
+  // (1.0.66) Disengaging mid-raid forfeits the run — no loot, no penalty beyond that.
+  if(combat.raid){
+    const raid=getRaid(combat.raid.id); const stage=combat.raid.stage;
+    _raidResult={ raidId:combat.raid.id, failed:true, forfeit:true, stage:stage+1, n:combat.raid.n };
+    cmbLog(`🏳 You withdraw from ${raid?raid.name:'the raid'} at stage ${stage+1}/${combat.raid.n} — the run is forfeit.`,'lose');
+    combat.raid=null; combat.raidDebuff=null;
+    _resetCombatTargetAfterRaid();
+  }
   stopCombatTimer();
   combat.active=false;
   combat.rare=false;  // disengage clears rare — re-engaging rerolls (1.0.70)
@@ -19020,12 +19360,22 @@ function combatTick(){
         didCrit=true;
       }
     }
-    combat.foeHp=Math.max(0,combat.foeHp-youDmg);
+    // ── Cleave (1.0.66) — the Grave Cleaver's Reaping Arc: a landed hit has a
+    // chance to strike a second time in the same swing (mirrors the first blow,
+    // crit and all). Pure bonus damage — kills still resolve on the swing path.
+    let _cleaveDmg=0;
+    if(youDmg>0){
+      const _clId=(typeof eqCombatWeapon==='function')?eqCombatWeapon():((state.combatEquipped&&state.combatEquipped.weapon)||'');
+      const _clfx=_clId&&ITEMS[_clId]&&ITEMS[_clId].wfx;
+      if(_clfx&&_clfx.cleave&&Math.random()<_clfx.cleave.chance){ _cleaveDmg=youDmg; }
+    }
+    combat.foeHp=Math.max(0,combat.foeHp-youDmg-_cleaveDmg);
     if(youDmg>0){
       cmbLog(`You ${didCrit?'<span style="color:#ffd700">crit</span> ':''}hit the ${mon.name} for ${youDmg}.`,'hit');
+      if(_cleaveDmg>0) cmbLog(`🪓 Reaping Arc cleaves again for ${_cleaveDmg}!`,'hit');
       // Per-damage XP factor ÷10 vs old scale — damage numbers are ~10× bigger now.
-      grantCombatXp(style,youDmg*0.4);
-      grantCombatXp('hitpoints',Math.round(youDmg*0.133));
+      grantCombatXp(style,(youDmg+_cleaveDmg)*0.4);
+      grantCombatXp('hitpoints',Math.round((youDmg+_cleaveDmg)*0.133));
       // Lifesteal — heal a fraction of damage dealt, capped at maxHp.
       // Bloodthirst enchant (15%) is the headline source; sockets stack on top.
       const cb2=(typeof combatBonusesAll==='function')?combatBonusesAll():null;
@@ -19078,6 +19428,10 @@ function combatTick(){
 
     // Foe down? Award kill XP and respawn for idle farming.
     if(combat.foeHp<=0){
+      // ── Raid gauntlet (1.0.66) — no farming loop, no per-kill loot. Advance the
+      // stage or win the raid; all handled in handleRaidKill. Return early so none
+      // of the standard drop/respawn logic below runs for a raid foe.
+      if(combat.raid){ handleRaidKill(baseMon); updateCombatBars(); return; }
       // Capture rare state for THIS kill — we reroll after rewards are awarded.
       const wasRare=combat.rare;
       state.coins+=mon.coins*SILVER_PER_GOLD;
@@ -19223,7 +19577,10 @@ function combatTick(){
     }
 
     if(combat.youHp<=0){
-      cmbLog('💀 You were defeated and retreat to safety.','lose');
+      // (1.0.66) A death mid-raid forfeits the whole run — handleRaidFail logs it
+      // and clears the raid state; the standard cleanup below still runs.
+      if(combat.raid){ handleRaidFail(); }
+      else cmbLog('💀 You were defeated and retreat to safety.','lose');
       combat.active=false;
       combat.rare=false;  // death clears rare encounter (1.0.70)
       combat.regens=[];   // (1.0.21) wipe food regen on death
@@ -19382,6 +19739,9 @@ function updateCombatBars(){
   const yb=document.querySelector('#cmbYouBar i'); if(yb) yb.style.width=youPct+'%';
   const ft=$('cmbFoeHpText'); if(ft) ft.textContent=combat.active?`${combat.foeHp} / ${mon.hp}`:`${mon.hp} / ${mon.hp}`;
   const yt=$('cmbYouHpText'); if(yt) yt.textContent=`${combat.youHp} / ${combat.youMaxHp}`;
+  // Live raid timer (1.0.66) — updated in-place so the run clock ticks without a
+  // full panel re-render.
+  if(combat.raid){ const rt=$('raidTimer'); if(rt) rt.textContent=_fmtRaidTime(Date.now()-combat.raid.startMs); }
   _syncChipRow($('cmbFoeStatus'),'foe',()=>_foeChipSig,v=>_foeChipSig=v);
   _syncChipRow($('cmbYouStatus'),'you',()=>_youChipSig,v=>_youChipSig=v);
   const logEl=$('cmbLog');
@@ -19982,6 +20342,84 @@ function buildCmastViewHTML(){
 }
 /* ════ END COMBAT MASTERY VIEW ═════════════════════════════════════════════════ */
 
+/* ════ RAID UI (1.0.66) ═══════════════════════════════════════════════════════
+   buildRaidsPanelHTML — the raids-mode content: an intro strip, the last-run
+   result box (session-only), and one card per raid (gauntlet dots + relic
+   preview + best rating/time + Enter button). buildRaidProgressHTML — the live
+   run strip shown atop the arena during a raid (stage dots, curse, timer). */
+function buildRaidsPanelHTML(){
+  const esc=s=>String(s==null?'':s).replace(/"/g,'&quot;');
+  const active=combat.active, inRaid=!!combat.raid;
+  const cards=RAIDS.map(r=>{
+    const unlocked=raidUnlocked(r);
+    const best=state.raidBest&&state.raidBest[r.id];
+    const clears=(state.raidClears&&state.raidClears[r.id])||0;
+    const n=r.stages.length;
+    const nMini=r.stages.filter(s=>s.miniBoss).length;
+    const dots=r.stages.map(s=>`<span class="rd-dot${s.raidBoss?' boss':s.miniBoss?' mini':''}" data-tip="${esc(s.name)} · Lv ${s.lvl} · ${s.hp} HP${s.raidfx?' · '+esc(s.raidfx.name):''}">${s.raidBoss?'★':s.miniBoss?'◆':''}</span>`).join('');
+    const gearIcons=r.gearDrops.map(g=>`<span class="rd-gi" data-tip="${esc(ITEMS[g.id]?ITEMS[g.id].name:g.id)}${g.id==='grave_cleaver'?' — super rare 2H':' — rare'}">${iconHTML(g.id)}</span>`).join('');
+    const tierCol=best?((r.ratingTiers.find(t=>t.key===best.rating)||{}).col||'#ccc'):'#ccc';
+    const bestLine=best?`Best <b style="color:${tierCol}">${best.rating}</b> · ${_fmtRaidTime(best.timeMs)}`:'Not yet cleared';
+    return `<div class="raid-card${unlocked?'':' locked'}" style="--raid-accent:${r.accent}">
+      <div class="rc-head">
+        <span class="rc-ic">${iconHTML(r.icon)}</span>
+        <div class="rc-title"><span class="rc-nm">${r.name}</span><span class="rc-lv">Combat Lv ${r.unlockLvl}+</span></div>
+        <span class="rc-clears">${clears?clears+'× cleared':''}</span>
+      </div>
+      <div class="rc-blurb">${r.blurb}</div>
+      <div class="rc-row"><span class="rc-lbl">Gauntlet</span><span class="rc-dots">${dots}</span><span class="rc-meta">${n} stages · ${nMini} mini-boss + final</span></div>
+      <div class="rc-row"><span class="rc-lbl">Relics</span><span class="rc-gicons">${gearIcons}</span><span class="rc-meta">rare drops · faster clear = better odds</span></div>
+      <div class="rc-foot">
+        <span class="rc-best">${bestLine}</span>
+        ${unlocked
+          ? `<button class="raid-enter" data-raid="${r.id}"${(active||inRaid)?' disabled':''}>${inRaid?'In progress…':'⚔ Enter Raid'}</button>`
+          : `<button class="raid-enter locked" disabled>🔒 Combat Lv ${r.unlockLvl}</button>`}
+      </div>
+    </div>`;
+  }).join('');
+  let resultBox='';
+  if(_raidResult){
+    const R=_raidResult, raid=getRaid(R.raidId);
+    if(R.failed){
+      resultBox=`<div class="raid-result fail"><b>${R.forfeit?'🏳 Run forfeit':'💀 Raid failed'}</b> — ${raid.name}, stage ${R.stage}/${R.n}. No spoils recovered.</div>`;
+    }else{
+      const tier=raid.ratingTiers.find(t=>t.key===R.rating)||{};
+      const mats=R.mats.map(m=>`<span class="rr-mat" data-tip="${esc(ITEMS[m.id]?ITEMS[m.id].name:m.id)}">${iconHTML(m.id)}${m.qty>1?'<i>×'+m.qty+'</i>':''}</span>`).join('');
+      const gear=R.gear.length
+        ? `<div class="rr-gear">★ Relic${R.gear.length>1?'s':''}: ${R.gear.map(id=>`<span data-tip="${esc(ITEMS[id]?ITEMS[id].name:id)}">${iconHTML(id)} ${ITEMS[id]?ITEMS[id].name:id}</span>`).join(' · ')}</div>`
+        : `<div class="rr-nogear">No relic gear this run — push for a faster rank.</div>`;
+      resultBox=`<div class="raid-result win" style="--rr-col:${tier.col||'#ffe27a'}">
+        <div class="rr-top"><span class="rr-rank">${R.rating}</span><span class="rr-h">${raid.name} cleared</span><span class="rr-time">${_fmtRaidTime(R.timeMs)}</span></div>
+        <div class="rr-loot"><span class="rr-gold">+${R.gold}g</span>${mats}</div>
+        ${gear}
+      </div>`;
+    }
+  }
+  return `<div class="raid-panel">
+    <div class="raid-intro">🗝 <b>Raids</b> — a no-retreat gauntlet fought on <b>one health bar</b>. Food &amp; auto-eat still work, but there's no full heal between stages, and <b>no loot unless you clear the final boss</b>. Mini-bosses and the boss lay a mild curse on you. Clear faster for a higher rating — and better relic odds.</div>
+    ${resultBox}
+    <div class="raid-list">${cards}</div>
+  </div>`;
+}
+function buildRaidProgressHTML(){
+  if(!combat.raid) return '';
+  const raid=getRaid(combat.raid.id);
+  const stage=combat.raid.stage;
+  const cur=raid.stages[stage]||{};
+  const dots=raid.stages.map((s,i)=>{
+    const cls=i<stage?'done':(i===stage?'cur':'todo');
+    return `<span class="rp-dot ${cls}${s.raidBoss?' boss':s.miniBoss?' mini':''}"></span>`;
+  }).join('');
+  const curse=combat.raidDebuff?`<span class="rp-curse" data-tip="${String(combat.raidDebuff.desc).replace(/"/g,'&quot;')}">✦ ${combat.raidDebuff.name}</span>`:'';
+  return `<div class="raid-progress" style="--raid-accent:${raid.accent}">
+    <div class="rp-top">
+      <span class="rp-l"><span class="rp-ic">${iconHTML(raid.icon)}</span><b>${raid.name}</b> · Stage ${stage+1}/${raid.stages.length}${cur.raidBoss?' — Final Boss':(cur.miniBoss?' — Mini-Boss':'')}</span>
+      <span class="rp-r">${curse}<span class="rp-timer" id="raidTimer">${_fmtRaidTime(Date.now()-combat.raid.startMs)}</span></span>
+    </div>
+    <div class="rp-dots">${dots}</div>
+    <div class="rp-warn">⚠ No retreat — if you fall, the run is lost and you leave with nothing.</div>
+  </div>`;
+}
 function renderCombat(){
   const panel=$('combatPanel');
   if(!panel) return;
@@ -20276,6 +20714,7 @@ function renderCombat(){
   // attaches without changes.
   const arenaBodyHTML=(subTab==='arena')?`
     ${noteHtml}
+    ${combat.raid?buildRaidProgressHTML():''}
     <div class="cmb-fightwrap">
       <div class="cmb-engrid">
         <div class="cmb-fighter foe${combat.rare?' rare':''}${baseMon.boss?' boss':''}">
@@ -20342,7 +20781,7 @@ function renderCombat(){
     <div class="cmb-zones-block">
       <div class="cmb-zone-modes">
         <button class="cmb-zmode ${state.zoneMode==='dungeons'?'on':''}" data-zmode="dungeons">Dungeons</button>
-        <button class="cmb-zmode ${state.zoneMode==='raids'?'on':''}" data-zmode="raids">Raids<span class="zsoon">SOON</span></button>
+        <button class="cmb-zmode ${state.zoneMode==='raids'?'on':''}" data-zmode="raids">Raids</button>
       </div>
       ${state.zoneMode==='dungeons'?`
         <div class="cmb-zmsplit">
@@ -20356,11 +20795,7 @@ function renderCombat(){
           </div>
         </div>
       `:`
-        <div class="cmb-mode-placeholder">
-          <div class="mph-ic">🐉</div>
-          <div class="mph-ttl">Raids</div>
-          <div class="mph-txt">Server-scale encounters against ancient horrors. Coming in a future update.</div>
-        </div>
+        ${buildRaidsPanelHTML()}
       `}
     </div>
   `:'';
@@ -20524,6 +20959,11 @@ function renderCombat(){
       if(typeof saveGame==='function') saveGame();
       renderCombat();
     });
+  });
+  // ── Raid entry (1.0.66) — start a no-retreat gauntlet run. ────────────────────
+  panel.querySelectorAll('.raid-enter[data-raid]').forEach(b=>{
+    if(b.disabled) return;
+    b.addEventListener('click',()=>startRaid(b.getAttribute('data-raid')));
   });
 
   // ── Sub-tab wire-up (Arena / Mastery) (v1.0.69) ─────────────────────────────
