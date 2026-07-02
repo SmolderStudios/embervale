@@ -2443,7 +2443,7 @@ header h1 .flame{color:var(--ember)}
   <div class="mm-btns">
     <button class="mm-btn mm-primary" id="mmPlay">▶ Play</button>
   </div>
-  <div class="mm-ver">v1.0.44</div>
+  <div class="mm-ver">v1.0.45</div>
 </div>
 
 <!-- ===== CHARACTER SELECT (added) ===== -->
@@ -18253,47 +18253,54 @@ function renderSockets(){
     +'<br><span style="color:var(--muted);font-size:12px">Gems drop from combat (better tiers from tougher foes) or craft them from Gem Dust below.</span>';
   box.appendChild(intro);
 
-  // ── Materials chips ──
-  const matRow=document.createElement('div');
-  matRow.style.cssText='display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px';
-  var goldChip=document.createElement('div');
-  goldChip.style.cssText='background:var(--raised-s);border:1px solid var(--trim-d);border-radius:5px;padding:4px 10px;font-size:14px;color:var(--text)';
-  goldChip.innerHTML='💰 '+fmtCoins(state.coins||0);
-  matRow.appendChild(goldChip);
-  var dustQty=state.items['gem_dust']||0;
-  var dustChip=document.createElement('div');
-  dustChip.style.cssText='background:var(--raised-s);border:1px solid var(--trim-d);border-radius:5px;padding:4px 10px;font-size:14px;'+(dustQty>0?'color:var(--text)':'color:var(--muted);opacity:0.55');
-  dustChip.textContent='✨ Gem Dust: '+dustQty.toLocaleString();
-  matRow.appendChild(dustChip);
-  box.appendChild(matRow);
-
-  // ── Owned gear grid ──
+  // ── Owned socketable gear ──
   var owned=_socketOwnedList();
-    var GROUP_ORDER={combat:0,jewelry:1,other:2};
-    owned.sort(function(a,b){
-      var ga=GROUP_ORDER[_socketGroupOf(a)], gb=GROUP_ORDER[_socketGroupOf(b)];
-      if(ga!==gb) return ga-gb;
-      var na=(ITEMS[a]&&ITEMS[a].name)||a;
-      var nb=(ITEMS[b]&&ITEMS[b].name)||b;
-      return na.localeCompare(nb);
-    });
+  var GROUP_ORDER={combat:0,jewelry:1,other:2};
+  owned.sort(function(a,b){
+    var ga=GROUP_ORDER[_socketGroupOf(a)], gb=GROUP_ORDER[_socketGroupOf(b)];
+    if(ga!==gb) return ga-gb;
+    var na=(ITEMS[a]&&ITEMS[a].name)||a, nb=(ITEMS[b]&&ITEMS[b].name)||b;
+    return na.localeCompare(nb);
+  });
 
   if(!owned.length){
-    const emp=document.createElement('div');
+    var emp=document.createElement('div');
     emp.style.cssText='font-size:14px;color:var(--muted);font-style:italic;padding:10px 0';
     emp.textContent='No socketable gear yet. Craft combat gear or jewelry — then come back to drill sockets.';
     box.appendChild(emp);
   } else {
     if(!_socketSel || owned.indexOf(_socketSel)<0) _socketSel=owned[0];
 
-    // ── Gear selector — a compact dropdown themed to match the panel (warm
-    // brown, not a black input). Pick a piece and its sockets appear below. ──
+    // Two-column layout: LEFT = gold/dust + gear picker, RIGHT = socket detail —
+    // so the picker and the drill/gem area sit side by side instead of one long stack.
+    var cols=document.createElement('div');
+    cols.style.cssText='display:flex;gap:12px;flex-wrap:wrap;align-items:flex-start';
+    var left=document.createElement('div');
+    left.style.cssText='flex:1 1 230px;min-width:210px';
+    var right=document.createElement('div');
+    right.style.cssText='flex:1.5 1 300px;min-width:270px';
+
+    // LEFT — gold + gem dust chips
+    var matRow=document.createElement('div');
+    matRow.style.cssText='display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px';
+    var goldChip=document.createElement('div');
+    goldChip.style.cssText='background:var(--raised-s);border:1px solid var(--trim-d);border-radius:5px;padding:4px 10px;font-size:13px;color:var(--text)';
+    goldChip.innerHTML='💰 '+fmtCoins(state.coins||0);
+    matRow.appendChild(goldChip);
+    var dustQty=state.items['gem_dust']||0;
+    var dustChip=document.createElement('div');
+    dustChip.style.cssText='background:var(--raised-s);border:1px solid var(--trim-d);border-radius:5px;padding:4px 10px;font-size:13px;'+(dustQty>0?'color:var(--text)':'color:var(--muted);opacity:0.55');
+    dustChip.textContent='✨ Gem Dust: '+dustQty.toLocaleString();
+    matRow.appendChild(dustChip);
+    left.appendChild(matRow);
+
+    // LEFT — gear selector dropdown (themed to the panel)
     var lbl=document.createElement('div');
     lbl.style.cssText='font-size:11px;color:var(--ember);text-transform:uppercase;letter-spacing:2px;margin-bottom:6px';
     lbl.textContent='Select Gear';
-    box.appendChild(lbl);
+    left.appendChild(lbl);
     var gearSel=document.createElement('select');
-    gearSel.style.cssText='width:100%;background:var(--raised-s);color:var(--text);border:1px solid var(--trim-d);border-radius:6px;padding:7px 9px;font-size:14px;cursor:pointer;margin-bottom:10px';
+    gearSel.style.cssText='width:100%;background:var(--raised-s);color:var(--text);border:1px solid var(--trim-d);border-radius:6px;padding:7px 9px;font-size:14px;cursor:pointer';
     var groups=[['combat','Combat Gear'],['jewelry','Jewelry']];
     for(var gi=0;gi<groups.length;gi++){
       var gtype=groups[gi][0], glabel=groups[gi][1];
@@ -18314,10 +18321,13 @@ function renderSockets(){
       gearSel.appendChild(og);
     }
     gearSel.addEventListener('change',function(){ _socketSel=this.value; hideTooltip(); renderSockets(); });
-    box.appendChild(gearSel);
+    left.appendChild(gearSel);
 
-        // ── Detail panel for selected item ──
-    renderSocketDetail(box, _socketSel);
+    // RIGHT — the selected item's sockets + drill
+    renderSocketDetail(right, _socketSel);
+
+    cols.appendChild(left); cols.appendChild(right);
+    box.appendChild(cols);
   }
 
   // ── Gem Exchange (gem_dust → socket gems) ──
