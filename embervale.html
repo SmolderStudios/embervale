@@ -2451,7 +2451,7 @@ header h1 .flame{color:var(--ember)}
   <div class="mm-btns">
     <button class="mm-btn mm-primary" id="mmPlay">▶ Play</button>
   </div>
-  <div class="mm-ver">v1.0.58</div>
+  <div class="mm-ver">v1.0.59</div>
 </div>
 
 <!-- ===== CHARACTER SELECT (added) ===== -->
@@ -14611,7 +14611,8 @@ function buildMonLogHTML(){
     const got = sDrops[d.id]||0;
     const has = got>0;
     const qtyTag = Array.isArray(d.qty)?` <span class="mld-qty">×${d.qty[0]}–${d.qty[1]}</span>`:'';
-    return `<div class="mlog-drop${has?' got':''}">
+    const disc = !!(state.discovered&&state.discovered[d.id]);
+    return `<div class="mlog-drop${has?' got':''}" data-mldrop="${d.id}" data-disc="${disc?1:0}" style="cursor:help">
       <span class="mld-ic">${iconHTML(d.id)}</span>
       <span class="mld-nm">${it?it.name:d.id}${qtyTag}</span>
       <span class="mld-rate">${_fmtMonChance(effDropChance(d.chance))}</span>
@@ -20233,6 +20234,27 @@ function renderCombat(){
       saveGame();
       renderCombat();
     });
+  });
+
+  // ── Monster-log drop tooltips ──────────────────────────────────────────────
+  // Discovered drops show the full item tooltip (stats/desc/sources); ones you
+  // haven't found yet show a spoiler-free "not found yet" tip instead.
+  panel.querySelectorAll('[data-mldrop]').forEach(row=>{
+    const id=row.getAttribute('data-mldrop');
+    if(row.getAttribute('data-disc')==='1'){
+      attachTooltip(row, id);
+    } else {
+      row.addEventListener('mouseenter',e=>{
+        const tt=ttEl(); if(!tt) return;
+        const it=ITEMS[id];
+        tt.innerHTML='<div class="tt-name">❓ '+(it?it.name:'Unknown')+'</div>'
+          +'<div class="tt-sub" style="color:var(--muted);font-style:italic">Not found yet — defeat this foe to add it to your collection.</div>';
+        tt.style.display='block';
+        positionTooltip(tt, e.clientX, e.clientY);
+      });
+      row.addEventListener('mousemove',e=>positionTooltip(ttEl(), e.clientX, e.clientY));
+      row.addEventListener('mouseleave',hideTooltip);
+    }
   });
 
   // ── Mastery node click + allocate/refund (v1.0.69) ──────────────────────────
