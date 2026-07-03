@@ -2494,35 +2494,35 @@ header h1 .flame{color:var(--ember)}
 /* ════════ [CSS-31 END] MONSTER LOG ═══════════════════════════════════════════════ */
 
 /* ════════ [CSS-32] RAIDS (1.0.66) ═════════════════════════════════════════════════ */
-.raid-panel{display:flex;flex-direction:column;gap:12px;padding:4px 0}
-.raid-intro{font-size:12.5px;line-height:1.55;color:var(--muted);background:linear-gradient(180deg,#171f1e,#101615);border:1px solid var(--trim-d);border-left:3px solid #4a9a8a;border-radius:7px;padding:10px 13px}
+.raid-panel{display:flex;flex-direction:column;gap:9px;padding:3px 0}
+.raid-intro{font-size:11.5px;line-height:1.5;color:var(--muted);background:linear-gradient(180deg,#171f1e,#101615);border:1px solid var(--trim-d);border-left:3px solid #4a9a8a;border-radius:6px;padding:7px 11px}
 .raid-intro b{color:#bfe6db}
-.raid-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(430px,1fr));gap:12px;align-items:start}
-.raid-card{background:linear-gradient(180deg,#161c1b,#0e1312);border:1px solid var(--trim-d);border-radius:10px;padding:13px 15px 13px 17px;position:relative;overflow:hidden}
+.raid-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(400px,1fr));gap:10px;align-items:start}
+.raid-card{background:linear-gradient(180deg,#161c1b,#0e1312);border:1px solid var(--trim-d);border-radius:9px;padding:10px 13px 10px 15px;position:relative;overflow:hidden}
 .raid-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--raid-accent,#4a9a8a)}
 .raid-card.locked{opacity:.62;filter:saturate(.5)}
 /* 2-column body — description on the left, gauntlet/relics/action on the right.
-   Both flex to ~240px so a single wide card splits cleanly, and a narrow one stacks. */
-.rc-body{display:flex;flex-wrap:wrap;gap:8px 18px}
-.rc-left{flex:1 1 230px;min-width:0;display:flex;flex-direction:column}
-.rc-right{flex:1 1 220px;min-width:0;display:flex;flex-direction:column;gap:2px;justify-content:center}
-.rc-head{display:flex;align-items:center;gap:11px;margin-bottom:8px}
-.rc-ic{font-size:38px;line-height:1;filter:drop-shadow(0 2px 4px rgba(0,0,0,.6))}
+   Both flex so a single wide card splits side-by-side, and a narrow one stacks. */
+.rc-body{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:stretch}
+.rc-left{flex:1 1 215px;min-width:0;display:flex;flex-direction:column}
+.rc-right{flex:1 1 205px;min-width:0;display:flex;flex-direction:column;gap:3px;justify-content:center;border-left:1px solid var(--trim-d);padding-left:14px}
+.rc-head{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.rc-ic{font-size:34px;line-height:1;filter:drop-shadow(0 2px 4px rgba(0,0,0,.6))}
 .rc-title{display:flex;flex-direction:column;flex:1;min-width:0}
-.rc-nm{font-family:'Cinzel',serif;font-size:18px;color:#e7efe9;letter-spacing:.4px}
-.rc-lv{font-size:11px;color:var(--muted);letter-spacing:.6px}
-.rc-blurb{font-size:12px;line-height:1.5;color:var(--muted);font-style:italic}
-.rc-row{display:flex;align-items:center;gap:8px;margin-top:5px}
-.rc-lbl{font-size:10px;letter-spacing:1.2px;text-transform:uppercase;color:#6d8079;min-width:52px}
-.rc-dots{display:inline-flex;gap:5px;align-items:center}
+.rc-nm{font-family:'Cinzel',serif;font-size:17px;color:#e7efe9;letter-spacing:.4px;line-height:1.1}
+.rc-lv{font-size:10.5px;color:var(--muted);letter-spacing:.6px}
+.rc-blurb{font-size:11.5px;line-height:1.45;color:var(--muted);font-style:italic}
+.rc-row{display:flex;align-items:center;gap:8px}
+.rc-lbl{font-size:9.5px;letter-spacing:1.1px;text-transform:uppercase;color:#6d8079;min-width:50px}
+.rc-cnt{font-size:9.5px;color:#6d8079;margin-left:auto;white-space:nowrap;font-family:'Courier New',monospace}
+.rc-dots{display:inline-flex;gap:4px;align-items:center}
 .rd-dot{width:13px;height:13px;border-radius:50%;background:#31403c;border:1px solid #5a736c;display:inline-flex;align-items:center;justify-content:center;font-size:9px;color:#0e1312;cursor:default}
 .rd-dot.mini{background:#c9a24a;border-color:#f0d59a;width:15px;height:15px}
 .rd-dot.boss{background:#c44a45;border-color:#ffb0aa;width:17px;height:17px;font-size:10px}
 .rc-gicons{display:inline-flex;gap:4px}
-.rd-gi{font-size:22px;line-height:1;cursor:default;filter:drop-shadow(0 1px 2px rgba(0,0,0,.5))}
-.rc-note{font-size:10px;color:#6d8079;margin:1px 0 3px 60px}
-.rc-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:8px;padding-top:9px;border-top:1px solid var(--trim-d)}
-.rc-best{font-size:11.5px;color:#a9c4bc;font-family:'Courier New',monospace;line-height:1.35}
+.rd-gi{font-size:21px;line-height:1;cursor:default;filter:drop-shadow(0 1px 2px rgba(0,0,0,.5))}
+.rc-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:6px;padding-top:7px;border-top:1px solid var(--trim-d)}
+.rc-best{font-size:11px;color:#a9c4bc;font-family:'Courier New',monospace;line-height:1.3}
 .raid-enter{background:linear-gradient(180deg,#2c4a44,#183029);color:#dff2ec;border:1px solid #4a9a8a;border-radius:6px;padding:8px 16px;font-family:'Cinzel',serif;font-size:14px;letter-spacing:.6px;cursor:pointer;white-space:nowrap;transition:filter .12s}
 .raid-enter:hover:not(:disabled){filter:brightness(1.22)}
 .raid-enter:disabled{opacity:.5;cursor:default}
@@ -2593,7 +2593,7 @@ header h1 .flame{color:var(--ember)}
   <div class="mm-btns">
     <button class="mm-btn mm-primary" id="mmPlay">▶ Play</button>
   </div>
-  <div class="mm-ver">v1.0.67</div>
+  <div class="mm-ver">v1.0.68</div>
 </div>
 
 <!-- ===== CHARACTER SELECT (added) ===== -->
@@ -3665,7 +3665,7 @@ const COMBAT_GEAR_STATS={
   barrow_blade:      {atk:35,str:29,def:0},   // T7.5 slash sword  — budget 64, above starsteel (54) & troll_maul (62); warrior staple
   barrow_dagger:     {atk:36,str:28,def:0},   // T7.5 stab dagger  — budget 64, atk-slant per dagger convention; rogue pick
   barrow_shield:     {atk:0, str:0, def:47},  // T7.5 shield       — best shield in game (above starsteel 43, runite 34)
-  grave_cleaver:     {atk:50,str:46,def:0},   // 2H crush greataxe — budget 96; huge, but no shield + the Reaping Arc cleave is the draw (berserker heavy)
+  grave_cleaver:     {atk:46,str:42,def:0},   // 2H crush greataxe — budget 88, just under doomblade's offense (89) but at Lv70; no shield + Reaping Arc cleave is the draw (berserker heavy). Best pure-damage weapon pre-Lv90, glass-cannon trade.
 };
 
 /* ---- skills ---- */
@@ -20514,10 +20514,8 @@ function buildRaidsPanelHTML(){
           <div class="rc-blurb">${r.blurb}</div>
         </div>
         <div class="rc-right">
-          <div class="rc-row"><span class="rc-lbl">Gauntlet</span><span class="rc-dots">${dots}</span></div>
-          <div class="rc-note">${n} stages · ${nMini} mini-boss + final</div>
-          <div class="rc-row"><span class="rc-lbl">Relics</span><span class="rc-gicons">${gearIcons}</span></div>
-          <div class="rc-note">rare drops · faster clear = better odds</div>
+          <div class="rc-row"><span class="rc-lbl">Gauntlet</span><span class="rc-dots">${dots}</span><span class="rc-cnt">${n} stages · ${nMini}+boss</span></div>
+          <div class="rc-row"><span class="rc-lbl">Relics</span><span class="rc-gicons">${gearIcons}</span><span class="rc-cnt">rare</span></div>
           <div class="rc-foot">
             <span class="rc-best">${bestLine}</span>
             ${unlocked
@@ -20549,7 +20547,7 @@ function buildRaidsPanelHTML(){
     }
   }
   return `<div class="raid-panel">
-    <div class="raid-intro">🗝 <b>Raids</b> — a no-retreat gauntlet fought on <b>one health bar</b>. Food &amp; auto-eat still work, but there's no full heal between stages, and <b>no loot unless you clear the final boss</b>. Mini-bosses and the boss lay a mild curse on you. Clear faster for a higher rating — and better relic odds. See the <b>Log</b> tab for full drop rates.</div>
+    <div class="raid-intro">🗝 <b>No-retreat gauntlet</b> on <b>one health bar</b> — food works, but no heal between stages and <b>no loot unless you clear the final boss</b>. Mini-bosses &amp; the boss curse you. Faster clear = higher rating = better relic odds. Full drop rates in the <b>Log</b> tab.</div>
     ${resultBox}
     <div class="raid-list">${cards}</div>
   </div>`;
