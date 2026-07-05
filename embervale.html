@@ -2461,7 +2461,7 @@ header h1 .flame{color:var(--ember)}
   padding:10px 0 6px;border-bottom:1px dashed var(--trim-d);margin-bottom:6px}
 .mlog-dropmod{display:inline-block;font-size:10px;letter-spacing:.5px;color:#1a1006;border-radius:8px;
   padding:1px 7px;margin-left:6px;vertical-align:middle;font-family:'Courier New',monospace}
-.mlog-drops{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px}
+.mlog-drops{display:grid;grid-template-columns:repeat(auto-fill,minmax(184px,1fr));gap:4px}
 .mlog-drop{display:grid;grid-template-columns:20px minmax(0,1fr) auto 30px 12px;gap:6px;
   align-items:center;padding:5px 8px;background:#0f0a08;border:1px solid #2a2018;
   border-radius:4px;font-family:'Crimson Pro',serif;opacity:.55;transition:opacity .15s}
@@ -2573,6 +2573,14 @@ header h1 .flame{color:var(--ember)}
 .mlog-tierrow{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
 .mlog-tierchip{display:inline-flex;flex-direction:column;align-items:center;gap:1px;min-width:52px;padding:5px 8px;background:var(--raised-s);border:1px solid var(--tc,#888);border-radius:6px;font-family:'Cinzel',serif;font-size:16px;font-weight:700;color:var(--tc,#ccc);cursor:default;line-height:1}
 .mlog-tierchip i{font-style:normal;font-family:'Courier New',monospace;font-size:9.5px;color:var(--muted);letter-spacing:0}
+/* Slayer tab buttons (1.0.73) */
+.sl-btn{background:var(--raised-s);border:1px solid var(--trim-d);color:var(--muted);border-radius:6px;
+  padding:6px 13px;font-family:'Cinzel',serif;font-size:13px;letter-spacing:.4px;cursor:pointer;transition:filter .12s,background .12s}
+.sl-btn:hover:not(:disabled){background:#2a1a12;color:var(--text);border-color:var(--trim)}
+.sl-btn.primary{background:linear-gradient(180deg,#3a1e1a,#241010);border-color:#c05149;color:#f0d0c8}
+.sl-btn.primary:hover:not(:disabled){filter:brightness(1.22)}
+.sl-btn:disabled{opacity:.45;cursor:default}
+.sl-btn.tiny{padding:1px 8px;font-size:11px;font-family:'Courier New',monospace}
 /* ════════ [CSS-32 END] RAIDS ══════════════════════════════════════════════════════ */
 </style>
 </head>
@@ -2594,7 +2602,7 @@ header h1 .flame{color:var(--ember)}
   <div class="mm-btns">
     <button class="mm-btn mm-primary" id="mmPlay">▶ Play</button>
   </div>
-  <div class="mm-ver">v1.0.72</div>
+  <div class="mm-ver">v1.0.73</div>
 </div>
 
 <!-- ===== CHARACTER SELECT (added) ===== -->
@@ -9562,10 +9570,11 @@ function anyLoadoutHas(id){
    armour/shields/etc on Defence level, by crafted tier. Derived from ctier+cslot
    so monster-drop weapons & armour are covered automatically. Returns
    {stat:'attack'|'defence', level} or null for non-combat / unranked items. */
-// ctier → wield level. Extended past T7 (1.0.72) so post-starsteel gear gates
-// correctly: T8=Lv90 (Doomblade / Emberwyrm Skull), T9=Lv95 (Demon Lord's Skull —
-// was falling through to Lv1!), T10=Lv99 reserved for the Lv99 raid tier.
-const COMBAT_GEAR_REQ={1:1,2:10,3:20,4:30,5:40,6:55,7:70,8:90,9:95,10:99};
+// ctier → wield level. Post-starsteel tiers map to the coming raid levels (1.0.73):
+// T8=Lv80 raid, T9=Lv90 raid, T10=Lv99 raid. (Existing ctier8/9 boss drops —
+// Doomblade, Emberwyrm/Demon Lord skulls — come from Lv84-99 bosses, so they're
+// obtained well after their wield level anyway.)
+const COMBAT_GEAR_REQ={1:1,2:10,3:20,4:30,5:40,6:55,7:70,8:80,9:90,10:99};
 function combatGearReq(id){
   const it=ITEMS[id];
   if(!it||!it.cgear||!it.ctier) return null;
@@ -10119,6 +10128,8 @@ function defaultState(){
     cmastBossKills:{},
     cmastZoneClears:{},
     cmbSubTab:'arena',
+    // (1.0.73) Slayer — the 13th skill's state (own xp/level/points/bounty).
+    slayer:{xp:0,points:0,tasksDone:0,streak:0,masterSel:'novice',perks:{},blocked:{},task:null},
     // (1.0.72) collapsible Stats & Training drawer inside the Arena. Closed by
     // default so the zone grid sits closer to the fight controls. Toggle persists.
     cmbStatsOpen:false,
@@ -10474,6 +10485,17 @@ function normalizeState(){
   }
   if(!state.raidClears||typeof state.raidClears!=='object'||Array.isArray(state.raidClears)) state.raidClears={};
   for(const k in state.raidClears){ if(typeof state.raidClears[k]!=='number'||state.raidClears[k]<0) state.raidClears[k]=0; }
+  // Slayer (1.0.73) — the 13th skill's state. Own XP/level/points/task; not in state.xp.
+  if(!state.slayer||typeof state.slayer!=='object'||Array.isArray(state.slayer)) state.slayer={};
+  if(typeof state.slayer.xp!=='number'||state.slayer.xp<0) state.slayer.xp=0;
+  if(typeof state.slayer.points!=='number'||state.slayer.points<0) state.slayer.points=0;
+  if(typeof state.slayer.tasksDone!=='number'||state.slayer.tasksDone<0) state.slayer.tasksDone=0;
+  if(typeof state.slayer.streak!=='number'||state.slayer.streak<0) state.slayer.streak=0;
+  if(typeof state.slayer.masterSel!=='string') state.slayer.masterSel='novice';
+  if(!state.slayer.perks||typeof state.slayer.perks!=='object'||Array.isArray(state.slayer.perks)) state.slayer.perks={};
+  if(!state.slayer.blocked||typeof state.slayer.blocked!=='object'||Array.isArray(state.slayer.blocked)) state.slayer.blocked={};
+  // task: {monId,need,done,master} or null — drop it if the monster no longer exists.
+  if(state.slayer.task && (typeof state.slayer.task!=='object' || (typeof MONSTERS!=='undefined' && !MONSTERS.find(m=>m.id===state.slayer.task.monId)))) state.slayer.task=null;
   // Monster Log (1.0.76) — kill/drop counters + UI selection.
   if(!state.monKills||typeof state.monKills!=='object'||Array.isArray(state.monKills)) state.monKills={};
   for(const k in state.monKills){ if(typeof state.monKills[k]!=='number'||state.monKills[k]<0) state.monKills[k]=0; }
@@ -16669,6 +16691,16 @@ LEATHER_TIERS.forEach(function(t,ti){
   });
 })();
 
+/* Leather GEAR drops (1.0.73) — so leather isn't crafting-only. Each beast zone's
+   BOSS occasionally drops a finished piece of its tier's leather set (rare — the
+   crafting bench stays the main path). Rate is per-piece; ~6% for any piece. */
+(function(){
+  const add=function(mon,id,ch){ if(MONSTER_DROPS[mon]) MONSTER_DROPS[mon].push({id:id,chance:ch}); };
+  const bossSet={ rat_queen:'rough', silkweaver_queen:'chitin', ironfang:'wolf', ogre_warlord:'ogre', troll_king:'troll', emberwyrm:'drake', demon_lord:'demon' };
+  const slots=['helm','chest','legs','gloves','boots'];
+  for(const boss in bossSet){ slots.forEach(function(s){ add(boss, bossSet[boss]+'_'+s, 0.012); }); }
+})();
+
 /* Roll the drop table for one kill. Returns array of {id, qty} actually granted.
    `once:true` drops only fire if the player has never received that item before
    (used for the Rat Queen's Crown so it doesn't pile up on farm).
@@ -16839,15 +16871,15 @@ const RAIDS=[
     // armour set (its full-set "Warden's Vigil" bonus is the real chase). The 2H
     // Grave Cleaver stays the marquee super-rare.
     gearDrops:[
-      {id:'barrow_blade',   chance:0.030},
-      {id:'barrow_shield',  chance:0.030},
-      {id:'barrow_dagger',  chance:0.030},
-      {id:'grave_cleaver',  chance:0.005},
-      {id:'barrow_helm',    chance:0.040, set:true},
-      {id:'barrow_chest',   chance:0.035, set:true},
-      {id:'barrow_legs',    chance:0.040, set:true},
-      {id:'barrow_gloves',  chance:0.040, set:true},
-      {id:'barrow_boots',   chance:0.040, set:true},
+      {id:'barrow_blade',   chance:0.020},
+      {id:'barrow_shield',  chance:0.020},
+      {id:'barrow_dagger',  chance:0.020},
+      {id:'grave_cleaver',  chance:0.003},
+      {id:'barrow_helm',    chance:0.028, set:true},
+      {id:'barrow_chest',   chance:0.024, set:true},
+      {id:'barrow_legs',    chance:0.028, set:true},
+      {id:'barrow_gloves',  chance:0.028, set:true},
+      {id:'barrow_boots',   chance:0.028, set:true},
     ],
     matPool:RAID_MAT_POOL,
   },
@@ -17004,6 +17036,117 @@ function handleRaidFail(){
   cmbLog(`💀 You fall in ${raid.name} at stage ${stage+1}/${raid.stages.length}. The barrow keeps its treasures.`,'lose');
   if(typeof toast==='function') toast(`💀 Raid failed — ${raid.name}.`);
   if(typeof logNotification==='function') logNotification('combat','💀',`Fell in ${raid.name} (stage ${stage+1}/${raid.stages.length}).`);
+}
+
+/* ════ SLAYER (1.0.73) — the 13th skill, combat-driven ═══════════════════════════
+   A Slayer Master assigns a bounty ("slay N of a monster"). On-task kills pay
+   Slayer XP + progress; completing a bounty pays Slayer Points to spend on perks.
+   Lives entirely in the Combat panel's Slayer tab with its own XP/level/points —
+   it is NOT a skilling-sidebar skill, so it carries no 98-point passive tree.
+   Tasks target the EXISTING monster roster (45 foes across 9 zones), so bounties
+   rotate you around the world instead of grinding one spot. */
+const SLAYER_MASTERS=[
+  {key:'novice', name:'Novice Slayer Master', minLvl:1,  size:[15,28], pts:4,  band:[1,42],  blurb:'Rats, spiders, goblins, skeletons — starter bounties.'},
+  {key:'expert', name:'Expert Slayer Master', minLvl:35, size:[24,40], pts:9,  band:[18,75], blurb:'Wolves, ogres, undead. Bigger lists, better pay.'},
+  {key:'master', name:'Slayer General',       minLvl:75, size:[34,52], pts:17, band:[50,99], blurb:'Trolls, wyverns, demons — the deadliest bounties.'},
+];
+const SLAYER_PERKS=[
+  {id:'scholar',       name:'Bloodscholar', max:5, cost:[6,10,16,24,36], desc:'+8% Slayer XP per kill, per level.'},
+  {id:'warpath',       name:'Warpath',      max:5, cost:[6,10,16,24,36], desc:'+6% combat XP from on-task kills, per level.'},
+  {id:'skinner',       name:'Skinner',      max:5, cost:[8,14,22,32,46], desc:'+12% chance per level for a bonus drop from on-task kills.'},
+  {id:'quartermaster', name:'Quartermaster',max:3, cost:[20,40,70],      desc:'+1 Slayer Point per completed bounty, per level.'},
+];
+const SLAYER_SKIP_COST=5, SLAYER_BLOCK_COST=12;
+function slayerMasterFor(key){ return SLAYER_MASTERS.find(m=>m.key===key)||SLAYER_MASTERS[0]; }
+function slayerLevel(){ return levelFromXp((state.slayer&&state.slayer.xp)||0); }
+function slayerPerkLevel(id){ return (state.slayer&&state.slayer.perks&&state.slayer.perks[id])||0; }
+function slayerBlocked(id){ return !!(state.slayer&&state.slayer.blocked&&state.slayer.blocked[id]); }
+/* Monsters a master may assign — within its level band, capped so you can actually
+   fight them (≤ combat Lv +5) and not trivially low, non-boss, not blocked. */
+function slayerEligible(master){
+  const cl=combatLevel();
+  const hi=Math.min(master.band[1], cl+5);
+  const lo=Math.max(master.band[0], cl-45);
+  return MONSTERS.filter(m=>!m.boss && m.lvl>=lo && m.lvl<=hi && !slayerBlocked(m.id));
+}
+function assignSlayerTask(masterKey){
+  const master=slayerMasterFor(masterKey);
+  if(slayerLevel()<master.minLvl){ toast(`🔒 Requires Slayer Lv ${master.minLvl}.`); return; }
+  const cur=state.slayer.task;
+  if(cur && cur.done<cur.need){ toast('You already have an active bounty — finish or skip it.'); return; }
+  const pool=slayerEligible(master);
+  if(!pool.length){ toast('No eligible targets right now — raise your Combat level or unblock a monster.'); return; }
+  const mon=pool[Math.floor(Math.random()*pool.length)];
+  const need=master.size[0]+Math.floor(Math.random()*(master.size[1]-master.size[0]+1));
+  state.slayer.task={monId:mon.id, need:need, done:0, master:masterKey};
+  state.slayer.masterSel=masterKey;
+  if(typeof toast==='function') toast(`🗡 New bounty: slay ${need} ${mon.name}.`);
+  saveGame(); if(combatMode&&typeof renderCombat==='function') renderCombat();
+}
+function slayerSkipTask(){
+  if(!state.slayer.task) return;
+  if(state.slayer.points<SLAYER_SKIP_COST){ toast(`Skipping a bounty costs ${SLAYER_SKIP_COST} Slayer Points.`); return; }
+  state.slayer.points-=SLAYER_SKIP_COST; state.slayer.streak=0; state.slayer.task=null;
+  toast('Bounty skipped.'); saveGame(); if(combatMode&&typeof renderCombat==='function') renderCombat();
+}
+function slayerBlockCurrent(){
+  const t=state.slayer.task; if(!t) return;
+  if(state.slayer.points<SLAYER_BLOCK_COST){ toast(`Blocking a monster costs ${SLAYER_BLOCK_COST} Slayer Points.`); return; }
+  state.slayer.points-=SLAYER_BLOCK_COST; if(!state.slayer.blocked) state.slayer.blocked={};
+  state.slayer.blocked[t.monId]=1; state.slayer.streak=0; state.slayer.task=null;
+  toast('Monster blocked from future bounties.'); saveGame(); if(combatMode&&typeof renderCombat==='function') renderCombat();
+}
+function buySlayerPerk(id){
+  const perk=SLAYER_PERKS.find(p=>p.id===id); if(!perk) return;
+  const lvl=slayerPerkLevel(id);
+  if(lvl>=perk.max){ toast('Already maxed.'); return; }
+  const cost=perk.cost[lvl];
+  if(state.slayer.points<cost){ toast(`Not enough Slayer Points (need ${cost}).`); return; }
+  state.slayer.points-=cost;
+  if(!state.slayer.perks) state.slayer.perks={};
+  state.slayer.perks[id]=lvl+1;
+  toast(`✦ ${perk.name} → Lv ${lvl+1}.`);
+  saveGame(); if(combatMode&&typeof renderCombat==='function') renderCombat();
+}
+function grantSlayerXp(amt){
+  if(!amt||amt<=0) return;
+  amt*=(1+slayerPerkLevel('scholar')*0.08);
+  amt=Math.max(1, Math.round(amt*((typeof charTypeXpMult==='function')?charTypeXpMult():1)));
+  const before=slayerLevel();
+  state.slayer.xp=(state.slayer.xp||0)+amt;
+  const after=slayerLevel();
+  if(after>before){ if(typeof toast==='function') toast(`🗡 Slayer level up! ${before} → ${after}`); }
+}
+/* Called from combatTick on every monster kill. Progresses the bounty, pays Slayer
+   XP, and applies on-task perks (warpath combat XP, skinner bonus drop). No-op if
+   the kill isn't the current target. */
+function onSlayerKill(baseMon){
+  if(!state.slayer) return;
+  const t=state.slayer.task;
+  if(!t || t.done>=t.need || t.monId!==baseMon.id) return;
+  t.done++;
+  grantSlayerXp(Math.max(1, Math.round((baseMon.xp||10)*0.6)));
+  const wp=slayerPerkLevel('warpath');
+  if(wp>0 && typeof grantCombatXp==='function'){
+    const style=(state.combatStyle==='strength'||state.combatStyle==='defence')?state.combatStyle:'attack';
+    grantCombatXp(style, Math.max(1, Math.round((baseMon.xp||10)*0.75*wp*0.06)));
+  }
+  const sk=slayerPerkLevel('skinner');
+  if(sk>0 && Math.random()<sk*0.12 && typeof rollDrops==='function'){
+    const bonus=rollDrops(baseMon.id,false);
+    for(const d of bonus){ if(grantItem(d.id,d.qty||1)>0) cmbLog(`   🗡 Skinner: extra ${ITEMS[d.id]?ITEMS[d.id].name:d.id}.`,''); }
+  }
+  if(t.done>=t.need){
+    const master=slayerMasterFor(t.master);
+    const pts=master.pts + slayerPerkLevel('quartermaster') + Math.min(6, Math.floor((state.slayer.streak||0)/2));
+    state.slayer.points+=pts;
+    state.slayer.tasksDone=(state.slayer.tasksDone||0)+1;
+    state.slayer.streak=(state.slayer.streak||0)+1;
+    grantSlayerXp(Math.round(t.need*(baseMon.xp||10)*0.09));   // completion bonus
+    cmbLog(`🗡 Slayer bounty complete! +${pts} Slayer Points (${state.slayer.streak} streak).`,'rare-win');
+    if(typeof toast==='function') toast(`🗡 Bounty done — +${pts} Slayer Points!`);
+    if(typeof logNotification==='function') logNotification('rare','🗡',`Completed a ${master.name} bounty.`);
+  }
 }
 
 const combat={
@@ -20026,6 +20169,8 @@ function combatTick(){
         if(parts.length) dropLine=' · '+parts.join(', ');
       }
       cmbLog(`✔ ${mon.name} defeated! +${mon.coins}g · +${mon.xp} cmb xp${dropLine}${consolationGold>0?` · +${consolationGold}g scavenged`:''}`, wasRare?'rare-win':'win');
+      // ── Slayer (1.0.73) — progress the active bounty if this foe is the target ──
+      if(typeof onSlayerKill==='function') onSlayerKill(baseMon);
       // ── Rare-kill aftermath (1.0.70) — alert log + pet roll ──
       if(wasRare){
         if(typeof logNotification==='function'){
@@ -20881,38 +21026,70 @@ function buildCmastViewHTML(){
    result box (session-only), and one card per raid (gauntlet dots + relic
    preview + best rating/time + Enter button). buildRaidProgressHTML — the live
    run strip shown atop the arena during a raid (stage dots, curse, timer). */
-/* Slayer preview (1.0.70) — the skill isn't built yet, but this gives it its home
-   in the combat panel (its own sub-tab) and shows the player what's coming: the
-   task loop, a mock bounty card, and the planned perk branches. */
-function buildSlayerPreviewHTML(){
-  const sl='#c05149';
-  const card=(icon,title,body)=>`<div style="flex:1 1 190px;background:linear-gradient(180deg,#1e1712,#140e0a);border:1px solid var(--trim-d);border-radius:9px;padding:11px 13px">`
-    +`<div style="font-family:'Cinzel',serif;font-size:15px;color:#e7dcc4;margin-bottom:4px">${icon} ${title}</div>`
-    +`<div style="font-size:12px;color:var(--muted);line-height:1.5">${body}</div></div>`;
-  return `<div style="display:flex;flex-direction:column;gap:12px;padding:4px 0">
-    <div style="display:flex;align-items:center;gap:12px;background:linear-gradient(180deg,#241614,#160c0a);border:1px solid #5a2c28;border-left:3px solid ${sl};border-radius:8px;padding:12px 15px">
-      <span style="font-size:32px;line-height:1">🗡</span>
-      <div><div style="font-family:'Cinzel',serif;font-size:20px;color:#f0d8d0">The Slayer's Guild</div>
-        <div style="font-size:12.5px;color:var(--muted)">A 13th skill — take a bounty, hunt the mark, spend the points. <b style="color:${sl}">In development.</b></div></div>
+/* Slayer tab (1.0.73) — the live skill: level/XP + points header, current bounty
+   card (progress + skip/block or claim), the three Slayer Masters, and the perk
+   shop. Buttons carry data-sl-* attrs wired in renderCombat. */
+function buildSlayerHTML(){
+  const S=state.slayer||{}; const sl='#c05149';
+  const lvl=slayerLevel(), xp=S.xp||0, pts=S.points||0;
+  const lo=XP_CUM[lvl]||0, hi=lvl<MAX_LEVEL?(XP_CUM[lvl+1]||lo):lo;
+  const pct=lvl>=MAX_LEVEL?100:Math.floor(100*(xp-lo)/Math.max(1,(hi-lo)));
+  const header=`<div style="display:flex;align-items:center;gap:13px;background:linear-gradient(180deg,#241614,#160c0a);border:1px solid #5a2c28;border-left:3px solid ${sl};border-radius:8px;padding:11px 15px">
+    <span style="font-size:30px;line-height:1">🗡</span>
+    <div style="flex:1;min-width:0">
+      <div style="display:flex;align-items:baseline;gap:8px"><span style="font-family:'Cinzel',serif;font-size:19px;color:#f0d8d0">Slayer</span><span style="font-family:'Courier New',monospace;color:${sl};font-size:14px">Lv ${lvl}</span></div>
+      <div style="height:6px;background:#0d0905;border-radius:3px;margin-top:5px;overflow:hidden"><i style="display:block;height:100%;width:${pct}%;background:${sl}"></i></div>
+      <div style="font-size:11px;color:var(--muted);margin-top:3px;font-family:'Courier New',monospace">${xp.toLocaleString()} xp${lvl<MAX_LEVEL?` · ${(hi-xp).toLocaleString()} to Lv ${lvl+1}`:' · MAX'} · ${S.tasksDone||0} bounties</div>
     </div>
-    <div style="font-size:13px;color:var(--muted);line-height:1.6">Right now you kill what you like. Soon a <b style="color:#e7dcc4">Slayer Master</b> will hand you a <b style="color:#e7dcc4">task</b> — "slay N of a monster" — and on-task kills will pay <b style="color:${sl}">Slayer XP</b> + <b style="color:${sl}">Slayer Points</b>. Level up for tougher masters, superior monster variants (more XP &amp; drops), and a perk tree.</div>
-    <div style="background:linear-gradient(180deg,#1a1310,#120c08);border:1px dashed #5a463a;border-radius:9px;padding:13px 16px">
-      <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:${sl};margin-bottom:8px">Current bounty · preview</div>
+    <div style="text-align:right"><div style="font-family:'Cinzel',serif;font-size:24px;color:#ffd24a;line-height:1">${pts}</div><div style="font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--muted)">points</div></div>
+  </div>`;
+  const t=S.task; let bounty;
+  if(t){
+    const mon=getMonster(t.monId), done=Math.min(t.done,t.need), p=Math.floor(100*done/t.need), complete=t.done>=t.need, master=slayerMasterFor(t.master);
+    bounty=`<div style="background:linear-gradient(180deg,#1a1310,#120c08);border:1px solid ${complete?'#4a7a3a':'#5a463a'};border-radius:9px;padding:13px 16px">
+      <div style="display:flex;justify-content:space-between;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:${complete?'#9be89b':sl};margin-bottom:8px"><span>${complete?'✓ Bounty complete':'Current bounty'}</span><span style="color:var(--muted)">${master.name}</span></div>
       <div style="display:flex;align-items:center;gap:13px">
-        <span style="font-size:30px;line-height:1">${iconHTML('wolf')}</span>
-        <div style="flex:1;min-width:0"><div style="font-family:'Cinzel',serif;font-size:17px;color:#e7dcc4">Slay Dire Wolves</div>
-          <div style="height:7px;background:#0d0905;border-radius:4px;margin-top:6px;overflow:hidden"><i style="display:block;height:100%;width:35%;background:${sl}"></i></div>
-          <div style="font-size:12px;color:var(--muted);margin-top:3px">14 / 40 slain</div></div>
-        <div style="text-align:right;font-size:12px;color:var(--muted);white-space:nowrap">Reward<br><b style="color:${sl}">+10 pts</b> · <b style="color:#9be89b">+2.4k xp</b></div>
+        <span style="font-size:30px;line-height:1">${iconHTML(mon.id)}</span>
+        <div style="flex:1;min-width:0"><div style="font-family:'Cinzel',serif;font-size:17px;color:#e7dcc4">Slay ${mon.name}</div>
+          <div style="height:8px;background:#0d0905;border-radius:4px;margin-top:6px;overflow:hidden"><i style="display:block;height:100%;width:${p}%;background:${complete?'#6ab04a':sl}"></i></div>
+          <div style="font-size:12px;color:var(--muted);margin-top:3px">${done} / ${t.need} slain · Lv ${mon.lvl} · ${getZone(mon.zone).name}</div></div>
       </div>
-    </div>
-    <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#6d6058">Planned perk tree</div>
-    <div style="display:flex;gap:10px;flex-wrap:wrap">
-      ${card('🎯','Tracker','+hide &amp; rare drops, double-hide chance, richer loot while on-task.')}
-      ${card('⚔','Executioner','+damage &amp; accuracy vs your task target, +combat XP while on-task.')}
-      ${card('🎖','Quartermaster','+Slayer points &amp; XP, cheaper task skips, superior-variant chance.')}
-    </div>
-    <div style="font-size:12px;color:${sl};text-align:center;padding:9px;border:1px solid #5a2c28;border-radius:7px;background:#1a0e0c">🗡 Slayer is coming in a future update — this tab is its home.</div>
+      <div style="display:flex;gap:8px;margin-top:11px;flex-wrap:wrap">
+        ${complete?`<button class="sl-btn primary" data-sl-newtask="${t.master}">🗡 Claim &amp; new bounty</button>`
+          :`<button class="sl-btn" data-sl-skip="1">Skip · ${SLAYER_SKIP_COST} pts</button><button class="sl-btn" data-sl-block="1">Never assign · ${SLAYER_BLOCK_COST} pts</button>`}
+      </div></div>`;
+  } else {
+    bounty=`<div style="background:linear-gradient(180deg,#1a1310,#120c08);border:1px dashed #5a463a;border-radius:9px;padding:15px;text-align:center;color:var(--muted);font-size:13px">No active bounty — take one from a Slayer Master below.</div>`;
+  }
+  const active=!!(t&&t.done<t.need);
+  const masters=SLAYER_MASTERS.map(m=>{
+    const locked=lvl<m.minLvl;
+    return `<div style="flex:1 1 215px;background:linear-gradient(180deg,#1e1712,#140e0a);border:1px solid ${locked?'#3a2e20':'#5a463a'};border-radius:9px;padding:12px 14px;${locked?'opacity:.55':''}">
+      <div style="font-family:'Cinzel',serif;font-size:15px;color:#e7dcc4">${m.name}</div>
+      <div style="font-size:11px;color:${sl};font-family:'Courier New',monospace;margin:1px 0 5px">Lv ${m.minLvl}+ · ${m.size[0]}–${m.size[1]} kills · +${m.pts} pts</div>
+      <div style="font-size:12px;color:var(--muted);line-height:1.45;margin-bottom:9px">${m.blurb}</div>
+      <button class="sl-btn ${locked||active?'':'primary'}" data-sl-newtask="${m.key}" ${locked||active?'disabled':''}>${locked?`🔒 Slayer Lv ${m.minLvl}`:(active?'bounty active':'Get bounty')}</button>
+    </div>`;
+  }).join('');
+  const perks=SLAYER_PERKS.map(p=>{
+    const plvl=slayerPerkLevel(p.id), maxed=plvl>=p.max, cost=maxed?0:p.cost[plvl], can=!maxed&&pts>=cost;
+    const pips=Array.from({length:p.max},(_,i)=>`<span style="width:9px;height:9px;border-radius:2px;background:${i<plvl?sl:'#2a1e1a'};display:inline-block"></span>`).join('');
+    return `<div style="flex:1 1 225px;background:linear-gradient(180deg,#1e1712,#140e0a);border:1px solid var(--trim-d);border-radius:9px;padding:11px 13px">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:6px"><span style="font-family:'Cinzel',serif;font-size:14px;color:#e7dcc4">${p.name}</span><span style="display:inline-flex;gap:3px">${pips}</span></div>
+      <div style="font-size:12px;color:var(--muted);line-height:1.4;margin:4px 0 8px">${p.desc}</div>
+      <button class="sl-btn ${can?'primary':''}" data-sl-perk="${p.id}" ${maxed||!can?'disabled':''}>${maxed?'Maxed':`Buy · ${cost} pts`}</button>
+    </div>`;
+  }).join('');
+  const blockedIds=Object.keys(S.blocked||{});
+  const blockedRow=blockedIds.length?`<div style="font-size:11px;color:var(--muted)">Blocked from bounties: ${blockedIds.map(id=>{const m=getMonster(id);return m?m.name:id;}).join(', ')} · <button class="sl-btn tiny" data-sl-unblockall="1">clear all</button></div>`:'';
+  return `<div style="display:flex;flex-direction:column;gap:12px;padding:2px 0">
+    ${header}${bounty}
+    <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#6d6058;margin-top:2px">Slayer Masters</div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">${masters}</div>
+    <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#6d6058;margin-top:2px">Perks — spend Slayer Points</div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">${perks}</div>
+    ${blockedRow}
+    <div style="font-size:11.5px;color:var(--muted);line-height:1.5;background:linear-gradient(180deg,#1a1310,#12100a);border:1px solid var(--trim-d);border-left:3px solid ${sl};border-radius:7px;padding:9px 12px">🗡 Take a bounty, then kill that monster anywhere in the Arena. On-task kills pay <b style="color:#e7dcc4">Slayer XP</b>; finishing pays <b style="color:#ffd24a">Slayer Points</b>. Bounties rotate across all 9 zones — no more farming rats twenty times.</div>
   </div>`;
 }
 function buildRaidsPanelHTML(){
@@ -21231,7 +21408,7 @@ function renderCombat(){
       <button class="cmb-subtab${subTab==='mastery'?' on':''}" data-sub="mastery">✦ MASTERY <span class="badge">${cmastAvail}/${cmastGranted}</span></button>
       <button class="cmb-subtab${subTab==='pets'?' on':''}" data-sub="pets">🐾 PETS <span class="badge">${_petOwned}/${_petTotal}</span></button>
       <button class="cmb-subtab${subTab==='log'?' on':''}" data-sub="log">🗒 LOG <span class="badge">${_monLogSeen}/${_monLogTotal}</span></button>
-      <button class="cmb-subtab${subTab==='slayer'?' on':''}" data-sub="slayer">🗡 SLAYER <span class="badge soon">soon</span></button>
+      <button class="cmb-subtab${subTab==='slayer'?' on':''}" data-sub="slayer">🗡 SLAYER <span class="badge">${(function(){var t=state.slayer&&state.slayer.task;return t&&t.done<t.need?(t.done+'/'+t.need):('Lv'+slayerLevel());})()}</span></button>
     </div>
   `;
 
@@ -21387,7 +21564,7 @@ function renderCombat(){
     ${subTab==='mastery' ? buildCmastViewHTML() : ''}
     ${subTab==='pets' ? buildPetsViewHTML() : ''}
     ${subTab==='log' ? buildMonLogHTML() : ''}
-    ${subTab==='slayer' ? buildSlayerPreviewHTML() : ''}
+    ${subTab==='slayer' ? buildSlayerHTML() : ''}
     ${arenaBodyHTML}
   `;
 
@@ -21544,6 +21721,13 @@ function renderCombat(){
     if(b.disabled) return;
     b.addEventListener('click',()=>startRaid(b.getAttribute('data-raid')));
   });
+
+  // ── Slayer tab wiring (1.0.73) ───────────────────────────────────────────────
+  panel.querySelectorAll('[data-sl-newtask]').forEach(b=>{ if(b.disabled) return; b.addEventListener('click',()=>assignSlayerTask(b.getAttribute('data-sl-newtask'))); });
+  panel.querySelectorAll('[data-sl-skip]').forEach(b=>b.addEventListener('click',slayerSkipTask));
+  panel.querySelectorAll('[data-sl-block]').forEach(b=>b.addEventListener('click',slayerBlockCurrent));
+  panel.querySelectorAll('[data-sl-perk]').forEach(b=>{ if(b.disabled) return; b.addEventListener('click',()=>buySlayerPerk(b.getAttribute('data-sl-perk'))); });
+  panel.querySelectorAll('[data-sl-unblockall]').forEach(b=>b.addEventListener('click',()=>{ state.slayer.blocked={}; saveGame(); renderCombat(); }));
 
   // ── Sub-tab wire-up (Arena / Mastery) (v1.0.69) ─────────────────────────────
   // Switching to Mastery during an active fight is allowed (you can read while
