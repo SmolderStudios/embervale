@@ -1094,6 +1094,7 @@ header h1 .flame{color:var(--ember)}
   align-items:center}
 .cmb-zright .czs-ic svg{width:13px;height:13px}
 .cmb-zright .czs-blurb{display:inline;color:var(--muted);font-style:italic;flex:none;min-width:0}
+.czs-tag{font-size:9px;letter-spacing:1px;text-transform:uppercase;color:#8aab52;background:#1c2810;border:1px solid #3a4d1e;border-radius:4px;padding:1px 6px;margin-left:7px;vertical-align:middle;font-family:'Courier New',monospace}
 /* Monster rows */
 .cmb-zright .cmb-picker{display:flex;flex-direction:column;gap:3px;grid-template-columns:none;margin-bottom:0}
 .cmb-zright .cmb-mon{display:flex;align-items:center;gap:9px;background:#1a1208;
@@ -2602,7 +2603,7 @@ header h1 .flame{color:var(--ember)}
   <div class="mm-btns">
     <button class="mm-btn mm-primary" id="mmPlay">▶ Play</button>
   </div>
-  <div class="mm-ver">v1.0.73</div>
+  <div class="mm-ver">v1.0.74</div>
 </div>
 
 <!-- ===== CHARACTER SELECT (added) ===== -->
@@ -6182,6 +6183,23 @@ const ICONS = {
   barrow_dust: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><radialGradient id="bdst1" cx="0.5" cy="0.7" r="0.7"><stop offset="0" stop-color="#a8a898"/><stop offset="0.6" stop-color="#5a5a4c"/><stop offset="1" stop-color="#26261e"/></radialGradient></defs><path d="M10 50 Q20 34 32 34 Q44 34 54 50 Z" fill="url(#bdst1)"/><path d="M14 48 Q22 40 30 46 M34 46 Q42 40 50 48" stroke="#3a3a2e" stroke-width="0.6" fill="none" opacity="0.5"/><circle cx="26" cy="20" r="1.6" fill="#c8c8b4" opacity="0.85"/><circle cx="36" cy="14" r="1.2" fill="#a8a898" opacity="0.7"/><circle cx="42" cy="24" r="1.4" fill="#8ff0d8" opacity="0.55"/><circle cx="20" cy="28" r="1" fill="#c8c8b4" opacity="0.6"/><circle cx="32" cy="24" r="1.1" fill="#88988a" opacity="0.6"/></svg>',
   wraithcloth: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><linearGradient id="wcth1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7a8a86"/><stop offset="0.5" stop-color="#3e4a46"/><stop offset="1" stop-color="#161e1c"/></linearGradient></defs><path d="M18 8 Q32 4 46 8 L44 40 L48 54 L40 48 L36 58 L32 50 L28 58 L24 48 L16 54 L20 40 Z" fill="url(#wcth1)"/><path d="M22 12 Q32 10 42 12 M22 22 Q32 20 42 22 M24 32 Q32 30 40 32" stroke="#8ff0d8" stroke-width="0.6" fill="none" opacity="0.45"/><path d="M18 8 L20 40 M46 8 L44 40" stroke="#242c2a" stroke-width="0.6" opacity="0.6"/><circle cx="26" cy="18" r="1" fill="#7fd8c8" opacity="0.5"/><circle cx="38" cy="26" r="1" fill="#7fd8c8" opacity="0.5"/></svg>',
   runed_bone: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><linearGradient id="rbne1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f0e8d0"/><stop offset="0.5" stop-color="#c0b088"/><stop offset="1" stop-color="#6a5c38"/></linearGradient></defs><ellipse cx="16" cy="16" rx="6" ry="5" fill="url(#rbne1)" transform="rotate(-32 16 16)"/><ellipse cx="48" cy="48" rx="6" ry="5" fill="url(#rbne1)" transform="rotate(-32 48 48)"/><rect x="18" y="22" width="28" height="8" fill="url(#rbne1)" transform="rotate(45 32 32)"/><ellipse cx="16" cy="16" rx="2" ry="1.4" fill="#3a3018" transform="rotate(-32 16 16)"/><ellipse cx="48" cy="48" rx="2" ry="1.4" fill="#3a3018" transform="rotate(-32 48 48)"/><path d="M26 30 L30 34 M30 26 L36 32 M34 28 L38 32" stroke="#4a9a8a" stroke-width="1" opacity="0.75"/><circle cx="32" cy="32" r="1.4" fill="#8ff0d8" opacity="0.7"/></svg>',
+
+  /* ─── HUNTING GROUNDS (1.0.74) — 3 zones + 12 beasts ─── */
+  thornwood: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><linearGradient id="thw1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8ac24e"/><stop offset="0.5" stop-color="#4a7a26"/><stop offset="1" stop-color="#1e380f"/></linearGradient></defs><ellipse cx="32" cy="58" rx="22" ry="4" fill="#000" opacity="0.3"/><path d="M32 54 L30 30 L34 30 L32 54 Z" fill="#5a3a1c"/><path d="M32 44 Q18 40 12 26 Q26 30 32 40 Q38 30 52 26 Q46 40 32 44 Z" fill="url(#thw1)"/><path d="M32 34 Q22 30 16 18 Q28 22 32 30 Q36 22 48 18 Q42 30 32 34 Z" fill="url(#thw1)"/><path d="M32 24 Q26 18 24 8 Q32 14 32 22 Q32 14 40 8 Q38 18 32 24 Z" fill="url(#thw1)"/><path d="M18 28 L14 24 M46 28 L50 24 M24 20 L20 15 M40 20 L44 15" stroke="#2e4a15" stroke-width="0.9" opacity="0.6"/><circle cx="24" cy="34" r="1.4" fill="#c84040"/><circle cx="42" cy="32" r="1.4" fill="#c84040"/></svg>',
+  frostfang: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><linearGradient id="ffg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e8f4fc"/><stop offset="0.5" stop-color="#9cc0d8"/><stop offset="1" stop-color="#4a6a84"/></linearGradient></defs><path d="M2 58 L18 22 L28 40 L34 14 L44 34 L52 24 L62 58 Z" fill="url(#ffg1)"/><path d="M18 22 L23 31 L28 26 L18 22 M34 14 L39 26 L44 22 L34 14" fill="#fff" opacity="0.85"/><path d="M2 58 L62 58" stroke="#6a8aa4" stroke-width="1"/><path d="M10 50 Q16 47 22 50 M40 50 Q48 47 56 50" stroke="#fff" stroke-width="1" fill="none" opacity="0.6"/><circle cx="14" cy="16" r="1.4" fill="#d8ecfa"/><circle cx="52" cy="14" r="1.2" fill="#d8ecfa"/><circle cx="32" cy="9" r="1" fill="#fff"/></svg>',
+  ashen_steppe: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><linearGradient id="ash1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c08858"/><stop offset="0.5" stop-color="#8a4e2c"/><stop offset="1" stop-color="#3a1c10"/></linearGradient><radialGradient id="ash2" cx="0.5" cy="0.3" r="0.6"><stop offset="0" stop-color="#e0764a" stop-opacity="0.5"/><stop offset="1" stop-color="#e0764a" stop-opacity="0"/></radialGradient></defs><rect x="0" y="0" width="64" height="64" fill="url(#ash2)"/><path d="M0 44 Q16 38 32 42 Q48 46 64 40 L64 64 L0 64 Z" fill="url(#ash1)"/><path d="M0 50 L14 52 L28 49 L44 53 L64 49" stroke="#5a2e18" stroke-width="1" fill="none" opacity="0.6"/><path d="M12 58 L14 46 L18 58 M14 50 L10 47 M14 52 L19 48" stroke="#3a2012" stroke-width="1.4" fill="none" stroke-linecap="round"/><circle cx="46" cy="18" r="7" fill="#e0764a" opacity="0.6"/><path d="M20 56 L22 52 M36 55 L38 51 M52 57 L54 53" stroke="#ff7030" stroke-width="0.8" opacity="0.5"/></svg>',
+  wild_boar: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><linearGradient id="wbr1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7a5838"/><stop offset="0.5" stop-color="#4a3420"/><stop offset="1" stop-color="#241810"/></linearGradient></defs><ellipse cx="32" cy="56" rx="16" ry="3" fill="#000" opacity="0.3"/><path d="M14 30 Q14 16 30 16 L44 20 Q54 24 54 36 Q54 48 40 50 L24 50 Q14 46 14 30 Z" fill="url(#wbr1)"/><path d="M44 40 Q54 40 56 46 Q52 50 44 48 Z" fill="#5a4028"/><ellipse cx="50" cy="44" rx="5" ry="4" fill="#3a281a"/><circle cx="48" cy="44" r="1.2" fill="#1a1008"/><circle cx="53" cy="44" r="1.2" fill="#1a1008"/><path d="M42 48 Q40 54 46 54 M40 48 Q42 55 36 54" stroke="#e8e0c8" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M22 18 L18 10 L26 16 Z M34 16 L34 8 L40 15 Z" fill="#5a4028"/><circle cx="30" cy="30" r="2.4" fill="#1a1008"/><circle cx="30.8" cy="29.3" r="0.7" fill="#c88040"/><path d="M20 34 Q26 32 30 36" stroke="#2a1c10" stroke-width="0.8" fill="none" opacity="0.6"/></svg>',
+  timber_wolf: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><linearGradient id="twf1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a0a4ac"/><stop offset="0.5" stop-color="#64686e"/><stop offset="1" stop-color="#2e3034"/></linearGradient></defs><ellipse cx="32" cy="57" rx="14" ry="3" fill="#000" opacity="0.3"/><path d="M16 12 L24 24 L40 24 L48 12 L48 28 Q48 44 32 52 Q16 44 16 28 Z" fill="url(#twf1)"/><path d="M18 14 L24 24 L22 16 Z M46 14 L40 24 L42 16 Z" fill="#3a3c40"/><path d="M24 24 L40 24 L38 34 L32 40 L26 34 Z" fill="#c8ccd2"/><path d="M28 46 L32 52 L36 46 Q32 48 28 46 Z" fill="#1a1c1e"/><path d="M30 40 L32 44 L34 40" stroke="#1a1c1e" stroke-width="1.4" fill="none"/><path d="M22 30 L28 32 M42 30 L36 32" fill="none"/><ellipse cx="25" cy="30" rx="3" ry="2.4" fill="#0e0f10"/><ellipse cx="39" cy="30" rx="3" ry="2.4" fill="#0e0f10"/><circle cx="25" cy="30" r="1.3" fill="#e8c84a"/><circle cx="39" cy="30" r="1.3" fill="#e8c84a"/></svg>',
+  thornback_stag: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><linearGradient id="stg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9a7448"/><stop offset="0.5" stop-color="#664a28"/><stop offset="1" stop-color="#2e2010"/></linearGradient></defs><ellipse cx="32" cy="57" rx="12" ry="3" fill="#000" opacity="0.3"/><path d="M24 12 Q18 6 12 8 M24 12 Q20 4 14 2 M24 14 Q16 12 10 14 M40 12 Q46 6 52 8 M40 12 Q44 4 50 2 M40 14 Q48 12 54 14" stroke="#c8b088" stroke-width="2.2" fill="none" stroke-linecap="round"/><path d="M26 18 Q26 12 32 12 Q38 12 38 18 L38 34 Q38 46 32 52 Q26 46 26 34 Z" fill="url(#stg1)"/><path d="M28 44 L32 50 L36 44 Q32 46 28 44 Z" fill="#1a1208"/><ellipse cx="28" cy="26" rx="2.4" ry="3" fill="#160f08"/><ellipse cx="36" cy="26" rx="2.4" ry="3" fill="#160f08"/><circle cx="28" cy="26" r="1" fill="#3a2a14"/><circle cx="36" cy="26" r="1" fill="#3a2a14"/><path d="M30 34 L32 40 L34 34" stroke="#2a1c0e" stroke-width="1" fill="none"/><path d="M22 20 L26 22 M42 20 L38 22" stroke="#4a3418" stroke-width="1.2"/></svg>',
+  briar_lynx: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><linearGradient id="lnx1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c8a86a"/><stop offset="0.5" stop-color="#96723e"/><stop offset="1" stop-color="#4a3418"/></linearGradient></defs><ellipse cx="32" cy="57" rx="13" ry="3" fill="#000" opacity="0.3"/><path d="M18 16 L20 6 L28 18 M46 16 L44 6 L36 18" fill="url(#lnx1)" stroke="#3a2810" stroke-width="0.6"/><path d="M18 6 L17 2 L22 8 M46 6 L47 2 L42 8" fill="#1a1208"/><path d="M18 18 Q18 14 32 14 Q46 14 46 18 L46 30 Q46 44 32 52 Q18 44 18 30 Z" fill="url(#lnx1)"/><path d="M24 34 L20 32 M24 37 L19 37 M40 34 L44 32 M40 37 L45 37" stroke="#2a1c0e" stroke-width="0.8"/><path d="M28 42 L32 46 L36 42 Q32 44 28 42 Z" fill="#e8d8b8"/><path d="M31 38 L32 42 L33 38" stroke="#8a3030" stroke-width="1.2" fill="none"/><ellipse cx="26" cy="28" rx="3" ry="3.6" fill="#141008"/><ellipse cx="38" cy="28" rx="3" ry="3.6" fill="#141008"/><ellipse cx="26" cy="28" rx="1" ry="2.4" fill="#9be838"/><ellipse cx="38" cy="28" rx="1" ry="2.4" fill="#9be838"/><circle cx="24" cy="40" r="1" fill="#3a2810"/><circle cx="40" cy="40" r="1" fill="#3a2810"/></svg>',
+  frost_bear: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><linearGradient id="fbr1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eaf2f8"/><stop offset="0.5" stop-color="#b8ccda"/><stop offset="1" stop-color="#6a8496"/></linearGradient></defs><ellipse cx="32" cy="57" rx="16" ry="3" fill="#000" opacity="0.3"/><circle cx="18" cy="18" r="8" fill="url(#fbr1)"/><circle cx="46" cy="18" r="8" fill="url(#fbr1)"/><circle cx="18" cy="18" r="4" fill="#8aa4b6"/><circle cx="46" cy="18" r="4" fill="#8aa4b6"/><path d="M14 24 Q14 14 32 14 Q50 14 50 24 L50 34 Q50 48 32 54 Q14 48 14 34 Z" fill="url(#fbr1)"/><ellipse cx="32" cy="44" rx="9" ry="7" fill="#dce8f0"/><ellipse cx="32" cy="40" rx="3.4" ry="2.6" fill="#2a3a44"/><path d="M32 42 L32 48 M28 48 Q32 51 36 48" stroke="#5a6e7a" stroke-width="1.2" fill="none"/><ellipse cx="24" cy="30" rx="2.6" ry="3" fill="#1a2830"/><ellipse cx="40" cy="30" rx="2.6" ry="3" fill="#1a2830"/><circle cx="24.6" cy="29.3" r="0.7" fill="#a8d0e8"/><circle cx="40.6" cy="29.3" r="0.7" fill="#a8d0e8"/></svg>',
+  snow_leopard: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><linearGradient id="slp1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e0e6ec"/><stop offset="0.5" stop-color="#b0bcc6"/><stop offset="1" stop-color="#68767e"/></linearGradient></defs><ellipse cx="32" cy="57" rx="13" ry="3" fill="#000" opacity="0.3"/><path d="M18 14 L18 6 L26 16 M46 14 L46 6 L38 16" fill="url(#slp1)"/><path d="M18 16 Q18 12 32 12 Q46 12 46 16 L46 30 Q46 44 32 52 Q18 44 18 30 Z" fill="url(#slp1)"/><circle cx="24" cy="36" r="1.6" fill="#4a565e" opacity="0.6"/><circle cx="40" cy="36" r="1.6" fill="#4a565e" opacity="0.6"/><circle cx="28" cy="42" r="1.4" fill="#4a565e" opacity="0.5"/><circle cx="36" cy="42" r="1.4" fill="#4a565e" opacity="0.5"/><circle cx="21" cy="24" r="1.2" fill="#4a565e" opacity="0.5"/><circle cx="43" cy="24" r="1.2" fill="#4a565e" opacity="0.5"/><path d="M28 44 L32 47 L36 44 Q32 46 28 44 Z" fill="#3a4650"/><path d="M31 40 L32 44 L33 40" stroke="#5a6870" stroke-width="1.1" fill="none"/><ellipse cx="26" cy="28" rx="3" ry="3.6" fill="#161c1e"/><ellipse cx="38" cy="28" rx="3" ry="3.6" fill="#161c1e"/><ellipse cx="26" cy="28" rx="1" ry="2.6" fill="#7ad0e0"/><ellipse cx="38" cy="28" rx="1" ry="2.6" fill="#7ad0e0"/></svg>',
+  tundra_elk: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><linearGradient id="elk1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8a6e50"/><stop offset="0.5" stop-color="#5a442c"/><stop offset="1" stop-color="#2a1e12"/></linearGradient></defs><ellipse cx="32" cy="57" rx="11" ry="3" fill="#000" opacity="0.3"/><path d="M24 14 Q12 12 6 4 Q10 16 20 18 M24 12 Q14 6 10 -2 M40 14 Q52 12 58 4 Q54 16 44 18 M40 12 Q50 6 54 -2" stroke="#cab894" stroke-width="2.6" fill="none" stroke-linecap="round"/><path d="M8 8 Q4 8 2 12 M56 8 Q60 8 62 12 M14 4 Q12 0 8 0 M50 4 Q52 0 56 0" stroke="#cab894" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M26 20 Q26 14 32 14 Q38 14 38 20 L37 38 Q36 50 32 54 Q28 50 27 38 Z" fill="url(#elk1)"/><path d="M29 46 L32 52 L35 46 Q32 48 29 46 Z" fill="#160f08"/><ellipse cx="29" cy="27" rx="2.2" ry="2.8" fill="#140d06"/><ellipse cx="35" cy="27" rx="2.2" ry="2.8" fill="#140d06"/><path d="M30 36 L32 42 L34 36" stroke="#241810" stroke-width="1" fill="none"/></svg>',
+  ice_mammoth: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><linearGradient id="mmt1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9ab0c4"/><stop offset="0.5" stop-color="#647e94"/><stop offset="1" stop-color="#2e3e4c"/></linearGradient></defs><ellipse cx="32" cy="57" rx="17" ry="3" fill="#000" opacity="0.3"/><path d="M12 22 Q10 10 32 10 Q54 10 52 22 L50 34 Q48 42 40 44 L40 30 Q40 24 32 24 Q24 24 24 30 L24 44 Q16 42 14 34 Z" fill="url(#mmt1)"/><path d="M28 24 Q28 40 32 52 Q36 40 36 24 Z" fill="#5a748a"/><path d="M26 42 Q20 50 14 46 Q18 44 22 40 Z M38 42 Q44 50 50 46 Q46 44 42 40 Z" fill="#eae4d0"/><path d="M32 44 Q30 54 32 58 Q34 54 32 44 Z" fill="#4a6072"/><path d="M14 18 Q12 12 18 12 M50 18 Q52 12 46 12" fill="#4a6072"/><ellipse cx="23" cy="24" rx="2.2" ry="2.6" fill="#141c22"/><ellipse cx="41" cy="24" rx="2.2" ry="2.6" fill="#141c22"/><circle cx="23.6" cy="23.4" r="0.6" fill="#a8d0e8"/><circle cx="41.6" cy="23.4" r="0.6" fill="#a8d0e8"/></svg>',
+  ash_jackal: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><linearGradient id="jkl1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9a8a7a"/><stop offset="0.5" stop-color="#64544a"/><stop offset="1" stop-color="#2e241e"/></linearGradient></defs><ellipse cx="32" cy="57" rx="12" ry="3" fill="#000" opacity="0.3"/><path d="M16 10 L20 26 L26 22 Z M48 10 L44 26 L38 22 Z" fill="url(#jkl1)"/><path d="M17 12 L20 24 L22 16 Z M47 12 L44 24 L42 16 Z" fill="#3a2e26"/><path d="M22 22 Q22 18 32 18 Q42 18 42 22 L40 34 L32 52 L24 34 Z" fill="url(#jkl1)"/><path d="M30 44 L32 52 L34 44 Q32 46 30 44 Z" fill="#e0b040"/><path d="M31 40 L32 44 L33 40" stroke="#1a120c" stroke-width="1.1" fill="none"/><ellipse cx="27" cy="28" rx="2.4" ry="2.8" fill="#120c08"/><ellipse cx="37" cy="28" rx="2.4" ry="2.8" fill="#120c08"/><circle cx="27" cy="28" r="1.1" fill="#e0a838"/><circle cx="37" cy="28" r="1.1" fill="#e0a838"/><path d="M24 24 L28 26 M40 24 L36 26" stroke="#2a1e16" stroke-width="0.7"/></svg>',
+  cinder_boar: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><radialGradient id="cbr0" cx="0.5" cy="0.5" r="0.6"><stop offset="0" stop-color="#ff7020" stop-opacity="0.4"/><stop offset="1" stop-color="#ff7020" stop-opacity="0"/></radialGradient><linearGradient id="cbr1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4a3830"/><stop offset="0.5" stop-color="#2a1c18"/><stop offset="1" stop-color="#120a08"/></linearGradient></defs><circle cx="32" cy="34" r="28" fill="url(#cbr0)"/><ellipse cx="32" cy="56" rx="15" ry="3" fill="#000" opacity="0.35"/><path d="M14 30 Q14 16 30 16 L44 20 Q54 24 54 36 Q54 48 40 50 L24 50 Q14 46 14 30 Z" fill="url(#cbr1)"/><path d="M20 32 Q28 30 34 35 M18 40 Q26 38 32 42" stroke="#ff6018" stroke-width="0.9" fill="none" opacity="0.6"/><ellipse cx="50" cy="44" rx="5" ry="4" fill="#1a0e08"/><circle cx="48" cy="44" r="1.1" fill="#ff5010"/><circle cx="53" cy="44" r="1.1" fill="#ff5010"/><path d="M42 48 Q40 54 46 54 M40 48 Q42 55 36 54" stroke="#ffb060" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M22 18 L18 10 L26 16 Z M34 16 L34 8 L40 15 Z" fill="#2a1c16"/><circle cx="30" cy="30" r="2.6" fill="#ff5010"/><circle cx="30.8" cy="29.2" r="0.8" fill="#ffd060"/></svg>',
+  dust_stalker: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><linearGradient id="dst1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b0a488"/><stop offset="0.5" stop-color="#7a6c50"/><stop offset="1" stop-color="#3a3020"/></linearGradient></defs><ellipse cx="32" cy="57" rx="13" ry="3" fill="#000" opacity="0.3"/><path d="M18 14 L16 6 L24 16 M46 14 L48 6 L40 16" fill="url(#dst1)"/><path d="M18 16 Q18 12 32 12 Q46 12 46 16 L45 30 Q44 44 32 52 Q20 44 19 30 Z" fill="url(#dst1)"/><path d="M14 34 Q8 32 4 34 Q9 36 14 37 M50 34 Q56 32 60 34 Q55 36 50 37" stroke="#8a7c5c" stroke-width="0.7" fill="none" opacity="0.5"/><path d="M22 34 L18 33 M22 37 L17 38 M42 34 L46 33 M42 37 L47 38" stroke="#2a2214" stroke-width="0.8"/><path d="M28 44 L32 47 L36 44 Q32 46 28 44 Z" fill="#2a2214"/><path d="M31 40 L32 44 L33 40" stroke="#4a3c24" stroke-width="1.1" fill="none"/><path d="M22 26 L30 29 M42 26 L34 29" fill="none"/><ellipse cx="26" cy="28" rx="3.2" ry="2.4" fill="#120e08" transform="rotate(-12 26 28)"/><ellipse cx="38" cy="28" rx="3.2" ry="2.4" fill="#120e08" transform="rotate(12 38 28)"/><circle cx="26" cy="28" r="1.1" fill="#d8b040"/><circle cx="38" cy="28" r="1.1" fill="#d8b040"/></svg>',
+  scorch_rhino: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><radialGradient id="srh0" cx="0.5" cy="0.5" r="0.6"><stop offset="0" stop-color="#ff7028" stop-opacity="0.3"/><stop offset="1" stop-color="#ff7028" stop-opacity="0"/></radialGradient><linearGradient id="srh1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8a8078"/><stop offset="0.5" stop-color="#544c46"/><stop offset="1" stop-color="#28221e"/></linearGradient></defs><circle cx="32" cy="34" r="28" fill="url(#srh0)"/><ellipse cx="32" cy="57" rx="17" ry="3" fill="#000" opacity="0.35"/><path d="M16 20 Q16 12 26 12 L38 12 Q48 12 48 20 L48 34 Q48 46 40 50 L24 50 Q16 46 16 34 Z" fill="url(#srh1)"/><path d="M30 50 L28 62 L34 62 L34 50 Z" fill="#3a342e"/><path d="M32 12 Q26 4 30 -2 Q34 2 34 12 Z" fill="#c8bca8"/><path d="M31 12 L31 4" stroke="#ff6020" stroke-width="0.8" opacity="0.6"/><path d="M20 30 Q26 28 30 32 M40 30 Q46 28 48 32" stroke="#ff6020" stroke-width="0.8" fill="none" opacity="0.5"/><rect x="18" y="38" width="28" height="3" rx="1" fill="#ff7028" opacity="0.4"/><ellipse cx="25" cy="26" rx="2.4" ry="2.8" fill="#1a1610"/><ellipse cx="39" cy="26" rx="2.4" ry="2.8" fill="#1a1610"/><circle cx="25" cy="26" r="1" fill="#ff8038"/><circle cx="39" cy="26" r="1" fill="#ff8038"/></svg>',
 
   /* ─── Combat: Rat Warrens drop items (6) — misc + key + trophy. ─── */
   rat_tail: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><linearGradient id="it_1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e8a888"/><stop offset="0.5" stop-color="#a87858"/><stop offset="1" stop-color="#5a3828"/></linearGradient></defs><path d="M14 8 L20 12 L22 22 L26 30 L34 36 L42 38 L52 36 L58 32 L52 38 L42 44 L34 42 L26 36 L22 28 L20 16 L16 12 Z" fill="url(#it_1)"/><path d="M14 10 L18 14 L20 22 L24 30 L32 34" stroke="#3a2010" stroke-width="0.6" fill="none" opacity="0.5"/><circle cx="56" cy="32" r="2" fill="#7a4838"/><path d="M50 38 L48 42 M44 42 L42 46 M38 42 L36 46" stroke="#3a2010" stroke-width="0.5"/></svg>',
@@ -10475,7 +10493,7 @@ function normalizeState(){
   // (1.0.85, renamed 1.0.86) zoneMode migration — Dungeons / Raids tabs. Old
   // saves may have 'zones' (the now-renamed value); roll them forward to
   // 'dungeons'. Anything else falls back to 'dungeons' as default.
-  if(!state.zoneMode||!['dungeons','raids'].includes(state.zoneMode)) state.zoneMode='dungeons';
+  if(!state.zoneMode||!['dungeons','hunt','raids'].includes(state.zoneMode)) state.zoneMode='dungeons';
   // Raids (1.0.66) — per-raid best rating/time + clear counts. Well-formed guards
   // so a hand-edited or older save never throws when the raids panel renders.
   if(!state.raidBest||typeof state.raidBest!=='object'||Array.isArray(state.raidBest)) state.raidBest={};
@@ -15911,6 +15929,23 @@ const MONSTERS=[
   {id:'abyssal_fiend',zone:'demon_sanctum', name:'Abyssal Fiend',  icon:'😈', lvl:92, hp:1205,  atk:262,  str:213, def:122, coins:3900, xp:5800,  swingMs:2300, dmgType:'stab',  weakTo:'crush', resistTo:'stab'},
   {id:'dread_knight', zone:'demon_sanctum', name:'Dread Knight',   icon:'😈', lvl:95, hp:1629,  atk:324,  str:309, def:178, coins:4400, xp:6500,  swingMs:2700, dmgType:'crush', weakTo:'stab',  resistTo:'crush'},
   {id:'demon_lord',   zone:'demon_sanctum', name:'Demon Lord',     icon:'👑', lvl:99, hp:3353, atk:494, str:414, def:296, coins:7000, xp:10000, swingMs:2800, boss:true, bossReq:'infernal_crest', dmgType:'slash', weakTo:'slash', resistTo:'crush'},
+  // ── HUNTING GROUNDS (1.0.74) — open beast zones, no bosses. Farming + Slayer
+  // targets + alt hide sources. Stats mirror same-level dungeon mobs.
+  // Thornwood Thicket (Lv 6-22)
+  {id:'wild_boar',     zone:'thornwood', name:'Wild Boar',       icon:'wild_boar',     lvl:6,  hp:88,   atk:20,  str:16,  def:10,  coins:10,  xp:22,  swingMs:1900, dmgType:'crush', weakTo:'slash'},
+  {id:'timber_wolf',   zone:'thornwood', name:'Timber Wolf',     icon:'timber_wolf',   lvl:11, hp:162,  atk:38,  str:26,  def:16,  coins:16,  xp:34,  swingMs:1600, dmgType:'slash', weakTo:'stab'},
+  {id:'thornback_stag',zone:'thornwood', name:'Thornback Stag',  icon:'thornback_stag',lvl:16, hp:205,  atk:44,  str:38,  def:20,  coins:24,  xp:58,  swingMs:2000, dmgType:'stab',  weakTo:'crush'},
+  {id:'briar_lynx',    zone:'thornwood', name:'Briar Lynx',      icon:'briar_lynx',    lvl:22, hp:258,  atk:58,  str:48,  def:27,  coins:34,  xp:82,  swingMs:1400, dmgType:'slash', weakTo:'crush'},
+  // Frostfang Tundra (Lv 35-55)
+  {id:'frost_bear',    zone:'frostfang', name:'Frost Bear',      icon:'frost_bear',    lvl:35, hp:432,  atk:100, str:82,  def:46,  coins:80,  xp:150, swingMs:2400, dmgType:'crush', weakTo:'slash'},
+  {id:'snow_leopard',  zone:'frostfang', name:'Snow Leopard',    icon:'snow_leopard',  lvl:42, hp:522,  atk:118, str:100, def:58,  coins:110, xp:210, swingMs:1500, dmgType:'slash', weakTo:'stab'},
+  {id:'tundra_elk',    zone:'frostfang', name:'Tundra Elk',      icon:'tundra_elk',    lvl:48, hp:600,  atk:132, str:112, def:64,  coins:140, xp:250, swingMs:2100, dmgType:'stab',  weakTo:'crush'},
+  {id:'ice_mammoth',   zone:'frostfang', name:'Ice Mammoth',     icon:'ice_mammoth',   lvl:55, hp:760,  atk:160, str:150, def:86,  coins:200, xp:360, swingMs:2900, dmgType:'crush', weakTo:'slash', resistTo:'crush'},
+  // Ashen Steppe (Lv 65-88)
+  {id:'ash_jackal',    zone:'ashen_steppe', name:'Ash Jackal',    icon:'ash_jackal',    lvl:65, hp:905,  atk:205, str:175, def:105, coins:500, xp:720,  swingMs:1600, dmgType:'slash', weakTo:'stab'},
+  {id:'cinder_boar',   zone:'ashen_steppe', name:'Cinder Boar',   icon:'cinder_boar',   lvl:72, hp:1010, atk:222, str:190, def:108, coins:700, xp:980,  swingMs:2400, dmgType:'crush', weakTo:'slash'},
+  {id:'dust_stalker',  zone:'ashen_steppe', name:'Dust Stalker',  icon:'dust_stalker',  lvl:80, hp:1210, atk:262, str:225, def:140, coins:900, xp:1300, swingMs:1700, dmgType:'stab',  weakTo:'crush'},
+  {id:'scorch_rhino',  zone:'ashen_steppe', name:'Scorch Rhino',  icon:'scorch_rhino',  lvl:88, hp:1600, atk:315, str:300, def:178, coins:1300,xp:2100, swingMs:2900, dmgType:'crush', weakTo:'stab', resistTo:'crush'},
 ];
 
 /* ════ COMBAT REBALANCE v2 (1.0.26) ═══════════════════════════════════════════════
@@ -15938,10 +15973,17 @@ const ZONES=[
   {id:'troll_caverns',   name:'Troll Caverns',   icon:'⛰️', accent:'#8a8078', unlockLvl:58, blurb:"Stalactites drip into nothing. The whole place feels like the inside of a mouth."},
   {id:'wyvern_roost',    name:'Wyvern Roost',    icon:'🌋', accent:'#5fb8e0', unlockLvl:72, blurb:"Ash drifts down from the crater. The air tastes of cooked copper."},
   {id:'demon_sanctum',   name:'Demon Sanctum',   icon:'🔥', accent:'#e0762f', unlockLvl:86, blurb:"This ground was never meant to be walked on. It tolerates you only briefly."},
+  // ── HUNTING GROUNDS (1.0.74) — type:'hunt' open beast zones, shown in the Hunt
+  // mode (not Dungeons). No boss gate; pure farming + Slayer targets.
+  {id:'thornwood',    name:'Thornwood Thicket', icon:'thornwood',    accent:'#6a9a3c', unlockLvl:5,  type:'hunt', blurb:"Bramble and birdsong — and things with teeth moving low through the undergrowth."},
+  {id:'frostfang',    name:'Frostfang Tundra',  icon:'frostfang',    accent:'#7fb8d4', unlockLvl:35, type:'hunt', blurb:"A white waste where the wind screams and the cold hunts alongside the beasts."},
+  {id:'ashen_steppe', name:'Ashen Steppe',      icon:'ashen_steppe', accent:'#b0704a', unlockLvl:65, type:'hunt', blurb:"Cracked red earth under a bruised sky — only the hardiest predators still range here."},
 ];
 function getZone(id){ return ZONES.find(z=>z.id===id)||ZONES[0]; }
 function monstersInZone(id){ return MONSTERS.filter(m=>m.zone===id); }
 function zoneUnlocked(z){ return combatLevel()>=z.unlockLvl; }
+// (1.0.74) Zones shown in a combat mode: 'hunt' → hunting grounds, else dungeons.
+function zonesForMode(mode){ return ZONES.filter(z=> mode==='hunt' ? z.type==='hunt' : z.type!=='hunt'); }
 function bossUnlocked(mon){
   if(!mon||!mon.boss) return true;
   if(!mon.bossReq) return true;
@@ -16699,6 +16741,26 @@ LEATHER_TIERS.forEach(function(t,ti){
   const bossSet={ rat_queen:'rough', silkweaver_queen:'chitin', ironfang:'wolf', ogre_warlord:'ogre', troll_king:'troll', emberwyrm:'drake', demon_lord:'demon' };
   const slots=['helm','chest','legs','gloves','boots'];
   for(const boss in bossSet){ slots.forEach(function(s){ add(boss, bossSet[boss]+'_'+s, 0.012); }); }
+})();
+
+/* Hunting-ground drops (1.0.74) — light: a bone/hide + gold (consolation gold
+   fills the rest). Beasts double as alt hide sources, feeding the leather line. */
+(function(){
+  const D={
+    wild_boar:[{id:'gnawed_bone',chance:0.25},{id:'ratskin',chance:0.18}],
+    timber_wolf:[{id:'wolf_pelt',chance:0.28},{id:'gnawed_bone',chance:0.18}],
+    thornback_stag:[{id:'gnawed_bone',chance:0.30},{id:'ratskin',chance:0.15}],
+    briar_lynx:[{id:'ratskin',chance:0.28},{id:'rat_fang',chance:0.10}],
+    frost_bear:[{id:'wolf_pelt',chance:0.30}],
+    snow_leopard:[{id:'wolf_pelt',chance:0.26}],
+    tundra_elk:[{id:'gnawed_bone',chance:0.30},{id:'troll_hide',chance:0.10}],
+    ice_mammoth:[{id:'troll_hide',chance:0.26}],
+    ash_jackal:[{id:'troll_hide',chance:0.24}],
+    cinder_boar:[{id:'drake_hide',chance:0.20}],
+    dust_stalker:[{id:'drake_hide',chance:0.22}],
+    scorch_rhino:[{id:'demonhide',chance:0.20}],
+  };
+  for(const k in D){ if(!MONSTER_DROPS[k]) MONSTER_DROPS[k]=D[k]; }
 })();
 
 /* Roll the drop table for one kill. Returns array of {id, qty} actually granted.
@@ -21300,8 +21362,12 @@ function renderCombat(){
   // exclusively on the locked-boss monster's hover tooltip (monsterTipHTML's
   // bossLock branch), so zone tiles stay clean.
   if(!state.zone || !ZONES.find(z=>z.id===state.zone)) state.zone='rat_warrens';
+  // (1.0.74) Dungeons vs Hunt show different zone sets. Keep state.zone valid for
+  // the active mode so the picker + engage always target a zone that's on screen.
+  const _modeZones=zonesForMode(state.zoneMode==='hunt'?'hunt':'dungeons');
+  if(state.zoneMode!=='raids' && !_modeZones.find(z=>z.id===state.zone)) state.zone=(_modeZones[0]&&_modeZones[0].id)||'rat_warrens';
   const curZone=getZone(state.zone);
-  const zoneTiles=ZONES.map(z=>{
+  const zoneTiles=_modeZones.map(z=>{
     const unlocked=zoneUnlocked(z);
     const sel=z.id===state.zone;
     const mons=monstersInZone(z.id);
@@ -21536,14 +21602,15 @@ function renderCombat(){
     <div class="cmb-zones-block">
       <div class="cmb-zone-modes">
         <button class="cmb-zmode ${state.zoneMode==='dungeons'?'on':''}" data-zmode="dungeons">Dungeons</button>
+        <button class="cmb-zmode ${state.zoneMode==='hunt'?'on':''}" data-zmode="hunt">Hunt</button>
         <button class="cmb-zmode ${state.zoneMode==='raids'?'on':''}" data-zmode="raids">Raids</button>
       </div>
-      ${state.zoneMode==='dungeons'?`
+      ${(state.zoneMode==='dungeons'||state.zoneMode==='hunt')?`
         <div class="cmb-zmsplit">
           <div class="cmb-zicons">${zoneTiles}</div>
           <div class="cmb-zright">
             <div class="cmb-zone-strip" style="--zone-accent:${curZone.accent}">
-              <span class="czs-name"><span class="czs-ic">${iconHTML(curZone.id)}</span>${curZone.name}</span>
+              <span class="czs-name"><span class="czs-ic">${iconHTML(curZone.id)}</span>${curZone.name}${curZone.type==='hunt'?'<span class="czs-tag">Hunting Ground</span>':''}</span>
               ${curZone.blurb?`<span class="czs-blurb">${curZone.blurb}</span>`:''}
             </div>
             <div class="cmb-picker" id="cmbPicker">${picker}</div>
@@ -21711,7 +21778,18 @@ function renderCombat(){
     b.addEventListener('click',()=>{
       const m=b.getAttribute('data-zmode');
       if(state.zoneMode===m) return;
+      if(combat.active) return;   // don't swap the roster mid-fight
       state.zoneMode=m;
+      // Point state.zone (+ target) at the new mode's first zone so the picker
+      // and the Engage button line up immediately.
+      if(m==='dungeons'||m==='hunt'){
+        const zs=zonesForMode(m);
+        if(zs[0] && !zs.find(z=>z.id===state.zone)){
+          state.zone=zs[0].id;
+          const fm=monstersInZone(zs[0].id).find(x=>!x.boss)||monstersInZone(zs[0].id)[0];
+          if(fm) combat.monId=fm.id;
+        }
+      }
       if(typeof saveGame==='function') saveGame();
       renderCombat();
     });
