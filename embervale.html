@@ -2618,7 +2618,7 @@ header h1 .flame{color:var(--ember)}
   <div class="mm-btns">
     <button class="mm-btn mm-primary" id="mmPlay">▶ Play</button>
   </div>
-  <div class="mm-ver">v1.0.80</div>
+  <div class="mm-ver">v1.0.81</div>
 </div>
 
 <!-- ===== CHARACTER SELECT (added) ===== -->
@@ -3570,6 +3570,15 @@ const ITEMS={
   barrow_dust:      {name:'Barrow Dust',       icon:'🌫️',sell:820,  desc:'Fine grey ash swept from a tomb never meant to be opened. Alchemists swear it steadies volatile brews.'},
   wraithcloth:      {name:'Wraithcloth',       icon:'🧵',sell:1050, desc:'A tattered grave-shroud that refuses to rot, threaded through with a faint spectral shimmer. Prized by crafters for banners and light armour trim.'},
   runed_bone:       {name:'Runed Bone',        icon:'🦴',sell:1300, rare:true, desc:'A femur carved end to end with warden-runes, still humming with the cold that kept its owner walking. A rare T7 reagent.'},
+  // ─── RAID: The Emberforge Deep (1.0.81) — T8 relics + molten mats ───
+  // Weapons + shield drop only from a full clear (odds scale with rating). Molten
+  // Bars drop as COMMON clear loot — the smithing input for the T8 crafted ladder.
+  emberforged_blade: {name:'Emberforged Blade', icon:'🗡️',sell:42000,rare:true, cgear:true,ctier:8,cslot:'weapon', dmgType:'slash', wfx:{burn:{mult:0.15}}, desc:'A longsword quenched in the Forge-Tyrant\'s own heat, a seam of live fire running its fuller. It sears every wound it opens.'},
+  cinderguard:       {name:'Cinderguard',       icon:'🛡️',sell:38000,rare:true, cgear:true,ctier:8,cslot:'shield', desc:'A tower shield with a molten core that never cools. The best guard a mortal smith or a dead titan ever forged.'},
+  forgebreaker:      {name:'Forgebreaker',      icon:'🪓',sell:76000,rare:true, cgear:true,ctier:8,cslot:'weapon', dmgType:'crush', twoHanded:true, wfx:{burn:{mult:0.22}}, desc:'A colossal molten greataxe wrenched from Ignar\'s grip. Its head runs with fire; every blow leaves the wound burning. Hits harder than any two-hander yet found — and forgoes a shield.'},
+  molten_bar:        {name:'Molten Bar',        icon:'🟧',sell:2100, desc:'An ingot of moltensteel drawn glowing from the Emberforge. Still warm to the touch. The T8 smithing metal — forge it into Moltensteel gear.'},
+  emberweave:        {name:'Emberweave',        icon:'🧵',sell:1600, desc:'Fireproof cloth woven from the ash of the forge-thralls, threaded with living embers. A T8 leathercrafting hide.'},
+  drakeforged_rune:  {name:'Drakeforged Rune',  icon:'🔥',sell:3400, rare:true, desc:'A rune-scored fragment of the anvil itself, humming with trapped heat. A rare T8 reagent.'},
 };
 
 /* ════════ COMBAT GEAR STATS ════════════════════════════════════════════════════
@@ -3706,6 +3715,10 @@ const COMBAT_GEAR_STATS={
   barrow_dagger:     {atk:36,str:28,def:0},   // T7.5 stab dagger  — budget 64, atk-slant per dagger convention; rogue pick
   barrow_shield:     {atk:0, str:0, def:47},  // T7.5 shield       — best shield in game (above starsteel 43, runite 34)
   grave_cleaver:     {atk:46,str:42,def:0},   // 2H crush greataxe — budget 88, just under doomblade's offense (89) but at Lv70; no shield + Reaping Arc cleave is the draw (berserker heavy). Best pure-damage weapon pre-Lv90, glass-cannon trade.
+  // ─── RAID gear · The Emberforge Deep (1.0.81) — T8 relics (Lv80) ───
+  emberforged_blade: {atk:54,str:46,def:0},   // T8 slash sword — budget 100, above doomblade (89); burn proc; warrior staple of the tier
+  cinderguard:       {atk:0, str:0, def:58},  // T8 shield — best shield in the game (above barrow 47)
+  forgebreaker:      {atk:70,str:65,def:0},   // 2H crush greataxe — budget 135, well past grave_cleaver (88); marquee, heavy burn, no shield
 };
 
 /* ---- skills ---- */
@@ -6211,6 +6224,21 @@ const ICONS = {
   barrow_dust: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><radialGradient id="bdst1" cx="0.5" cy="0.7" r="0.7"><stop offset="0" stop-color="#a8a898"/><stop offset="0.6" stop-color="#5a5a4c"/><stop offset="1" stop-color="#26261e"/></radialGradient></defs><path d="M10 50 Q20 34 32 34 Q44 34 54 50 Z" fill="url(#bdst1)"/><path d="M14 48 Q22 40 30 46 M34 46 Q42 40 50 48" stroke="#3a3a2e" stroke-width="0.6" fill="none" opacity="0.5"/><circle cx="26" cy="20" r="1.6" fill="#c8c8b4" opacity="0.85"/><circle cx="36" cy="14" r="1.2" fill="#a8a898" opacity="0.7"/><circle cx="42" cy="24" r="1.4" fill="#8ff0d8" opacity="0.55"/><circle cx="20" cy="28" r="1" fill="#c8c8b4" opacity="0.6"/><circle cx="32" cy="24" r="1.1" fill="#88988a" opacity="0.6"/></svg>',
   wraithcloth: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><linearGradient id="wcth1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7a8a86"/><stop offset="0.5" stop-color="#3e4a46"/><stop offset="1" stop-color="#161e1c"/></linearGradient></defs><path d="M18 8 Q32 4 46 8 L44 40 L48 54 L40 48 L36 58 L32 50 L28 58 L24 48 L16 54 L20 40 Z" fill="url(#wcth1)"/><path d="M22 12 Q32 10 42 12 M22 22 Q32 20 42 22 M24 32 Q32 30 40 32" stroke="#8ff0d8" stroke-width="0.6" fill="none" opacity="0.45"/><path d="M18 8 L20 40 M46 8 L44 40" stroke="#242c2a" stroke-width="0.6" opacity="0.6"/><circle cx="26" cy="18" r="1" fill="#7fd8c8" opacity="0.5"/><circle cx="38" cy="26" r="1" fill="#7fd8c8" opacity="0.5"/></svg>',
   runed_bone: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><linearGradient id="rbne1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f0e8d0"/><stop offset="0.5" stop-color="#c0b088"/><stop offset="1" stop-color="#6a5c38"/></linearGradient></defs><ellipse cx="16" cy="16" rx="6" ry="5" fill="url(#rbne1)" transform="rotate(-32 16 16)"/><ellipse cx="48" cy="48" rx="6" ry="5" fill="url(#rbne1)" transform="rotate(-32 48 48)"/><rect x="18" y="22" width="28" height="8" fill="url(#rbne1)" transform="rotate(45 32 32)"/><ellipse cx="16" cy="16" rx="2" ry="1.4" fill="#3a3018" transform="rotate(-32 16 16)"/><ellipse cx="48" cy="48" rx="2" ry="1.4" fill="#3a3018" transform="rotate(-32 48 48)"/><path d="M26 30 L30 34 M30 26 L36 32 M34 28 L38 32" stroke="#4a9a8a" stroke-width="1" opacity="0.75"/><circle cx="32" cy="32" r="1.4" fill="#8ff0d8" opacity="0.7"/></svg>',
+
+  /* ─── RAID: The Emberforge Deep (1.0.81) — zone, 6 foes, 3 relics, mats ─── */
+  emberforge: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><radialGradient id="ef_glow" cx="0.5" cy="0.85" r="0.6"><stop offset="0" stop-color="#ff9a30" stop-opacity="0.9"/><stop offset="0.5" stop-color="#c8481a" stop-opacity="0.4"/><stop offset="1" stop-color="#c8481a" stop-opacity="0"/></radialGradient><linearGradient id="ef_anvil" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5a5852"/><stop offset="0.5" stop-color="#2e2b28"/><stop offset="1" stop-color="#161412"/></linearGradient><linearGradient id="ef_hot" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe6a0"/><stop offset="1" stop-color="#ff6a10"/></linearGradient></defs><ellipse cx="32" cy="52" rx="26" ry="11" fill="url(#ef_glow)"/><ellipse cx="32" cy="50" rx="18" ry="5" fill="#ff7a1e" opacity="0.5"/><ellipse cx="32" cy="50" rx="11" ry="3" fill="#ffd27a" opacity="0.7"/><path d="M14 26 L50 26 L50 31 L40 33 L44 37 L20 37 L24 33 L14 31 Z" fill="url(#ef_anvil)" stroke="#0c0a08" stroke-width="0.8" stroke-linejoin="round"/><path d="M40 33 L52 30 L54 33 L44 37 Z" fill="url(#ef_anvil)" stroke="#0c0a08" stroke-width="0.8"/><rect x="26" y="37" width="12" height="8" fill="url(#ef_anvil)" stroke="#0c0a08" stroke-width="0.8"/><path d="M22 45 L42 45 L38 49 L26 49 Z" fill="#1c1a17" stroke="#0c0a08" stroke-width="0.6"/><rect x="24" y="22.6" width="12" height="3.4" rx="1" fill="url(#ef_hot)"/><circle cx="46" cy="20" r="1.3" fill="#ffd27a"/><circle cx="18" cy="22" r="1" fill="#ff9a30"/><circle cx="40" cy="16" r="0.9" fill="#ffe6a0"/></svg>',
+  forge_thrall: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><linearGradient id="ft_body" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a2018"/><stop offset="0.5" stop-color="#241210"/><stop offset="1" stop-color="#100806"/></linearGradient><radialGradient id="ft_core" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#ffd27a"/><stop offset="1" stop-color="#ff6a10" stop-opacity="0"/></radialGradient></defs><ellipse cx="32" cy="58" rx="12" ry="2.6" fill="#000" opacity="0.35"/><path d="M22 30 Q32 22 42 30 L44 52 Q32 58 20 52 Z" fill="url(#ft_body)" stroke="#0a0604" stroke-width="0.9" stroke-linejoin="round"/><path d="M24 30 Q32 10 40 30 Q32 26 24 30 Z" fill="url(#ft_body)" stroke="#0a0604" stroke-width="0.9"/><ellipse cx="32" cy="26" rx="6" ry="5" fill="url(#ft_core)"/><circle cx="29.5" cy="26" r="1.5" fill="#fff2c8"/><circle cx="34.5" cy="26" r="1.5" fill="#fff2c8"/><path d="M28 36 L30 42 L28 48 M36 34 L34 40 L37 46" stroke="#ff7a1e" stroke-width="1.2" fill="none" opacity="0.85"/><path d="M32 32 L32 50" stroke="#ff9a30" stroke-width="0.8" opacity="0.5"/><path d="M18 40 Q24 44 32 43 Q40 42 46 46" stroke="#6a6058" stroke-width="1.4" fill="none" opacity="0.7"/></svg>',
+  cinder_golem: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><linearGradient id="cg_rock" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5a4a40"/><stop offset="0.5" stop-color="#3a2c24"/><stop offset="1" stop-color="#1c130e"/></linearGradient></defs><ellipse cx="32" cy="59" rx="15" ry="3" fill="#000" opacity="0.35"/><rect x="22" y="46" width="8" height="12" rx="2" fill="url(#cg_rock)" stroke="#0e0806" stroke-width="0.8"/><rect x="34" y="46" width="8" height="12" rx="2" fill="url(#cg_rock)" stroke="#0e0806" stroke-width="0.8"/><path d="M18 30 Q32 22 46 30 L44 48 Q32 52 20 48 Z" fill="url(#cg_rock)" stroke="#0e0806" stroke-width="0.9" stroke-linejoin="round"/><rect x="25" y="18" width="14" height="12" rx="3" fill="url(#cg_rock)" stroke="#0e0806" stroke-width="0.8"/><path d="M18 32 L12 42 L16 46 L22 38 Z" fill="url(#cg_rock)" stroke="#0e0806" stroke-width="0.8"/><path d="M46 32 L52 42 L48 46 L42 38 Z" fill="url(#cg_rock)" stroke="#0e0806" stroke-width="0.8"/><path d="M24 34 L30 38 L26 44 M40 33 L36 39 L40 45 M32 30 L32 46" stroke="#ff6a10" stroke-width="1.3" fill="none" opacity="0.9"/><path d="M20 40 L44 40" stroke="#ff9a30" stroke-width="0.7" opacity="0.4"/><circle cx="29" cy="24" r="1.6" fill="#ffd27a"/><circle cx="35" cy="24" r="1.6" fill="#ffd27a"/></svg>',
+  molten_sentinel: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><linearGradient id="mst_iron" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6a6660"/><stop offset="0.5" stop-color="#33302c"/><stop offset="1" stop-color="#14110e"/></linearGradient><linearGradient id="mst_hot" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe6a0"/><stop offset="1" stop-color="#ff5a08"/></linearGradient></defs><ellipse cx="32" cy="59" rx="13" ry="2.8" fill="#000" opacity="0.35"/><path d="M26 44 L24 58 L29 58 L30 44 Z M38 44 L40 58 L35 58 L34 44 Z" fill="url(#mst_iron)" stroke="#0a0806" stroke-width="0.7"/><path d="M20 26 L44 26 L46 44 Q32 50 18 44 Z" fill="url(#mst_iron)" stroke="#0a0806" stroke-width="0.9" stroke-linejoin="round"/><path d="M18 27 L10 22 L16 30 Z M46 27 L54 22 L48 30 Z" fill="url(#mst_iron)" stroke="#0a0806" stroke-width="0.7"/><path d="M26 12 L38 12 L40 24 L24 24 Z" fill="url(#mst_iron)" stroke="#0a0806" stroke-width="0.8"/><path d="M31 12 L33 6 L35 12 Z" fill="url(#mst_hot)"/><rect x="27" y="17" width="10" height="3" rx="1.5" fill="url(#mst_hot)"/><circle cx="32" cy="35" r="4" fill="url(#mst_hot)"/><circle cx="32" cy="35" r="1.8" fill="#fff2c8"/><path d="M24 30 L26 40 M40 30 L38 40" stroke="#ff6a10" stroke-width="1" fill="none" opacity="0.8"/></svg>',
+  ashbound_brute: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><linearGradient id="ab_ash" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8a8078"/><stop offset="0.5" stop-color="#4e463f"/><stop offset="1" stop-color="#241d18"/></linearGradient></defs><ellipse cx="32" cy="59" rx="16" ry="3" fill="#000" opacity="0.35"/><rect x="24" y="46" width="7" height="12" rx="2" fill="url(#ab_ash)" stroke="#100a08" stroke-width="0.8"/><rect x="33" y="46" width="7" height="12" rx="2" fill="url(#ab_ash)" stroke="#100a08" stroke-width="0.8"/><path d="M16 28 Q32 20 48 28 Q50 44 44 48 Q32 52 20 48 Q14 44 16 28 Z" fill="url(#ab_ash)" stroke="#100a08" stroke-width="0.9" stroke-linejoin="round"/><circle cx="14" cy="46" r="6" fill="url(#ab_ash)" stroke="#100a08" stroke-width="0.8"/><circle cx="50" cy="46" r="6" fill="url(#ab_ash)" stroke="#100a08" stroke-width="0.8"/><rect x="27" y="16" width="10" height="9" rx="3" fill="url(#ab_ash)" stroke="#100a08" stroke-width="0.7"/><circle cx="30" cy="21" r="1.3" fill="#ff7a1e"/><circle cx="34" cy="21" r="1.3" fill="#ff7a1e"/><path d="M26 32 L30 38 L27 44 M38 31 L35 37 L39 43 M32 28 L32 46" stroke="#ff6a10" stroke-width="1.3" fill="none" opacity="0.85"/><circle cx="22" cy="30" r="0.9" fill="#b8aca0" opacity="0.7"/><circle cx="42" cy="34" r="0.9" fill="#b8aca0" opacity="0.7"/></svg>',
+  ember_colossus: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><linearGradient id="ec_iron" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5e5a54"/><stop offset="0.5" stop-color="#302c28"/><stop offset="1" stop-color="#121010"/></linearGradient><radialGradient id="ec_core" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#fff2c8"/><stop offset="0.4" stop-color="#ff9a30"/><stop offset="1" stop-color="#ff5a08" stop-opacity="0"/></radialGradient></defs><ellipse cx="32" cy="59" rx="15" ry="3" fill="#000" opacity="0.35"/><rect x="23" y="45" width="8" height="13" fill="url(#ec_iron)" stroke="#0a0806" stroke-width="0.8"/><rect x="33" y="45" width="8" height="13" fill="url(#ec_iron)" stroke="#0a0806" stroke-width="0.8"/><rect x="18" y="22" width="28" height="26" rx="3" fill="url(#ec_iron)" stroke="#0a0806" stroke-width="0.9"/><rect x="12" y="24" width="8" height="14" rx="2" fill="url(#ec_iron)" stroke="#0a0806" stroke-width="0.8"/><rect x="44" y="24" width="8" height="14" rx="2" fill="url(#ec_iron)" stroke="#0a0806" stroke-width="0.8"/><rect x="26" y="12" width="12" height="11" rx="2" fill="url(#ec_iron)" stroke="#0a0806" stroke-width="0.8"/><rect x="28" y="16" width="8" height="2.6" rx="1" fill="#ff7a1e"/><ellipse cx="32" cy="35" rx="9" ry="9" fill="url(#ec_core)"/><circle cx="32" cy="35" r="3.4" fill="#ffe6a0"/><path d="M18 30 L46 30 M18 40 L46 40" stroke="#0a0806" stroke-width="0.6" opacity="0.6"/><path d="M20 24 L22 46 M44 24 L42 46" stroke="#ff6a10" stroke-width="0.8" fill="none" opacity="0.5"/></svg>',
+  ignar: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><radialGradient id="ig_glow" cx="0.5" cy="0.5" r="0.6"><stop offset="0" stop-color="#ff9a30" stop-opacity="0.8"/><stop offset="1" stop-color="#ff5a08" stop-opacity="0"/></radialGradient><linearGradient id="ig_rock" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4a2418"/><stop offset="0.5" stop-color="#2a120c"/><stop offset="1" stop-color="#120604"/></linearGradient><linearGradient id="ig_lava" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe6a0"/><stop offset="1" stop-color="#ff4a06"/></linearGradient></defs><circle cx="32" cy="32" r="28" fill="url(#ig_glow)"/><path d="M20 20 Q12 10 10 2 Q20 8 24 18 Z" fill="url(#ig_rock)" stroke="#0a0402" stroke-width="0.8" stroke-linejoin="round"/><path d="M44 20 Q52 10 54 2 Q44 8 40 18 Z" fill="url(#ig_rock)" stroke="#0a0402" stroke-width="0.8" stroke-linejoin="round"/><path d="M20 20 Q32 12 44 20 Q48 34 42 46 Q32 54 22 46 Q16 34 20 20 Z" fill="url(#ig_rock)" stroke="#0a0402" stroke-width="1" stroke-linejoin="round"/><path d="M22 18 L25 8 L28 16 L32 6 L36 16 L39 8 L42 18 Z" fill="url(#ig_lava)" opacity="0.9"/><path d="M24 28 L30 30 L28 33 Z" fill="url(#ig_lava)"/><path d="M40 28 L34 30 L36 33 Z" fill="url(#ig_lava)"/><circle cx="27" cy="30" r="1.3" fill="#fff2c8"/><circle cx="37" cy="30" r="1.3" fill="#fff2c8"/><path d="M26 40 Q32 46 38 40 Q32 44 26 40 Z" fill="url(#ig_lava)"/><path d="M32 34 L32 40 M28 36 L27 42 M36 36 L37 42" stroke="#ff6a10" stroke-width="1.1" fill="none" opacity="0.85"/></svg>',
+  emberforged_blade: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><linearGradient id="ebl_blade" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7a736a"/><stop offset="0.5" stop-color="#3a342e"/><stop offset="1" stop-color="#161210"/></linearGradient><linearGradient id="ebl_hilt" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c8622a"/><stop offset="1" stop-color="#5a1e0c"/></linearGradient></defs><ellipse cx="32" cy="59" rx="8" ry="2" fill="#000" opacity="0.35"/><path d="M32 4 L37 12 L36 44 L32 48 L28 44 L27 12 Z" fill="url(#ebl_blade)" stroke="#0a0604" stroke-width="0.8" stroke-linejoin="round"/><path d="M32 8 L32 44" stroke="#ff6a10" stroke-width="1.6" opacity="0.9"/><path d="M32 8 L32 44" stroke="#ffe6a0" stroke-width="0.6" opacity="0.8"/><path d="M20 46 L44 46 L41 50 L23 50 Z" fill="url(#ebl_hilt)" stroke="#2a1006" stroke-width="0.7"/><circle cx="20" cy="46" r="2.2" fill="#ff9a30"/><circle cx="44" cy="46" r="2.2" fill="#ff9a30"/><rect x="30" y="50" width="4" height="9" rx="1" fill="url(#ebl_hilt)"/><circle cx="32" cy="60" r="2.4" fill="#c8622a" stroke="#2a1006" stroke-width="0.5"/></svg>',
+  cinderguard: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><linearGradient id="cs_face" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5e5852"/><stop offset="0.5" stop-color="#33302c"/><stop offset="1" stop-color="#161311"/></linearGradient><radialGradient id="cs_core" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#fff2c8"/><stop offset="0.5" stop-color="#ff8a20"/><stop offset="1" stop-color="#ff5a08"/></radialGradient></defs><ellipse cx="32" cy="60" rx="9" ry="1.8" fill="#000" opacity="0.3"/><path d="M12 10 L52 10 L50 36 Q32 56 14 36 Z" fill="url(#cs_face)" stroke="#0a0806" stroke-width="1" stroke-linejoin="round"/><path d="M17 14 L47 14 L45.5 34 Q32 50 18.5 34 Z" fill="none" stroke="#0e0b09" stroke-width="0.8" opacity="0.7"/><path d="M32 14 L32 48 M20 20 L44 20" stroke="#ff6a10" stroke-width="0.8" opacity="0.4"/><circle cx="32" cy="26" r="7" fill="url(#cs_core)"/><circle cx="32" cy="26" r="3" fill="#fff2c8"/><circle cx="16" cy="13" r="1.4" fill="#ff9a30"/><circle cx="48" cy="13" r="1.4" fill="#ff9a30"/><circle cx="32" cy="45" r="1.4" fill="#ff9a30"/></svg>',
+  forgebreaker: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><linearGradient id="fb_haft" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6a4a2e"/><stop offset="1" stop-color="#2a1a0e"/></linearGradient><linearGradient id="fb_head" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7a736a"/><stop offset="0.5" stop-color="#33302c"/><stop offset="1" stop-color="#141110"/></linearGradient><linearGradient id="fb_edge" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe6a0"/><stop offset="1" stop-color="#ff4a06"/></linearGradient></defs><ellipse cx="32" cy="60" rx="7" ry="1.8" fill="#000" opacity="0.35"/><rect x="30.5" y="8" width="3" height="52" rx="1.4" fill="url(#fb_haft)" stroke="#160c06" stroke-width="0.5"/><path d="M31 14 Q14 16 10 30 Q20 30 31 26 Z" fill="url(#fb_head)" stroke="#0a0604" stroke-width="0.9" stroke-linejoin="round"/><path d="M31 14 Q14 16 10 30" stroke="url(#fb_edge)" stroke-width="1.6" fill="none"/><path d="M33 14 Q50 16 54 30 Q44 30 33 26 Z" fill="url(#fb_head)" stroke="#0a0604" stroke-width="0.9" stroke-linejoin="round"/><path d="M33 14 Q50 16 54 30" stroke="url(#fb_edge)" stroke-width="1.6" fill="none"/><path d="M20 22 Q32 20 44 22" stroke="#ff6a10" stroke-width="1" fill="none" opacity="0.7"/><circle cx="32" cy="21" r="3" fill="url(#fb_edge)"/><circle cx="32" cy="21" r="1.2" fill="#fff2c8"/><path d="M30.5 8 L32 2 L33.5 8 Z" fill="url(#fb_edge)"/><circle cx="32" cy="59" r="2.4" fill="#6a4a2e" stroke="#160c06" stroke-width="0.5"/></svg>',
+  molten_bar: _barSVG({top:'#ff8a30', front:'#c8461a', edge:'#3a1004', stamp:'#1a0800', hl:'#ffd080', glow:'#ff6020'}),
+  emberweave: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><linearGradient id="ew_g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffb060"/><stop offset="0.5" stop-color="#e8641c"/><stop offset="1" stop-color="#7a2408"/></linearGradient></defs><ellipse cx="32" cy="57" rx="13" ry="2.6" fill="#000" opacity="0.3"/><rect x="16" y="20" width="4" height="28" rx="1.5" fill="#3a2c22" stroke="#160e08" stroke-width="0.6"/><rect x="44" y="20" width="4" height="28" rx="1.5" fill="#3a2c22" stroke="#160e08" stroke-width="0.6"/><path d="M20 24 Q32 30 44 24 M20 30 Q32 24 44 30 M20 36 Q32 42 44 36 M20 42 Q32 36 44 42" stroke="url(#ew_g)" stroke-width="3.2" fill="none"/><path d="M22 27 Q32 32 42 27" stroke="#ffe6a0" stroke-width="0.7" fill="none" opacity="0.7"/><path d="M44 40 Q52 42 50 50" stroke="#ff7a1e" stroke-width="1.6" fill="none"/></svg>',
+  drakeforged_rune: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><linearGradient id="dr_stone" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4a453e"/><stop offset="0.5" stop-color="#2a251f"/><stop offset="1" stop-color="#12100c"/></linearGradient><radialGradient id="dr_glow" cx="0.5" cy="0.5" r="0.6"><stop offset="0" stop-color="#ff9a30" stop-opacity="0.7"/><stop offset="1" stop-color="#ff5a08" stop-opacity="0"/></radialGradient></defs><ellipse cx="32" cy="58" rx="12" ry="2.4" fill="#000" opacity="0.35"/><circle cx="32" cy="30" r="22" fill="url(#dr_glow)"/><path d="M20 8 L44 8 L46 48 L18 48 Z" fill="url(#dr_stone)" stroke="#0a0806" stroke-width="1" stroke-linejoin="round"/><path d="M44 8 L46 20 L40 14 Z" fill="#12100c" opacity="0.6"/><g stroke="#ff8a20" stroke-width="1.6" fill="none" opacity="0.95" stroke-linecap="round"><path d="M26 16 L38 16 M32 16 L32 28 M27 40 L32 34 L37 40 M27 34 L37 34"/></g><circle cx="32" cy="30" r="1.6" fill="#ffe6a0"/></svg>',
 
   /* ─── HUNTING GROUNDS (1.0.74) — 3 zones + 12 beasts ─── */
   thornwood: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><linearGradient id="thw1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8ac24e"/><stop offset="0.5" stop-color="#4a7a26"/><stop offset="1" stop-color="#1e380f"/></linearGradient></defs><ellipse cx="32" cy="58" rx="22" ry="4" fill="#000" opacity="0.3"/><path d="M32 54 L30 30 L34 30 L32 54 Z" fill="#5a3a1c"/><path d="M32 44 Q18 40 12 26 Q26 30 32 40 Q38 30 52 26 Q46 40 32 44 Z" fill="url(#thw1)"/><path d="M32 34 Q22 30 16 18 Q28 22 32 30 Q36 22 48 18 Q42 30 32 34 Z" fill="url(#thw1)"/><path d="M32 24 Q26 18 24 8 Q32 14 32 22 Q32 14 40 8 Q38 18 32 24 Z" fill="url(#thw1)"/><path d="M18 28 L14 24 M46 28 L50 24 M24 20 L20 15 M40 20 L44 15" stroke="#2e4a15" stroke-width="0.9" opacity="0.6"/><circle cx="24" cy="34" r="1.4" fill="#c84040"/><circle cx="42" cy="32" r="1.4" fill="#c84040"/></svg>',
@@ -11337,19 +11365,33 @@ function combatSetBonus(){
   }
   return b;
 }
+/* Per-item UNIQUE bonuses (1.0.81) — raid "unique" gear bakes its signature effect
+   into the piece itself (ITEMS[id].ubonus), so no full set is needed. Channels match
+   the set/enchant/socket pipeline (atkBoost/hpBoost/defBoost/critChance/lifesteal) and
+   flow through combatBonusesAll like everything else. */
+function combatUniqueBonuses(){
+  const b={atkBoost:0,hpBoost:0,defBoost:0,critChance:0,lifesteal:0};
+  const ce=state&&state.combatEquipped; if(!ce) return b;
+  for(const itemId of Object.values(ce)){
+    const it=ITEMS[itemId]; const ub=it&&it.ubonus; if(!ub) continue;
+    for(const key in ub) b[key]=(b[key]||0)+ub[key];
+  }
+  return b;
+}
 function combatBonusesAll(){
   const e=(typeof combatEnchantBonuses==='function')?combatEnchantBonuses():{atkBoost:0,hpBoost:0,defBoost:0,critChance:0,lifesteal:0};
   const s=(typeof combatSocketBonuses==='function')?combatSocketBonuses():{atkBoost:0,hpBoost:0,defBoost:0,critChance:0,lifesteal:0};
   const a=armorPerkBonuses();
   const st=combatSetBonus();
+  const u=combatUniqueBonuses();
   return {
-    atkBoost:  (e.atkBoost||0)  + (s.atkBoost||0) + (st.atkBoost||0),
-    hpBoost:   (e.hpBoost||0)   + (s.hpBoost||0)  + (st.hpBoost||0),
-    defBoost:  (e.defBoost||0)  + (s.defBoost||0) + (st.defBoost||0),
-    // Leather crit stacks on top of enchant/socket/set crit — all flow through the
-    // single crit roll in combatTick.
-    critChance:(e.critChance||0)+ (s.critChance||0) + a.crit + (st.critChance||0),
-    lifesteal: (e.lifesteal||0) + (s.lifesteal||0) + (st.lifesteal||0),
+    atkBoost:  (e.atkBoost||0)  + (s.atkBoost||0) + (st.atkBoost||0) + (u.atkBoost||0),
+    hpBoost:   (e.hpBoost||0)   + (s.hpBoost||0)  + (st.hpBoost||0)  + (u.hpBoost||0),
+    defBoost:  (e.defBoost||0)  + (s.defBoost||0) + (st.defBoost||0) + (u.defBoost||0),
+    // Leather crit stacks on top of enchant/socket/set/unique crit — all flow through
+    // the single crit roll in combatTick.
+    critChance:(e.critChance||0)+ (s.critChance||0) + a.crit + (st.critChance||0) + (u.critChance||0),
+    lifesteal: (e.lifesteal||0) + (s.lifesteal||0) + (st.lifesteal||0) + (u.lifesteal||0),
     dodge:     a.dodge,   // chance to fully avoid a foe's landed hit
     aspd:      a.aspd,    // fractional swing-time reduction
   };
@@ -16767,6 +16809,30 @@ LEATHER_TIERS.forEach(function(t,ti){
   });
 })();
 
+/* ════ RAID UNIQUES — The Emberforge Deep (1.0.81) ═════════════════════════════════
+   Two plate + two leather "unique" pieces. Instead of a set bonus, each bakes its own
+   effect into the piece (ITEMS[id].ubonus → combatUniqueBonuses). Stats sit just above
+   the crafted T8 rung; the baked effect is the real draw. Icons reuse the plate /
+   leather generators with molten palettes so they read as forge-born. */
+(function(){
+  const PLATE={light:'#ffb24a', mid:'#d8541a', dark:'#6a1e08', edge:'#2a0c02', hl:'#ffe6b0', accent:'#ff7a1e', glow:'#ff6a10'};
+  const HIDE ={light:'#e08a3e', mid:'#9a4a1c', dark:'#4a2210', edge:'#1e0e06', hl:'#ffcf8a', stitch:'#ffb060', buckle:'#c8621a'};
+  // [id, name, generator, palette, slot, def, atk, sell, ubonus, effectText]
+  const U=[
+    ['emberforged_aegis',  'Emberforged Aegis',  _chestSVG, PLATE, 'chest',  70, 3, 40000, {lifesteal:0.08,hpBoost:0.08},  '+8% lifesteal, +8% max HP'],
+    ['emberforged_greaves','Emberforged Greaves',_legsSVG,  PLATE, 'legs',   52, 2, 32000, {defBoost:0.06,hpBoost:0.05},   '+6% Defence, +5% max HP'],
+    ['cinderweave_cowl',   'Cinderweave Cowl',   _lHelmSVG, HIDE,  'helmet', 22,11, 26000, {critChance:0.05,atkBoost:0.03},'+5% crit, +3% Attack'],
+    ['emberhide_vest',     'Emberhide Vest',     _lChestSVG,HIDE,  'chest',  34,14, 30000, {lifesteal:0.06,critChance:0.04},'+6% lifesteal, +4% crit'],
+  ];
+  U.forEach(function(u){
+    const id=u[0];
+    ITEMS[id]={name:u[1], icon:'🔥', sell:u[7], rare:true, cgear:true, ctier:8, cslot:u[4], ubonus:u[8],
+      desc:'A unique relic of The Emberforge Deep — worn power, no set required. <b>'+u[9]+'</b> while equipped.'};
+    COMBAT_GEAR_STATS[id]={atk:u[6], str:0, def:u[5]};
+    ICONS[id]=u[2](u[3]);
+  });
+})();
+
 /* Leather GEAR drops (1.0.73, reworked 1.0.75) — so leather isn't crafting-only.
    Each beast-zone boss can drop ONE piece of its tier's leather set per kill (a
    single random slot, ~5%), NOT the whole set — the crafting bench stays the main
@@ -16939,6 +17005,15 @@ const RAID_MAT_POOL=[
   {id:'wraithcloth', qty:[2,4]},   // (1.0.71) the raid's leather hide — bumped so runs feed Wraithhide armour
   {id:'runed_bone',  qty:[1,1]},
 ];
+/* Emberforge (1.0.81) — Molten Bars are the COMMON drop (listed twice + high qty) so
+   every clear feeds the T8 crafted ladder; Emberweave (leather hide) and the rare
+   Drakeforged Rune round it out. */
+const EMBERFORGE_MAT_POOL=[
+  {id:'molten_bar',       qty:[3,6]},
+  {id:'molten_bar',       qty:[3,6]},
+  {id:'emberweave',       qty:[2,4]},
+  {id:'drakeforged_rune', qty:[1,1]},
+];
 const RAIDS=[
   {
     id:'sunken_barrow', name:'The Sunken Barrow', icon:'sunken_barrow',
@@ -16981,6 +17056,41 @@ const RAIDS=[
       {id:'barrow_boots',   chance:0.028, set:true},
     ],
     matPool:RAID_MAT_POOL,
+  },
+  {
+    id:'emberforge', name:'The Emberforge Deep', icon:'emberforge',
+    accent:'#ff7a1e', unlockLvl:80,
+    blurb:"A forge drowned an age ago, rekindled when the tyrant Ignar woke and breathed his own fire back into the bellows. Molten constructs keep it roaring — and they do not stop for the living.",
+    // 6 stages · ~13,300 total HP on one bar · a geared Lv80 raider clears in ~4-6 min.
+    stages:[
+      {id:'forge_thrall',   zone:'emberforge', name:'Forge Thrall',    icon:'forge_thrall',   lvl:78, hp:1300, atk:250, str:200, def:130, coins:0, xp:3000, swingMs:2200, dmgType:'crush', weakTo:'slash'},
+      {id:'cinder_golem',   zone:'emberforge', name:'Cinder Golem',    icon:'cinder_golem',   lvl:79, hp:1450, atk:258, str:210, def:145, coins:0, xp:3200, swingMs:2600, dmgType:'crush', weakTo:'stab'},
+      {id:'molten_sentinel',zone:'emberforge', name:'Molten Sentinel', icon:'molten_sentinel',lvl:82, hp:2900, atk:330, str:270, def:185, coins:0, xp:5200, swingMs:2600, dmgType:'crush', weakTo:'slash', miniBoss:true,
+        raidfx:{name:'Forge Heat', desc:'The air itself scorches — your attacks are 20% slower.', swingMult:1.20}},
+      {id:'ashbound_brute', zone:'emberforge', name:'Ashbound Brute',  icon:'ashbound_brute', lvl:80, hp:1520, atk:268, str:224, def:150, coins:0, xp:3400, swingMs:2500, dmgType:'slash', weakTo:'stab'},
+      {id:'ember_colossus', zone:'emberforge', name:'Emberforged Colossus', icon:'ember_colossus', lvl:82, hp:1750, atk:288, str:250, def:168, coins:0, xp:3900, swingMs:2700, dmgType:'crush', weakTo:'slash'},
+      {id:'ignar', zone:'emberforge', name:'Ignar, the Forge-Tyrant', icon:'ignar', lvl:84, hp:4400, atk:400, str:330, def:225, coins:0, xp:8000, swingMs:2800, dmgType:'crush', weakTo:'slash', boss:true, raidBoss:true,
+        raidfx:{name:"Tyrant's Wrath", desc:'His forge-heat saps you — −20% Defence and your strikes drag 15% slower.', defMult:0.80, swingMult:1.15}},
+    ],
+    ratingTiers:[
+      {key:'S', maxMs:210000,   mult:3.0, gold:9000, mats:9, col:'#ffe27a'},
+      {key:'A', maxMs:285000,   mult:2.2, gold:7200, mats:7, col:'#a8e0ff'},
+      {key:'B', maxMs:360000,   mult:1.7, gold:5600, mats:6, col:'#9be89b'},
+      {key:'C', maxMs:450000,   mult:1.3, gold:4400, mats:5, col:'#d8c8a0'},
+      {key:'D', maxMs:Infinity, mult:1.0, gold:3200, mats:4, col:'#b0a494'},
+    ],
+    // Weapons + shield + 4 unique armour pieces (2 plate, 2 leather). No set — each
+    // unique bakes its own ubonus. Forgebreaker (2H) is the marquee super-rare.
+    gearDrops:[
+      {id:'emberforged_blade',   chance:0.022},
+      {id:'cinderguard',         chance:0.022},
+      {id:'forgebreaker',        chance:0.004},
+      {id:'emberforged_aegis',   chance:0.020},
+      {id:'emberforged_greaves', chance:0.022},
+      {id:'cinderweave_cowl',    chance:0.024},
+      {id:'emberhide_vest',      chance:0.022},
+    ],
+    matPool:EMBERFORGE_MAT_POOL,
   },
 ];
 const RAID_BY_ID=(function(){ const m={}; for(const r of RAIDS) m[r.id]=r; return m; })();
