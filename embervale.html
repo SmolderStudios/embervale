@@ -2603,7 +2603,7 @@ header h1 .flame{color:var(--ember)}
   <div class="mm-btns">
     <button class="mm-btn mm-primary" id="mmPlay">▶ Play</button>
   </div>
-  <div class="mm-ver">v1.0.74</div>
+  <div class="mm-ver">v1.0.75</div>
 </div>
 
 <!-- ===== CHARACTER SELECT (added) ===== -->
@@ -9499,7 +9499,13 @@ const ITEM_BODY_SLOTS={
 // Helpers for slot membership
 function getItemSlots(id){
   var s=ITEM_BODY_SLOTS[id];
-  if(!s) return [];
+  if(!s){
+    // (1.0.75) Fallback for runtime-generated combat gear (leather sets, the raid
+    // armour set) that isn't in the hardcoded map — equip by its own cslot.
+    var it=ITEMS[id];
+    if(it&&it.cgear&&it.cslot) return [it.cslot];
+    return [];
+  }
   return Array.isArray(s)?s:[s];
 }
 function itemFitsSlot(id,slot){
@@ -16679,7 +16685,7 @@ LEATHER_TIERS.forEach(function(t,ti){
     const def=t.def[si], atk=t.atk[si];
     const perk=_LPERK[t.band][slot]||{};
     const nm=t.set+' '+_LSLOT_NOUN[slot];
-    ITEMS[id]={name:nm, icon:'🟫', sell:Math.round(def*7+atk*12+(ti+1)*14), cgear:true, ctier:t.ctier, cslot:slot, light:true,
+    ITEMS[id]={name:nm, icon:'🟫', sell:Math.round(def*7+atk*12+(ti+1)*14), cgear:true, ctier:t.ctier, cslot:(slot==='helm'?'helmet':slot), light:true,
       desc:'Supple '+t.set.toLowerCase()+' worked into light armour — less guard than plate, but quicker and keener. '+
         (perk.crit?'Sharpens your crit. ':'')+(perk.dodge?'Helps you slip a blow. ':'')+(perk.aspd?'Frees the swing. ':'')};
     const cs={atk:atk, str:0, def:def};
@@ -16733,15 +16739,18 @@ LEATHER_TIERS.forEach(function(t,ti){
   });
 })();
 
-/* Leather GEAR drops (1.0.73) — so leather isn't crafting-only. Each beast zone's
-   BOSS occasionally drops a finished piece of its tier's leather set (rare — the
-   crafting bench stays the main path). Rate is per-piece; ~6% for any piece. */
-(function(){
-  const add=function(mon,id,ch){ if(MONSTER_DROPS[mon]) MONSTER_DROPS[mon].push({id:id,chance:ch}); };
-  const bossSet={ rat_queen:'rough', silkweaver_queen:'chitin', ironfang:'wolf', ogre_warlord:'ogre', troll_king:'troll', emberwyrm:'drake', demon_lord:'demon' };
+/* Leather GEAR drops (1.0.73, reworked 1.0.75) — so leather isn't crafting-only.
+   Each beast-zone boss can drop ONE piece of its tier's leather set per kill (a
+   single random slot, ~5%), NOT the whole set — the crafting bench stays the main
+   path. Resolved at kill time via leatherBossDrop() so a boss never dumps 5 rows. */
+const LEATHER_BOSS_SET={ rat_queen:'rough', silkweaver_queen:'chitin', ironfang:'wolf', ogre_warlord:'ogre', troll_king:'troll', emberwyrm:'drake', demon_lord:'demon' };
+const LEATHER_BOSS_CHANCE=0.05;
+function leatherBossDrop(monId){
+  const key=LEATHER_BOSS_SET[monId]; if(!key) return null;
+  if(Math.random()>=LEATHER_BOSS_CHANCE*((typeof charDropMult==='function')?charDropMult():1)) return null;
   const slots=['helm','chest','legs','gloves','boots'];
-  for(const boss in bossSet){ slots.forEach(function(s){ add(boss, bossSet[boss]+'_'+s, 0.012); }); }
-})();
+  return key+'_'+slots[Math.floor(Math.random()*slots.length)];
+}
 
 /* Hunting-ground drops (1.0.74) — light: a bone/hide + gold (consolation gold
    fills the rest). Beasts double as alt hide sources, feeding the leather line. */
@@ -17127,9 +17136,16 @@ function slayerBlocked(id){ return !!(state.slayer&&state.slayer.blocked&&state.
    fight them (≤ combat Lv +5) and not trivially low, non-boss, not blocked. */
 function slayerEligible(master){
   const cl=combatLevel();
+  // Upper bound: the master's ceiling, but never above what you can fight (cl+5).
   const hi=Math.min(master.band[1], cl+5);
-  const lo=Math.max(master.band[0], cl-45);
-  return MONSTERS.filter(m=>!m.boss && m.lvl>=lo && m.lvl<=hi && !slayerBlocked(m.id));
+  // Lower bound stays INSIDE the band — clamp so it can never exceed `hi` (the old
+  // `cl-45` floor made the window empty for high-level players → "no task"). Keeps
+  // at least an ~8-level window within the master's band.
+  const lo=Math.max(master.band[0], Math.min(cl-40, hi-8));
+  const pool=MONSTERS.filter(m=>!m.boss && m.lvl>=lo && m.lvl<=hi && !slayerBlocked(m.id));
+  // Absolute fallback: if somehow empty, offer anything in-band you can fight.
+  if(!pool.length) return MONSTERS.filter(m=>!m.boss && m.lvl>=master.band[0] && m.lvl<=hi && !slayerBlocked(m.id));
+  return pool;
 }
 function assignSlayerTask(masterKey){
   const master=slayerMasterFor(masterKey);
@@ -20233,6 +20249,16 @@ function combatTick(){
       cmbLog(`✔ ${mon.name} defeated! +${mon.coins}g · +${mon.xp} cmb xp${dropLine}${consolationGold>0?` · +${consolationGold}g scavenged`:''}`, wasRare?'rare-win':'win');
       // ── Slayer (1.0.73) — progress the active bounty if this foe is the target ──
       if(typeof onSlayerKill==='function') onSlayerKill(baseMon);
+      // ── Leather from bosses (1.0.75) — one random set piece, not the whole set ──
+      if(typeof leatherBossDrop==='function'){
+        const _lp=leatherBossDrop(baseMon.id);
+        if(_lp && grantItem(_lp,1)>0){
+          if(!state.discovered) state.discovered={}; state.discovered[_lp]=1;
+          state.monDrops[baseMon.id]=state.monDrops[baseMon.id]||{}; state.monDrops[baseMon.id][_lp]=(state.monDrops[baseMon.id][_lp]||0)+1;
+          cmbLog(`★ ${ITEMS[_lp]?ITEMS[_lp].name:_lp} recovered!`,'rare-win');
+          if(typeof toast==='function') toast(`★ ${ITEMS[_lp]?ITEMS[_lp].name:_lp}!`);
+        }
+      }
       // ── Rare-kill aftermath (1.0.70) — alert log + pet roll ──
       if(wasRare){
         if(typeof logNotification==='function'){
