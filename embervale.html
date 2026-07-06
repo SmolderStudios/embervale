@@ -2582,6 +2582,19 @@ header h1 .flame{color:var(--ember)}
 .sl-btn.primary:hover:not(:disabled){filter:brightness(1.22)}
 .sl-btn:disabled{opacity:.45;cursor:default}
 .sl-btn.tiny{padding:1px 8px;font-size:11px;font-family:'Courier New',monospace}
+/* Slayer "available tasks" dropdown (1.0.77) */
+.sl-tasks{background:linear-gradient(180deg,#1a1310,#120c08);border:1px solid var(--trim-d);border-radius:8px}
+.sl-tasks>summary{cursor:pointer;list-style:none;padding:8px 13px;font-family:'Cinzel',serif;font-size:12.5px;color:#c8b8a8;user-select:none;display:flex;align-items:center;gap:6px}
+.sl-tasks>summary::-webkit-details-marker{display:none}
+.sl-tasks>summary:hover{color:#f0d8d0}
+.sl-tasks>summary .sl-caret{transition:transform .15s;font-size:10px;color:#8a7060}
+.sl-tasks[open]>summary .sl-caret{transform:rotate(90deg)}
+.sl-tasks[open]>summary{border-bottom:1px solid var(--trim-d)}
+.sl-tasks .sl-tk-body{padding:6px 13px 9px}
+.sl-tasks .sl-tk-m{margin:7px 0 0}
+.sl-tasks .sl-tk-m:first-child{margin-top:2px}
+.sl-tasks .sl-tk-hd{font-family:'Cinzel',serif;font-size:12.5px}
+.sl-tasks .sl-tk-list{font-size:11.5px;color:var(--muted);line-height:1.5;margin-top:1px}
 /* ════════ [CSS-32 END] RAIDS ══════════════════════════════════════════════════════ */
 </style>
 </head>
@@ -2603,7 +2616,7 @@ header h1 .flame{color:var(--ember)}
   <div class="mm-btns">
     <button class="mm-btn mm-primary" id="mmPlay">▶ Play</button>
   </div>
-  <div class="mm-ver">v1.0.76</div>
+  <div class="mm-ver">v1.0.77</div>
 </div>
 
 <!-- ===== CHARACTER SELECT (added) ===== -->
@@ -17125,6 +17138,7 @@ const SLAYER_PERKS=[
   {id:'scholar',       name:'Bloodscholar', max:5, cost:[6,10,16,24,36], desc:'+8% Slayer XP per kill, per level.'},
   {id:'warpath',       name:'Warpath',      max:5, cost:[6,10,16,24,36], desc:'+6% combat XP from on-task kills, per level.'},
   {id:'skinner',       name:'Skinner',      max:5, cost:[8,14,22,32,46], desc:'+12% chance per level for a bonus drop from on-task kills.'},
+  {id:'bloodfrenzy',   name:'Bloodfrenzy',  max:5, cost:[8,14,22,32,46], desc:'+10% chance per level for an on-task kill to count double toward your bounty.'},
   {id:'quartermaster', name:'Quartermaster',max:3, cost:[20,40,70],      desc:'+1 Slayer Point per completed bounty, per level.'},
 ];
 const SLAYER_SKIP_COST=5, SLAYER_BLOCK_COST=12;
@@ -17218,6 +17232,10 @@ function onSlayerKill(baseMon){
   if(!t || t.done>=t.need || t.monId!==baseMon.id) return;
   t.done++;
   grantSlayerXp(Math.max(1, Math.round((baseMon.xp||10)*0.6)));
+  // Bloodfrenzy (1.0.77) — chance the kill counts double toward the bounty. Only
+  // advances progress (no extra XP/drops); speeds tasks so you cash more bounties.
+  const bf=slayerPerkLevel('bloodfrenzy');
+  if(bf>0 && t.done<t.need && Math.random()<bf*0.10){ t.done++; if(typeof cmbLog==='function') cmbLog('   🗡 Bloodfrenzy — that kill counted double!',''); }
   const wp=slayerPerkLevel('warpath');
   if(wp>0 && typeof grantCombatXp==='function'){
     const style=(state.combatStyle==='strength'||state.combatStyle==='defence')?state.combatStyle:'attack';
@@ -21166,13 +21184,22 @@ function buildSlayerHTML(){
   const active=!!(t&&t.done<t.need);
   const masters=SLAYER_MASTERS.map(m=>{
     const locked=lvl<m.minLvl;
-    return `<div style="flex:1 1 215px;background:linear-gradient(180deg,#1e1712,#140e0a);border:1px solid ${locked?'#3a2e20':'#5a463a'};border-radius:9px;padding:12px 14px;${locked?'opacity:.55':''}">
-      <div style="font-family:'Cinzel',serif;font-size:15px;color:#e7dcc4">${m.name}</div>
-      <div style="font-size:11px;color:${sl};font-family:'Courier New',monospace;margin:1px 0 5px">Lv ${m.minLvl}+ · ${m.size[0]}–${m.size[1]} kills · +${m.pts} pts</div>
-      <div style="font-size:12px;color:var(--muted);line-height:1.45;margin-bottom:9px">${m.blurb}</div>
+    return `<div style="flex:1 1 200px;background:linear-gradient(180deg,#1e1712,#140e0a);border:1px solid ${locked?'#3a2e20':'#5a463a'};border-radius:9px;padding:10px 13px;${locked?'opacity:.55':''}">
+      <div style="font-family:'Cinzel',serif;font-size:14.5px;color:#e7dcc4">${m.name}</div>
+      <div style="font-size:11px;color:${sl};font-family:'Courier New',monospace;margin:1px 0 7px">Lv ${m.minLvl}+ · ${m.size[0]}–${m.size[1]} kills · +${m.pts} pts</div>
       <button class="sl-btn ${locked||active?'':'primary'}" data-sl-newtask="${m.key}" ${locked||active?'disabled':''}>${locked?`🔒 Slayer Lv ${m.minLvl}`:(active?'bounty active':'Get bounty')}</button>
     </div>`;
   }).join('');
+  // ── Available-tasks dropdown (1.0.77) — collapsible list of what each master can
+  // actually assign at the player's current Combat level (via slayerEligible), so
+  // the roster is discoverable without cluttering the tab. ─────────────────────
+  const taskListHTML=SLAYER_MASTERS.map(m=>{
+    const unlocked=lvl>=m.minLvl;
+    const pool=slayerEligible(m).slice().sort((a,b)=>a.lvl-b.lvl);
+    const names=pool.map(mo=>`${mo.name} <span style="color:#6d6058">Lv${mo.lvl}</span>`).join(' · ');
+    return `<div class="sl-tk-m"><div class="sl-tk-hd" style="color:${unlocked?'#e7dcc4':'#7a6a60'}">${m.name} · ${m.size[0]}–${m.size[1]} kills${unlocked?'':` · 🔒 Lv ${m.minLvl}`}</div><div class="sl-tk-list">${unlocked?(names||'—'):'reach the required level to preview'}</div></div>`;
+  }).join('');
+  const tasksDropdown=`<details class="sl-tasks"><summary><span class="sl-caret">▶</span>Available tasks · your Combat Lv ${combatLevel()}</summary><div class="sl-tk-body">${taskListHTML}</div></details>`;
   const perks=SLAYER_PERKS.map(p=>{
     const plvl=slayerPerkLevel(p.id), maxed=plvl>=p.max, cost=maxed?0:p.cost[plvl], can=!maxed&&pts>=cost;
     const pips=Array.from({length:p.max},(_,i)=>`<span style="width:9px;height:9px;border-radius:2px;background:${i<plvl?sl:'#2a1e1a'};display:inline-block"></span>`).join('');
@@ -21201,16 +21228,18 @@ function buildSlayerHTML(){
       `<button class="sl-btn" data-sl-unblockall="1" ${nBlocked?'':'disabled'}>${nBlocked?`Clear ${nBlocked} block${nBlocked===1?'':'s'}`:'None blocked'}</button>`),
   ].join('');
   const blockedRow=nBlocked?`<div style="font-size:11px;color:var(--muted)">Blocked from bounties: ${blockedIds.map(id=>{const m=getMonster(id);return m?m.name:id;}).join(', ')}</div>`:'';
-  return `<div style="display:flex;flex-direction:column;gap:12px;padding:2px 0">
+  const lbl='font-size:10.5px;letter-spacing:2px;text-transform:uppercase;color:#6d6058';
+  return `<div style="display:flex;flex-direction:column;gap:9px;padding:2px 0">
     ${header}${bounty}
-    <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#6d6058;margin-top:2px">Slayer Masters</div>
-    <div style="display:flex;gap:10px;flex-wrap:wrap">${masters}</div>
-    <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#6d6058;margin-top:2px">Rewards Shop — task actions</div>
-    <div style="display:flex;gap:10px;flex-wrap:wrap">${taskActions}</div>
-    <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#6d6058;margin-top:2px">Rewards Shop — perks</div>
-    <div style="display:flex;gap:10px;flex-wrap:wrap">${perks}</div>
-    ${blockedRow}
-    <div style="font-size:11.5px;color:var(--muted);line-height:1.5;background:linear-gradient(180deg,#1a1310,#12100a);border:1px solid var(--trim-d);border-left:3px solid ${sl};border-radius:7px;padding:9px 12px">🗡 Take a bounty, then kill that monster anywhere in the Arena. On-task kills pay <b style="color:#e7dcc4">Slayer XP</b>; finishing pays <b style="color:#ffd24a">Slayer Points</b>. Bounties rotate across all 9 zones — no more farming rats twenty times.</div>
+    <div style="${lbl}">Slayer Masters</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">${masters}</div>
+    ${tasksDropdown}
+    <div style="${lbl}">Rewards Shop · task actions</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">${taskActions}</div>
+    <div style="${lbl}">Rewards Shop · perks</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">${perks}</div>
+    ${blockedRow?`<div style="margin-top:1px">${blockedRow}</div>`:''}
+    <div style="font-size:11px;color:var(--muted);line-height:1.45;border-left:3px solid ${sl};padding:2px 0 2px 10px;margin-top:2px">Take a bounty, kill that monster anywhere in the Arena for <b style="color:#e7dcc4">Slayer XP</b> + progress; finishing pays <b style="color:#ffd24a">Slayer Points</b>.</div>
   </div>`;
 }
 function buildRaidsPanelHTML(){
