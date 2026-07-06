@@ -2618,7 +2618,7 @@ header h1 .flame{color:var(--ember)}
   <div class="mm-btns">
     <button class="mm-btn mm-primary" id="mmPlay">▶ Play</button>
   </div>
-  <div class="mm-ver">v1.0.82</div>
+  <div class="mm-ver">v1.0.83</div>
 </div>
 
 <!-- ===== CHARACTER SELECT (added) ===== -->
@@ -11341,14 +11341,10 @@ function armorPerkBonuses(){
    Wearing every piece of a set unlocks a signature effect. First set: the raid's
    Barrow Warden's armour. Bonuses reuse the existing combatBonusesAll channels
    (lifesteal / critChance / hpBoost) so they flow through the normal combat math. */
-const COMBAT_SETS={
-  barrow_warden:{
-    name:"Warden's Vigil",
-    pieces:['barrow_helm','barrow_chest','barrow_legs','barrow_gloves','barrow_boots'],
-    bonus:{ lifesteal:0.12, critChance:0.05, hpBoost:0.10 },
-    desc:'Leech 12% of damage dealt, +5% crit, and +10% max HP. The dead warden does not tire.'
-  },
-};
+// (1.0.83) Armour SET bonuses retired — raid gear now uses per-item `ubonus` (see
+// combatUniqueBonuses). Kept as an empty map so activeCombatSets/combatSetBonus and
+// the tooltip set-block stay valid no-ops. Repurpose freely if sets return.
+const COMBAT_SETS={};
 /* Which full sets are currently worn (combat loadout). */
 function activeCombatSets(){
   const ce=state&&state.combatEquipped; if(!ce) return [];
@@ -16704,6 +16700,7 @@ const LEATHER_PAL={
   drake:  {light:'#d0864a',mid:'#824c22',dark:'#3c2410',edge:'#1e1006',hl:'#f0b068',stitch:'#eabf82',buckle:'#d0a03c'},
   demon:  {light:'#b04c38',mid:'#6e281e',dark:'#301208',edge:'#180604',hl:'#e28468',stitch:'#d09378',buckle:'#b06a3a'},
   wraith: {light:'#88a096',mid:'#4a5a52',dark:'#22302a',edge:'#101814',hl:'#b0e0d0',stitch:'#bce6d6',buckle:'#8aa89a'},
+  ember:  {light:'#e8944a',mid:'#9a4e1e',dark:'#42200e',edge:'#1e0e06',hl:'#ffcf88',stitch:'#ffb060',buckle:'#c86a24'},
 };
 const _LSLOTS=['helm','chest','legs','gloves','boots'];
 const _LSLOT_NOUN={helm:'Cowl',chest:'Jerkin',legs:'Chaps',gloves:'Bracers',boots:'Boots'};
@@ -16713,6 +16710,7 @@ const _LCRAFT=[
   [4500,0.510,540,'pine_log'],[7000,0.595,980,'oak_log'],[9500,0.640,1330,'ironbark_log'],
   [12500,0.700,1750,'ember_log'],[15500,0.745,2170,'frost_log'],[18500,0.775,2590,'shadow_log'],
   [21500,0.790,3010,'ancient_log'],
+  [23000,0.790,3200,'ancient_log'],   // T8 (1.0.83) — Emberhide, raid-crafted
 ];
 // secondary perks by band → slot → {crit,dodge,aspd} (decimal fractions).
 // Secondary perks — LOWERED base (1.0.70); class synergy boosts them back for the
@@ -16722,6 +16720,7 @@ const _LPERK={
   lo:    {helm:{}, chest:{crit:0.01}, legs:{dodge:0.01}, gloves:{aspd:0.01}, boots:{}},
   hi:    {helm:{dodge:0.01}, chest:{crit:0.02}, legs:{}, gloves:{crit:0.01,aspd:0.01}, boots:{dodge:0.01,aspd:0.01}},
   wraith:{helm:{dodge:0.01}, chest:{crit:0.02}, legs:{}, gloves:{crit:0.02,aspd:0.01}, boots:{dodge:0.02,aspd:0.02}},
+  ember: {helm:{dodge:0.01}, chest:{crit:0.02}, legs:{aspd:0.01}, gloves:{crit:0.02,aspd:0.02}, boots:{dodge:0.02,aspd:0.02}},
 };
 // def/atk per piece are [helm,chest,legs,gloves,boots]; ~58% of plate DEF, +ATK.
 // ATK nudged up (1.0.70) — leather leans a touch harder into offense; gloves stay
@@ -16735,6 +16734,7 @@ const LEATHER_TIERS=[
  {key:'drake', set:'Drakehide',  hide:'drake_hide', ctier:6, lv:68, def:[11,25,15,7,9], atk:[3,5,4,10,4], band:'hi'},
  {key:'demon', set:'Demonhide',  hide:'demonhide',  ctier:7, lv:82, def:[14,32,19,10,12],atk:[4,6,5,12,5],band:'hi'},
  {key:'wraith',set:'Wraithhide', hide:'wraithcloth',ctier:7, lv:75, def:[10,24,14,6,9], atk:[6,8,6,14,6],band:'wraith'},
+ {key:'ember', set:'Emberhide',  hide:'emberweave', ctier:8, lv:84, def:[15,34,20,11,13],atk:[7,11,7,18,7],band:'ember'},  // (1.0.83) T8 raid leather from Emberforge
 ];
 LEATHER_TIERS.forEach(function(t,ti){
   const pal=LEATHER_PAL[t.key]||LEATHER_PAL.rough;
@@ -16786,26 +16786,48 @@ LEATHER_TIERS.forEach(function(t,ti){
    Vigil" bonus (see COMBAT_SETS). Icons reuse the plate generators with a haunted
    bone-and-spectral palette so they read as barrow-grave armour. Def-heavy with a
    little Attack (a warden's kit); above starsteel, fitting a Lv70 raid clear. */
+/* Reworked 1.0.83 — the Warden's Vigil 5-piece SET is retired. The chase is now two
+   plate UNIQUES (chest = Warden's Aegis, legs = Warden's Greaves) that bake their own
+   ubonus, matching the Emberforge model. The other three pieces stay DEFINED (so old
+   saves that own them don't break) as plain Warden's plate, and no longer drop. */
 (function(){
   const pal={light:'#dcd4c0', mid:'#8c8a7c', dark:'#3e4a44', edge:'#141c18', hl:'#efe9d6', accent:'#4a9a8a', glow:'#4a9a8a'};
   const GEN={helmet:_helmSVG, chest:_chestSVG, legs:_legsSVG, gloves:_glovesSVG, boots:_bootsSVG};
-  const NOUN={helmet:'Helm', chest:'Cuirass', legs:'Greaves', gloves:'Gauntlets', boots:'Sabatons'};
-  // [slot, def, atk, sell]
+  // [slot, def, atk, sell, name, ubonus|null, effectText|null]
   const PIECES=[
-    ['helmet', 27, 2, 21000],
-    ['chest',  57, 3, 30000],
-    ['legs',   34, 2, 24000],
-    ['gloves', 17, 7, 15000],
-    ['boots',  22, 2, 16000],
+    ['chest',  60, 3, 30000, "Warden's Aegis",   {lifesteal:0.07,hpBoost:0.06}, '+7% lifesteal, +6% max HP'],
+    ['legs',   38, 2, 24000, "Warden's Greaves",  {defBoost:0.05,hpBoost:0.04},  '+5% Defence, +4% max HP'],
+    ['helmet', 27, 2, 21000, "Barrow Warden's Helm",      null, null],
+    ['gloves', 17, 7, 15000, "Barrow Warden's Gauntlets", null, null],
+    ['boots',  22, 2, 16000, "Barrow Warden's Sabatons",  null, null],
   ];
   PIECES.forEach(function(p){
-    const slot=p[0], def=p[1], atk=p[2];
+    const slot=p[0], def=p[1], atk=p[2], ub=p[5];
     const id='barrow_'+(slot==='helmet'?'helm':slot);
-    ITEMS[id]={name:"Barrow Warden's "+NOUN[slot], icon:'🛡️', sell:p[3], rare:true, cgear:true, ctier:7, cslot:slot,
-      setKey:'barrow_warden',
-      desc:"Grave-cold plate stripped from the Warden's honour guard, veined with the same drowned light as his blade. Part of the "+"<b>Warden's Vigil</b> set — gather all five."};
+    ITEMS[id]={name:p[4], icon:'🛡️', sell:p[3], rare:true, cgear:true, ctier:7, cslot:slot,
+      desc: ub ? ('A unique relic of The Sunken Barrow — worn power, no set required. <b>'+p[6]+'</b> while equipped.')
+               : "Grave-cold Warden's plate, veined with the same drowned light as the Warden's blade."};
+    if(ub) ITEMS[id].ubonus=ub;
     COMBAT_GEAR_STATS[id]={atk:atk, str:0, def:def};
     ICONS[id]=GEN[slot](pal);
+  });
+})();
+
+/* Barrow leather UNIQUES (1.0.83) — two grave-hide pieces so the Sunken Barrow matches
+   the 2-plate + 2-leather unique layout. Baked ubonus; leather generators + grave palette. */
+(function(){
+  const pal=LEATHER_PAL.wraith;
+  // [id, name, generator, slot, def, atk, sell, ubonus, effectText]
+  const U=[
+    ['wraithbound_cowl','Wraithbound Cowl',  _lHelmSVG, 'helmet', 18, 8, 22000, {critChance:0.045,atkBoost:0.03}, '+4.5% crit, +3% Attack'],
+    ['graveshroud_vest','Grave-Shroud Vest', _lChestSVG,'chest',  28,12, 26000, {lifesteal:0.05,critChance:0.035},'+5% lifesteal, +3.5% crit'],
+  ];
+  U.forEach(function(u){
+    const id=u[0];
+    ITEMS[id]={name:u[1], icon:'🟫', sell:u[6], rare:true, cgear:true, ctier:7, cslot:u[3], light:true, ubonus:u[7],
+      desc:'A unique relic of The Sunken Barrow — light grave-leather with worn power. <b>'+u[8]+'</b> while equipped.'};
+    COMBAT_GEAR_STATS[id]={atk:u[5], str:0, def:u[4]};
+    ICONS[id]=u[2](pal);
   });
 })();
 
@@ -17087,20 +17109,19 @@ const RAIDS=[
       {key:'C', maxMs:390000,   mult:1.3, gold:2100, mats:4, col:'#d8c8a0'},
       {key:'D', maxMs:Infinity, mult:1.0, gold:1500, mats:3, col:'#b0a494'},
     ],
-    // Gear table — base chance PER PIECE × the clear-rating mult, clamped. Rates
-    // lowered in 1.0.71 (the loot pool grew): weapons + the 5-piece Barrow Warden's
-    // armour set (its full-set "Warden's Vigil" bonus is the real chase). The 2H
-    // Grave Cleaver stays the marquee super-rare.
+    // Gear table — base chance PER PIECE × the clear-rating mult, clamped. Reworked
+    // 1.0.83: the 5-piece set is retired for 4 UNIQUES (2 plate: Warden's Aegis /
+    // Greaves; 2 leather: Wraithbound Cowl / Grave-Shroud Vest), each with a baked
+    // ubonus. The 2H Grave Cleaver stays the marquee super-rare.
     gearDrops:[
-      {id:'barrow_blade',   chance:0.020},
-      {id:'barrow_shield',  chance:0.020},
-      {id:'barrow_dagger',  chance:0.020},
-      {id:'grave_cleaver',  chance:0.003},
-      {id:'barrow_helm',    chance:0.028, set:true},
-      {id:'barrow_chest',   chance:0.024, set:true},
-      {id:'barrow_legs',    chance:0.028, set:true},
-      {id:'barrow_gloves',  chance:0.028, set:true},
-      {id:'barrow_boots',   chance:0.028, set:true},
+      {id:'barrow_blade',     chance:0.020},
+      {id:'barrow_shield',    chance:0.020},
+      {id:'barrow_dagger',    chance:0.020},
+      {id:'grave_cleaver',    chance:0.003},
+      {id:'barrow_chest',     chance:0.022},   // Warden's Aegis (plate unique)
+      {id:'barrow_legs',      chance:0.024},   // Warden's Greaves (plate unique)
+      {id:'wraithbound_cowl', chance:0.024},   // leather unique
+      {id:'graveshroud_vest', chance:0.022},   // leather unique
     ],
     matPool:RAID_MAT_POOL,
   },
