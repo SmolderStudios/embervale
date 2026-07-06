@@ -2616,7 +2616,7 @@ header h1 .flame{color:var(--ember)}
   <div class="mm-btns">
     <button class="mm-btn mm-primary" id="mmPlay">▶ Play</button>
   </div>
-  <div class="mm-ver">v1.0.77</div>
+  <div class="mm-ver">v1.0.78</div>
 </div>
 
 <!-- ===== CHARACTER SELECT (added) ===== -->
@@ -2796,6 +2796,19 @@ header h1 .flame{color:var(--ember)}
         <button class="dev-chip" data-gold="10000">+10k</button>
         <button class="dev-chip" data-gold="100000">+100k</button>
         <button class="dev-chip" data-gold="1000000">+1M</button>
+      </div>
+    </div>
+
+    <div class="dev-sec">
+      <div class="dev-sec-lbl">Slayer</div>
+      <div class="dev-row">
+        <input id="devSlayerPts" class="dev-input" type="number" value="50" min="0" style="flex:1" title="Slayer Points to add">
+        <button class="dev-btn" id="devAddSlayerPts">+ Points</button>
+      </div>
+      <div class="dev-chips">
+        <button class="dev-chip" data-slpts="10">+10</button>
+        <button class="dev-chip" data-slpts="50">+50</button>
+        <button class="dev-chip" data-slpts="500">+500</button>
       </div>
     </div>
 
@@ -21154,32 +21167,29 @@ function buildSlayerHTML(){
   const lvl=slayerLevel(), xp=S.xp||0, pts=S.points||0;
   const lo=XP_CUM[lvl]||0, hi=lvl<MAX_LEVEL?(XP_CUM[lvl+1]||lo):lo;
   const pct=lvl>=MAX_LEVEL?100:Math.floor(100*(xp-lo)/Math.max(1,(hi-lo)));
-  const header=`<div style="display:flex;align-items:center;gap:13px;background:linear-gradient(180deg,#241614,#160c0a);border:1px solid #5a2c28;border-left:3px solid ${sl};border-radius:8px;padding:11px 15px">
-    <span style="font-size:30px;line-height:1">🗡</span>
+  const header=`<div style="display:flex;align-items:center;gap:11px;background:linear-gradient(180deg,#241614,#160c0a);border:1px solid #5a2c28;border-left:3px solid ${sl};border-radius:8px;padding:8px 13px">
+    <span style="font-size:25px;line-height:1">🗡</span>
     <div style="flex:1;min-width:0">
-      <div style="display:flex;align-items:baseline;gap:8px"><span style="font-family:'Cinzel',serif;font-size:19px;color:#f0d8d0">Slayer</span><span style="font-family:'Courier New',monospace;color:${sl};font-size:14px">Lv ${lvl}</span></div>
-      <div style="height:6px;background:#0d0905;border-radius:3px;margin-top:5px;overflow:hidden"><i style="display:block;height:100%;width:${pct}%;background:${sl}"></i></div>
-      <div style="font-size:11px;color:var(--muted);margin-top:3px;font-family:'Courier New',monospace">${xp.toLocaleString()} xp${lvl<MAX_LEVEL?` · ${(hi-xp).toLocaleString()} to Lv ${lvl+1}`:' · MAX'} · ${S.tasksDone||0} bounties</div>
+      <div style="display:flex;align-items:baseline;gap:8px"><span style="font-family:'Cinzel',serif;font-size:17px;color:#f0d8d0">Slayer</span><span style="font-family:'Courier New',monospace;color:${sl};font-size:13px">Lv ${lvl}</span></div>
+      <div style="height:5px;background:#0d0905;border-radius:3px;margin-top:4px;overflow:hidden"><i style="display:block;height:100%;width:${pct}%;background:${sl}"></i></div>
+      <div style="font-size:10.5px;color:var(--muted);margin-top:3px;font-family:'Courier New',monospace">${xp.toLocaleString()} xp${lvl<MAX_LEVEL?` · ${(hi-xp).toLocaleString()} to Lv ${lvl+1}`:' · MAX'} · ${S.tasksDone||0} bounties</div>
     </div>
-    <div style="text-align:right"><div style="font-family:'Cinzel',serif;font-size:24px;color:#ffd24a;line-height:1">${pts}</div><div style="font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--muted)">points</div></div>
+    <div style="text-align:right"><div style="font-family:'Cinzel',serif;font-size:21px;color:#ffd24a;line-height:1">${pts}</div><div style="font-size:9.5px;letter-spacing:1px;text-transform:uppercase;color:var(--muted)">points</div></div>
   </div>`;
   const t=S.task; let bounty;
   if(t){
     const mon=getMonster(t.monId), done=Math.min(t.done,t.need), p=Math.floor(100*done/t.need), complete=t.done>=t.need, master=slayerMasterFor(t.master);
-    bounty=`<div style="background:linear-gradient(180deg,#1a1310,#120c08);border:1px solid ${complete?'#4a7a3a':'#5a463a'};border-radius:9px;padding:13px 16px">
-      <div style="display:flex;justify-content:space-between;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:${complete?'#9be89b':sl};margin-bottom:8px"><span>${complete?'✓ Bounty complete':'Current bounty'}</span><span style="color:var(--muted)">${master.name}</span></div>
-      <div style="display:flex;align-items:center;gap:13px">
-        <span style="font-size:30px;line-height:1">${iconHTML(mon.id)}</span>
-        <div style="flex:1;min-width:0"><div style="font-family:'Cinzel',serif;font-size:17px;color:#e7dcc4">Slay ${mon.name}</div>
-          <div style="height:8px;background:#0d0905;border-radius:4px;margin-top:6px;overflow:hidden"><i style="display:block;height:100%;width:${p}%;background:${complete?'#6ab04a':sl}"></i></div>
-          <div style="font-size:12px;color:var(--muted);margin-top:3px">${done} / ${t.need} slain · Lv ${mon.lvl} · ${getZone(mon.zone).name}</div></div>
-      </div>
-      <div style="display:flex;gap:8px;margin-top:11px;flex-wrap:wrap">
-        ${complete?`<button class="sl-btn primary" data-sl-newtask="${t.master}">🗡 Claim &amp; new bounty</button>`
-          :`<button class="sl-btn primary" data-sl-goto="1">⚔ Go to task</button>`}
+    bounty=`<div style="background:linear-gradient(180deg,#1a1310,#120c08);border:1px solid ${complete?'#4a7a3a':'#5a463a'};border-radius:9px;padding:10px 13px">
+      <div style="display:flex;justify-content:space-between;font-size:10.5px;letter-spacing:1.5px;text-transform:uppercase;color:${complete?'#9be89b':sl};margin-bottom:7px"><span>${complete?'✓ Bounty complete':'Current bounty'}</span><span style="color:var(--muted)">${master.name}</span></div>
+      <div style="display:flex;align-items:center;gap:11px">
+        <span style="font-size:26px;line-height:1">${iconHTML(mon.id)}</span>
+        <div style="flex:1;min-width:0"><div style="font-family:'Cinzel',serif;font-size:15.5px;color:#e7dcc4">Slay ${mon.name}</div>
+          <div style="height:7px;background:#0d0905;border-radius:4px;margin-top:5px;overflow:hidden"><i style="display:block;height:100%;width:${p}%;background:${complete?'#6ab04a':sl}"></i></div>
+          <div style="font-size:11.5px;color:var(--muted);margin-top:3px">${done} / ${t.need} slain · Lv ${mon.lvl} · ${getZone(mon.zone).name}</div></div>
+        <button class="sl-btn primary" style="align-self:center" data-sl-${complete?`newtask="${t.master}">🗡 Claim`:`goto="1">⚔ Go to task`}</button>
       </div></div>`;
   } else {
-    bounty=`<div style="background:linear-gradient(180deg,#1a1310,#120c08);border:1px dashed #5a463a;border-radius:9px;padding:15px;text-align:center;color:var(--muted);font-size:13px">No active bounty — take one from a Slayer Master below.</div>`;
+    bounty=`<div style="background:linear-gradient(180deg,#1a1310,#120c08);border:1px dashed #5a463a;border-radius:9px;padding:11px;text-align:center;color:var(--muted);font-size:12.5px">No active bounty — take one from a Slayer Master below.</div>`;
   }
   const active=!!(t&&t.done<t.need);
   const masters=SLAYER_MASTERS.map(m=>{
@@ -21203,9 +21213,9 @@ function buildSlayerHTML(){
   const perks=SLAYER_PERKS.map(p=>{
     const plvl=slayerPerkLevel(p.id), maxed=plvl>=p.max, cost=maxed?0:p.cost[plvl], can=!maxed&&pts>=cost;
     const pips=Array.from({length:p.max},(_,i)=>`<span style="width:9px;height:9px;border-radius:2px;background:${i<plvl?sl:'#2a1e1a'};display:inline-block"></span>`).join('');
-    return `<div style="flex:1 1 225px;background:linear-gradient(180deg,#1e1712,#140e0a);border:1px solid var(--trim-d);border-radius:9px;padding:11px 13px">
-      <div style="display:flex;justify-content:space-between;align-items:center;gap:6px"><span style="font-family:'Cinzel',serif;font-size:14px;color:#e7dcc4">${p.name}</span><span style="display:inline-flex;gap:3px">${pips}</span></div>
-      <div style="font-size:12px;color:var(--muted);line-height:1.4;margin:4px 0 8px">${p.desc}</div>
+    return `<div style="flex:1 1 178px;background:linear-gradient(180deg,#1e1712,#140e0a);border:1px solid var(--trim-d);border-radius:8px;padding:9px 11px">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:6px"><span style="font-family:'Cinzel',serif;font-size:13.5px;color:#e7dcc4">${p.name}</span><span style="display:inline-flex;gap:2px">${pips}</span></div>
+      <div style="font-size:11px;color:var(--muted);line-height:1.35;margin:3px 0 7px">${p.desc}</div>
       <button class="sl-btn ${can?'primary':''}" data-sl-perk="${p.id}" ${maxed||!can?'disabled':''}>${maxed?'Maxed':`Buy · ${cost} pts`}</button>
     </div>`;
   }).join('');
@@ -21216,9 +21226,9 @@ function buildSlayerHTML(){
   // blocked) so the shop always reads as a full menu. (1.0.76)
   const canSkip=active&&pts>=SLAYER_SKIP_COST, canBlock=active&&pts>=SLAYER_BLOCK_COST;
   const nBlocked=blockedIds.length;
-  const shopCard=(title,desc,btn)=>`<div style="flex:1 1 225px;background:linear-gradient(180deg,#1e1712,#140e0a);border:1px solid var(--trim-d);border-radius:9px;padding:11px 13px">
-    <div style="font-family:'Cinzel',serif;font-size:14px;color:#e7dcc4">${title}</div>
-    <div style="font-size:12px;color:var(--muted);line-height:1.4;margin:4px 0 8px">${desc}</div>${btn}</div>`;
+  const shopCard=(title,desc,btn)=>`<div style="flex:1 1 178px;background:linear-gradient(180deg,#1e1712,#140e0a);border:1px solid var(--trim-d);border-radius:8px;padding:9px 11px">
+    <div style="font-family:'Cinzel',serif;font-size:13.5px;color:#e7dcc4">${title}</div>
+    <div style="font-size:11px;color:var(--muted);line-height:1.35;margin:3px 0 7px">${desc}</div>${btn}</div>`;
   const taskActions=[
     shopCard('Skip Bounty','Abandon the current bounty and reset your streak, then take a fresh one from any master.',
       `<button class="sl-btn ${canSkip?'primary':''}" data-sl-skip="1" ${canSkip?'':'disabled'}>${active?`Skip · ${SLAYER_SKIP_COST} pts`:'No active bounty'}</button>`),
@@ -21560,9 +21570,9 @@ function renderCombat(){
     <div class="cmb-subtabs">
       <button class="cmb-subtab${subTab==='arena'?' on':''}" data-sub="arena">⚔ ARENA</button>
       <button class="cmb-subtab${subTab==='mastery'?' on':''}" data-sub="mastery">✦ MASTERY <span class="badge">${cmastAvail}/${cmastGranted}</span></button>
+      <button class="cmb-subtab${subTab==='slayer'?' on':''}" data-sub="slayer">🗡 SLAYER <span class="badge">${(function(){var t=state.slayer&&state.slayer.task;return t&&t.done<t.need?(t.done+'/'+t.need):('Lv'+slayerLevel());})()}</span></button>
       <button class="cmb-subtab${subTab==='pets'?' on':''}" data-sub="pets">🐾 PETS <span class="badge">${_petOwned}/${_petTotal}</span></button>
       <button class="cmb-subtab${subTab==='log'?' on':''}" data-sub="log">🗒 LOG <span class="badge">${_monLogSeen}/${_monLogTotal}</span></button>
-      <button class="cmb-subtab${subTab==='slayer'?' on':''}" data-sub="slayer">🗡 SLAYER <span class="badge">${(function(){var t=state.slayer&&state.slayer.task;return t&&t.done<t.need?(t.done+'/'+t.need):('Lv'+slayerLevel());})()}</span></button>
     </div>
   `;
 
@@ -22350,6 +22360,11 @@ $('tabSocket').addEventListener('click',()=>{ closeCombatPanel(); viewTab='socke
   function addGold(amt){ amt=Math.max(0,amt|0); if(!amt) return; state.coins+=amt*SILVER_PER_GOLD; renderHeader(); if(viewTab==='shop') renderShop(); saveGame(); toast(`+${amt.toLocaleString()} gold added`); }
   $('devAddGold').addEventListener('click',()=>addGold(parseInt($('devGold').value)||0));
   document.querySelectorAll('#devPanel .dev-chip[data-gold]').forEach(b=>b.addEventListener('click',()=>addGold(parseInt(b.dataset.gold))));
+
+  // Dev: grant Slayer Points (test skip/block/perks without grinding bounties).
+  function addSlayerPts(amt){ amt=Math.max(0,amt|0); if(!amt) return; state.slayer=state.slayer||{}; state.slayer.points=(state.slayer.points||0)+amt; if(typeof combatMode!=='undefined'&&combatMode&&typeof renderCombat==='function') renderCombat(); saveGame(); toast(`+${amt.toLocaleString()} Slayer Points added`); }
+  $('devAddSlayerPts').addEventListener('click',()=>addSlayerPts(parseInt($('devSlayerPts').value)||0));
+  document.querySelectorAll('#devPanel .dev-chip[data-slpts]').forEach(b=>b.addEventListener('click',()=>addSlayerPts(parseInt(b.dataset.slpts))));
 
   // ── Item spawner: live search + qty chips ──
   let devQty=1;
