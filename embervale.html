@@ -2618,7 +2618,7 @@ header h1 .flame{color:var(--ember)}
   <div class="mm-btns">
     <button class="mm-btn mm-primary" id="mmPlay">▶ Play</button>
   </div>
-  <div class="mm-ver">v1.0.81</div>
+  <div class="mm-ver">v1.0.82</div>
 </div>
 
 <!-- ===== CHARACTER SELECT (added) ===== -->
@@ -16830,6 +16830,53 @@ LEATHER_TIERS.forEach(function(t,ti){
       desc:'A unique relic of The Emberforge Deep — worn power, no set required. <b>'+u[9]+'</b> while equipped.'};
     COMBAT_GEAR_STATS[id]={atk:u[6], str:0, def:u[5]};
     ICONS[id]=u[2](u[3]);
+  });
+})();
+
+/* ════ RAID-CRAFTED METAL LINES (1.0.82) ═══════════════════════════════════════════
+   Two full craftable gear tiers smithed from raid metals, sitting ALONGSIDE the mined
+   ladder and slightly stronger at the same tier (the raid premium):
+     · Gravesteel (T7) from Grave Iron (Sunken Barrow)   — a shade above Starsteel.
+     · Moltensteel (T8) from Molten Bars (Emberforge)    — the rung above, below the
+       raid's unique drops.
+   Fully data-driven: each piece gets an ITEM, COMBAT_GEAR_STATS, a palette-generated
+   icon, and a crafting recipe pushed onto SKILLS.crafting.acts. */
+(function(){
+  CR_PAL.gravesteel ={light:'#a8b4ac', mid:'#5a645e', dark:'#28302c', edge:'#0e1512', hl:'#d8e4dc', accent:'#1a201c', glow:'#8ff0d8'};
+  CR_PAL.moltensteel={light:'#ffa850', mid:'#c85423', dark:'#5e2410', edge:'#280e04', hl:'#ffd890', accent:'#7a2c0c', glow:'#ff6a1e'};
+  const P={
+    helm:  {cat:'helm',  slot:'helmet', gen:_helmSVG,     bars:1, lvlOff:0, noun:'Helm'},
+    chest: {cat:'chest', slot:'chest',  gen:_chestSVG,    bars:3, lvlOff:4, noun:'Chest'},
+    legs:  {cat:'legs',  slot:'legs',   gen:_legsSVG,     bars:2, lvlOff:2, noun:'Legs'},
+    gloves:{cat:'gloves',slot:'gloves', gen:_glovesSVG,   bars:1, lvlOff:0, noun:'Gloves'},
+    boots: {cat:'boots', slot:'boots',  gen:_bootsSVG,    bars:1, lvlOff:0, noun:'Boots'},
+    sword: {cat:'weapon',slot:'weapon', gen:_swordSVGwpn, bars:2, lvlOff:6, noun:'Sword',  subcat:'sword',  dmg:'slash'},
+    shield:{cat:'shield',slot:'shield', gen:_shieldSVG,   bars:2, lvlOff:8, noun:'Shield'},
+    dagger:{cat:'weapon',slot:'weapon', gen:_daggerSVG,   bars:2, lvlOff:6, noun:'Dagger', subcat:'dagger', dmg:'stab'},
+    hammer:{cat:'weapon',slot:'weapon', gen:_hammerSVG,   bars:2, lvlOff:6, noun:'Hammer', subcat:'hammer', dmg:'crush'},
+  };
+  const ORDER=['helm','chest','legs','gloves','boots','sword','shield','dagger','hammer'];
+  const XPB={helm:2200,chest:4800,legs:3500,gloves:1900,boots:2100,sword:4000,shield:3400,dagger:3600,hammer:4400};
+  const TIERS=[
+    {key:'gravesteel', name:'Gravesteel', ctier:7, bar:'grave_iron', log:'ancient_log', baseLvl:90, ms:21500, spd:0.790, minMs:3010, sellMul:2.6,
+     blurb:'Forged from grave-iron drawn out of the Sunken Barrow — a shade heavier and truer than starsteel.',
+     stats:{helm:{def:27},chest:{def:58},legs:{def:35},gloves:{atk:8,def:17},boots:{def:22},sword:{atk:32,str:26},shield:{def:45},dagger:{atk:33,str:25},hammer:{atk:31,str:27}}},
+    {key:'moltensteel', name:'Moltensteel', ctier:8, bar:'molten_bar', log:'ancient_log', baseLvl:93, ms:23000, spd:0.790, minMs:3200, sellMul:3.4,
+     blurb:'Smithed from moltensteel bars quenched in the Emberforge Deep — the hottest metal a mortal ever worked.',
+     stats:{helm:{def:31},chest:{def:66},legs:{def:44},gloves:{atk:9,def:20},boots:{def:26},sword:{atk:40,str:33},shield:{def:55},dagger:{atk:41,str:31},hammer:{atk:38,str:36}}},
+  ];
+  TIERS.forEach(function(T){
+    ORDER.forEach(function(pk){
+      const p=P[pk], st=T.stats[pk], id=T.key+'_'+pk, nm=T.name+' '+p.noun;
+      ITEMS[id]={name:nm, icon:'⚔️', sell:Math.round((XPB[pk]||2000)*T.sellMul), cgear:true, ctier:T.ctier, cslot:p.slot, desc:T.blurb};
+      if(p.dmg) ITEMS[id].dmgType=p.dmg;
+      COMBAT_GEAR_STATS[id]={atk:st.atk||0, str:st.str||0, def:st.def||0};
+      ICONS[id]=p.gen(CR_PAL[T.key]);
+      const rec={id:'cr_'+T.key+'_'+pk, name:nm, cat:p.cat, lvl:Math.min(99,T.baseLvl+p.lvlOff), ms:T.ms, xp:XPB[pk]||2000, spdMult:T.spd, minMs:T.minMs, inp:{}, out:{}};
+      rec.inp[T.bar]=p.bars; rec.inp[T.log]=1; rec.out[id]=1;
+      if(p.subcat) rec.subcat=p.subcat;
+      if(typeof SKILLS!=='undefined'&&SKILLS.crafting&&SKILLS.crafting.acts) SKILLS.crafting.acts.push(rec);
+    });
   });
 })();
 
