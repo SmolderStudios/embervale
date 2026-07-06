@@ -2618,7 +2618,7 @@ header h1 .flame{color:var(--ember)}
   <div class="mm-btns">
     <button class="mm-btn mm-primary" id="mmPlay">▶ Play</button>
   </div>
-  <div class="mm-ver">v1.0.83</div>
+  <div class="mm-ver">v1.0.84</div>
 </div>
 
 <!-- ===== CHARACTER SELECT (added) ===== -->
@@ -3711,8 +3711,8 @@ const COMBAT_GEAR_STATS={
   doomblade:         {atk:49,str:40,def:0},   // T9   slash greatsword — Demon Lord endgame, best 1H in the game (budget 89, +65% over starsteel)
   demonlord_skull:   {atk:6, str:5, def:48},  // T9   helmet (1.0.5) — above emberwyrm (40); Demon Sanctum apex trophy
   // ─── RAID gear · The Sunken Barrow (1.0.66) — T7 warrior set + first 2H ───
-  barrow_blade:      {atk:35,str:29,def:0},   // T7.5 slash sword  — budget 64, above starsteel (54) & troll_maul (62); warrior staple
-  barrow_dagger:     {atk:36,str:28,def:0},   // T7.5 stab dagger  — budget 64, atk-slant per dagger convention; rogue pick
+  barrow_blade:      {atk:39,str:32,def:0},   // T7 slash sword  — budget 71, near-BIS for tier (edges wyrmfang 70); rare raid warrior staple (1.0.84)
+  barrow_dagger:     {atk:40,str:31,def:0},   // T7 stab dagger  — budget 71, near-BIS, atk-slant per dagger convention; rare rogue pick (1.0.84)
   barrow_shield:     {atk:0, str:0, def:47},  // T7.5 shield       — best shield in game (above starsteel 43, runite 34)
   grave_cleaver:     {atk:46,str:42,def:0},   // 2H crush greataxe — budget 88, just under doomblade's offense (89) but at Lv70; no shield + Reaping Arc cleave is the draw (berserker heavy). Best pure-damage weapon pre-Lv90, glass-cannon trade.
   // ─── RAID gear · The Emberforge Deep (1.0.81) — T8 relics (Lv80) ───
@@ -17114,14 +17114,14 @@ const RAIDS=[
     // Greaves; 2 leather: Wraithbound Cowl / Grave-Shroud Vest), each with a baked
     // ubonus. The 2H Grave Cleaver stays the marquee super-rare.
     gearDrops:[
-      {id:'barrow_blade',     chance:0.020},
-      {id:'barrow_shield',    chance:0.020},
-      {id:'barrow_dagger',    chance:0.020},
-      {id:'grave_cleaver',    chance:0.003},
-      {id:'barrow_chest',     chance:0.022},   // Warden's Aegis (plate unique)
-      {id:'barrow_legs',      chance:0.024},   // Warden's Greaves (plate unique)
-      {id:'wraithbound_cowl', chance:0.024},   // leather unique
-      {id:'graveshroud_vest', chance:0.022},   // leather unique
+      {id:'barrow_blade',     chance:0.010},   // weapons rarer than gear (1.0.84)
+      {id:'barrow_shield',    chance:0.010},
+      {id:'barrow_dagger',    chance:0.010},
+      {id:'grave_cleaver',    chance:0.0022},  // marquee 2H — super-rare
+      {id:'barrow_chest',     chance:0.018},   // Warden's Aegis (plate unique)
+      {id:'barrow_legs',      chance:0.018},   // Warden's Greaves (plate unique)
+      {id:'wraithbound_cowl', chance:0.018},   // leather unique
+      {id:'graveshroud_vest', chance:0.018},   // leather unique
     ],
     matPool:RAID_MAT_POOL,
   },
@@ -17150,13 +17150,13 @@ const RAIDS=[
     // Weapons + shield + 4 unique armour pieces (2 plate, 2 leather). No set — each
     // unique bakes its own ubonus. Forgebreaker (2H) is the marquee super-rare.
     gearDrops:[
-      {id:'emberforged_blade',   chance:0.022},
-      {id:'cinderguard',         chance:0.022},
-      {id:'forgebreaker',        chance:0.004},
-      {id:'emberforged_aegis',   chance:0.020},
-      {id:'emberforged_greaves', chance:0.022},
-      {id:'cinderweave_cowl',    chance:0.024},
-      {id:'emberhide_vest',      chance:0.022},
+      {id:'emberforged_blade',   chance:0.010},   // weapons rarer than gear (1.0.84)
+      {id:'cinderguard',         chance:0.010},
+      {id:'forgebreaker',        chance:0.0022},  // marquee 2H — super-rare
+      {id:'emberforged_aegis',   chance:0.018},
+      {id:'emberforged_greaves', chance:0.018},
+      {id:'cinderweave_cowl',    chance:0.018},
+      {id:'emberhide_vest',      chance:0.018},
     ],
     matPool:EMBERFORGE_MAT_POOL,
   },
