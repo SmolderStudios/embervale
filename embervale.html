@@ -2582,17 +2582,19 @@ header h1 .flame{color:var(--ember)}
 .sl-btn.primary:hover:not(:disabled){filter:brightness(1.22)}
 .sl-btn:disabled{opacity:.45;cursor:default}
 .sl-btn.tiny{padding:1px 8px;font-size:11px;font-family:'Courier New',monospace}
-/* Slayer "available tasks" dropdown (1.0.77) */
-.sl-tasks{background:linear-gradient(180deg,#1a1310,#120c08);border:1px solid var(--trim-d);border-radius:8px}
-.sl-tasks>summary{cursor:pointer;list-style:none;padding:8px 13px;font-family:'Cinzel',serif;font-size:12.5px;color:#c8b8a8;user-select:none;display:flex;align-items:center;gap:6px}
+/* Slayer "available tasks" dropdown (1.0.77) — pops out over the UI, no reflow (1.0.79) */
+.sl-tasks{position:relative;align-self:flex-start;background:linear-gradient(180deg,#1e1712,#140e0a);border:1px solid var(--trim-d);border-radius:7px}
+.sl-tasks[open]{border-color:var(--trim);background:linear-gradient(180deg,#241a15,#160f0a)}
+.sl-tasks>summary{cursor:pointer;list-style:none;padding:6px 12px;font-family:'Cinzel',serif;font-size:12px;color:#c8b8a8;user-select:none;display:flex;align-items:center;gap:6px}
 .sl-tasks>summary::-webkit-details-marker{display:none}
 .sl-tasks>summary:hover{color:#f0d8d0}
-.sl-tasks>summary .sl-caret{transition:transform .15s;font-size:10px;color:#8a7060}
+.sl-tasks>summary .sl-caret{transition:transform .15s;font-size:9px;color:#8a7060}
 .sl-tasks[open]>summary .sl-caret{transform:rotate(90deg)}
-.sl-tasks[open]>summary{border-bottom:1px solid var(--trim-d)}
-.sl-tasks .sl-tk-body{padding:6px 13px 9px}
-.sl-tasks .sl-tk-m{margin:7px 0 0}
-.sl-tasks .sl-tk-m:first-child{margin-top:2px}
+.sl-tasks .sl-tk-body{position:absolute;top:calc(100% + 5px);right:0;z-index:60;width:max-content;min-width:320px;max-width:min(560px,86vw);
+  max-height:300px;overflow-y:auto;background:linear-gradient(180deg,#1c1512,#110b07);border:1px solid var(--trim);border-radius:9px;
+  box-shadow:0 12px 30px rgba(0,0,0,.6);padding:9px 14px 11px}
+.sl-tasks .sl-tk-m{margin:8px 0 0}
+.sl-tasks .sl-tk-m:first-child{margin-top:1px}
 .sl-tasks .sl-tk-hd{font-family:'Cinzel',serif;font-size:12.5px}
 .sl-tasks .sl-tk-list{font-size:11.5px;color:var(--muted);line-height:1.5;margin-top:1px}
 /* ════════ [CSS-32 END] RAIDS ══════════════════════════════════════════════════════ */
@@ -2616,7 +2618,7 @@ header h1 .flame{color:var(--ember)}
   <div class="mm-btns">
     <button class="mm-btn mm-primary" id="mmPlay">▶ Play</button>
   </div>
-  <div class="mm-ver">v1.0.78</div>
+  <div class="mm-ver">v1.0.79</div>
 </div>
 
 <!-- ===== CHARACTER SELECT (added) ===== -->
@@ -16940,7 +16942,7 @@ const RAID_MAT_POOL=[
 const RAIDS=[
   {
     id:'sunken_barrow', name:'The Sunken Barrow', icon:'sunken_barrow',
-    accent:'#4a9a8a', unlockLvl:70,
+    accent:'#4a9a8a', unlockLvl:60,
     blurb:"A warrior-king's tomb, drowned when the old dam broke. His honour guard never stopped their vigil — and they do not open the door for the living.",
     // Sequence — 4 revenants + 1 mini-boss + 1 final boss. HP totals ~9.4k with no
     // heal between stages; a geared Lv70 raider clears in ~3.5–5 min.
@@ -21194,10 +21196,10 @@ function buildSlayerHTML(){
   const active=!!(t&&t.done<t.need);
   const masters=SLAYER_MASTERS.map(m=>{
     const locked=lvl<m.minLvl;
-    return `<div style="flex:1 1 200px;background:linear-gradient(180deg,#1e1712,#140e0a);border:1px solid ${locked?'#3a2e20':'#5a463a'};border-radius:9px;padding:10px 13px;${locked?'opacity:.55':''}">
-      <div style="font-family:'Cinzel',serif;font-size:14.5px;color:#e7dcc4">${m.name}</div>
-      <div style="font-size:11px;color:${sl};font-family:'Courier New',monospace;margin:1px 0 7px">Lv ${m.minLvl}+ · ${m.size[0]}–${m.size[1]} kills · +${m.pts} pts</div>
-      <button class="sl-btn ${locked||active?'':'primary'}" data-sl-newtask="${m.key}" ${locked||active?'disabled':''}>${locked?`🔒 Slayer Lv ${m.minLvl}`:(active?'bounty active':'Get bounty')}</button>
+    return `<div style="flex:1 1 172px;background:linear-gradient(180deg,#1e1712,#140e0a);border:1px solid ${locked?'#3a2e20':'#5a463a'};border-radius:8px;padding:8px 11px;${locked?'opacity:.55':''}">
+      <div style="font-family:'Cinzel',serif;font-size:13.5px;color:#e7dcc4">${m.name}</div>
+      <div style="font-size:10.5px;color:${sl};font-family:'Courier New',monospace;margin:1px 0 6px">Lv ${m.minLvl}+ · ${m.size[0]}–${m.size[1]} kills · +${m.pts} pts</div>
+      <button class="sl-btn ${locked||active?'':'primary'}" data-sl-newtask="${m.key}" ${locked||active?'disabled':''}>${locked?`🔒 Lv ${m.minLvl}`:(active?'bounty active':'Get bounty')}</button>
     </div>`;
   }).join('');
   // ── Available-tasks dropdown (1.0.77) — collapsible list of what each master can
@@ -21238,18 +21240,17 @@ function buildSlayerHTML(){
       `<button class="sl-btn" data-sl-unblockall="1" ${nBlocked?'':'disabled'}>${nBlocked?`Clear ${nBlocked} block${nBlocked===1?'':'s'}`:'None blocked'}</button>`),
   ].join('');
   const blockedRow=nBlocked?`<div style="font-size:11px;color:var(--muted)">Blocked from bounties: ${blockedIds.map(id=>{const m=getMonster(id);return m?m.name:id;}).join(', ')}</div>`:'';
-  const lbl='font-size:10.5px;letter-spacing:2px;text-transform:uppercase;color:#6d6058';
-  return `<div style="display:flex;flex-direction:column;gap:9px;padding:2px 0">
+  const lbl='font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#6d6058';
+  return `<div style="display:flex;flex-direction:column;gap:7px;padding:1px 0">
     ${header}${bounty}
-    <div style="${lbl}">Slayer Masters</div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap">${masters}</div>
-    ${tasksDropdown}
-    <div style="${lbl}">Rewards Shop · task actions</div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap">${taskActions}</div>
-    <div style="${lbl}">Rewards Shop · perks</div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap">${perks}</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap"><div style="${lbl}">Slayer Masters</div>${tasksDropdown}</div>
+    <div style="display:flex;gap:7px;flex-wrap:wrap">${masters}</div>
+    <div style="${lbl};margin-top:1px">Rewards Shop · task actions</div>
+    <div style="display:flex;gap:7px;flex-wrap:wrap">${taskActions}</div>
+    <div style="${lbl};margin-top:1px">Rewards Shop · perks</div>
+    <div style="display:flex;gap:7px;flex-wrap:wrap">${perks}</div>
     ${blockedRow?`<div style="margin-top:1px">${blockedRow}</div>`:''}
-    <div style="font-size:11px;color:var(--muted);line-height:1.45;border-left:3px solid ${sl};padding:2px 0 2px 10px;margin-top:2px">Take a bounty, kill that monster anywhere in the Arena for <b style="color:#e7dcc4">Slayer XP</b> + progress; finishing pays <b style="color:#ffd24a">Slayer Points</b>.</div>
+    <div style="font-size:10.5px;color:var(--muted);line-height:1.4;border-left:3px solid ${sl};padding:1px 0 1px 9px;margin-top:1px">Take a bounty, kill that monster anywhere in the Arena for <b style="color:#e7dcc4">Slayer XP</b> + progress; finishing pays <b style="color:#ffd24a">Slayer Points</b>.</div>
   </div>`;
 }
 function buildRaidsPanelHTML(){
