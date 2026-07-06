@@ -2618,7 +2618,7 @@ header h1 .flame{color:var(--ember)}
   <div class="mm-btns">
     <button class="mm-btn mm-primary" id="mmPlay">▶ Play</button>
   </div>
-  <div class="mm-ver">v1.0.79</div>
+  <div class="mm-ver">v1.0.80</div>
 </div>
 
 <!-- ===== CHARACTER SELECT (added) ===== -->
@@ -17176,6 +17176,24 @@ function slayerEligible(master){
   if(!pool.length) return MONSTERS.filter(m=>!m.boss && m.lvl>=master.band[0] && m.lvl<=hi && !slayerBlocked(m.id));
   return pool;
 }
+/* Soft assignment weight (1.0.80) — nudges bounties toward monsters near your
+   Combat level without ever excluding lower ones. Near-level ≈ 1.0; every level
+   of distance shaves 2.2%, floored at 0.35, so the strongest bias is only ~2.9:1
+   over the furthest-off target. Low mobs still turn up regularly. */
+function slayerTaskWeight(mon, cl){
+  const d=Math.abs(cl-(mon.lvl||1));
+  return Math.max(0.35, 1 - d*0.022);
+}
+/* Weighted pick from a pool using slayerTaskWeight. Falls back to uniform if the
+   weights sum to zero (shouldn't happen given the 0.35 floor). */
+function slayerPickWeighted(pool, cl){
+  const w=pool.map(m=>slayerTaskWeight(m,cl));
+  const total=w.reduce((a,b)=>a+b,0);
+  if(!(total>0)) return pool[Math.floor(Math.random()*pool.length)];
+  let r=Math.random()*total;
+  for(let i=0;i<pool.length;i++){ r-=w[i]; if(r<=0) return pool[i]; }
+  return pool[pool.length-1];
+}
 function assignSlayerTask(masterKey){
   const master=slayerMasterFor(masterKey);
   if(slayerLevel()<master.minLvl){ toast(`🔒 Requires Slayer Lv ${master.minLvl}.`); return; }
@@ -17183,7 +17201,7 @@ function assignSlayerTask(masterKey){
   if(cur && cur.done<cur.need){ toast('You already have an active bounty — finish or skip it.'); return; }
   const pool=slayerEligible(master);
   if(!pool.length){ toast('No eligible targets right now — raise your Combat level or unblock a monster.'); return; }
-  const mon=pool[Math.floor(Math.random()*pool.length)];
+  const mon=slayerPickWeighted(pool, combatLevel());
   const need=master.size[0]+Math.floor(Math.random()*(master.size[1]-master.size[0]+1));
   state.slayer.task={monId:mon.id, need:need, done:0, master:masterKey};
   state.slayer.masterSel=masterKey;
