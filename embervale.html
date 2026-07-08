@@ -2669,7 +2669,7 @@ header h1 .flame{color:var(--ember)}
   <div class="mm-btns">
     <button class="mm-btn mm-primary" id="mmPlay">▶ Play</button>
   </div>
-  <div class="mm-ver">v1.0.91</div>
+  <div class="mm-ver">v1.0.92</div>
 </div>
 
 <!-- ===== CHARACTER SELECT (added) ===== -->
@@ -6756,7 +6756,7 @@ function combatGearStatBlock(itemId){
   if(s.aspd)  parts.push('<span style="color:#9be89b">⚡ +'+Math.round(s.aspd*100)+'% Atk Speed</span>');
   // Shield block (1.0.87) — flat damage reduction, computed from this shield's Defence.
   // Bucklers (offhand) don't block; they're the rogue's light offhand instead.
-  if(it.cslot==='shield' && !it.offhand){ var _sdr=Math.min(0.28,(s.def||0)*0.003); if(_sdr>0) parts.push('<span style="color:#8fb8ff">🛡 Blocks '+Math.round(_sdr*100)+'% of each hit</span> <span style="color:var(--muted);font-size:11px">(halved with light weapons)</span>'); }
+  if(it.cslot==='shield' && !it.offhand){ var _sdr=Math.min(0.28,(s.def||0)*0.003); if(_sdr>0) parts.push('<span style="color:#8fb8ff">🛡 Blocks '+Math.round(_sdr*100)+'% of each hit</span> <span style="color:var(--muted);font-size:11px">(halved with light weapons)</span>'); if(it.hpBlock) parts.push('<span style="color:#9be89b">❤ +block scaling with max HP (up to +'+Math.round((it.hpBlock.cap||0.08)*100)+'%)</span>'); }
   if(it.cslot==='shield' && it.offhand) parts.push('<span style="color:#9be89b">🗡 Off-hand — pairs with light weapons (no swing penalty)</span>');
   var statLine=parts.length?parts.join(' &nbsp; '):'<span style="color:var(--muted)">No combat stats</span>';
   // Equip requirement (1.0.26) — green if met, red lock if not.
@@ -11923,6 +11923,20 @@ function _lightWepShieldPenalty(){
   const sid=eqCombatShield(); if(!sid || _shieldIsBuckler(sid)) return false;
   return (typeof weaponClass==='function') && weaponClass(eqCombatWeapon())==='light';
 }
+/* Aegis-of-Dawn signature (1.0.92) — the dawnsteel guard hardens with the life it
+   protects: bonus block that scales with the player's max HP, added ON TOP of the
+   normal block cap. Flag-gated on ITEMS[sid].hpBlock:{per,cap} so only shields that
+   declare it (currently just the Aegis) get it. This is the true HP-stacking tank
+   lever — every point of Hitpoints / hpBoost gear / verdant gem now buys mitigation,
+   not just a bigger pool. Returns 0 for any other shield / a buckler / no shield. */
+function shieldHpBlockBonus(){
+  const sid=eqCombatShield(); if(!sid) return 0;
+  const it=ITEMS[sid]; const hb=it&&it.hpBlock;
+  if(!hb || _shieldIsBuckler(sid)) return 0;
+  const mhp=(typeof maxHpFromStats==='function')?maxHpFromStats():0;
+  const bonus=(mhp/(hb.per||120))/100;          // +1% block per `per` max HP
+  return Math.max(0, Math.min(hb.cap||0.08, bonus));
+}
 function shieldDamageReduction(){
   const sid=eqCombatShield(); if(!sid) return 0;
   if(_shieldIsBuckler(sid)) return 0;   // bucklers don't block — they're a light offhand
@@ -11930,7 +11944,8 @@ function shieldDamageReduction(){
   let dr=Math.min(0.28, def*0.003);   // best shield (Aegis of Dawn, 100 def) → 28%
   if(_lightWepShieldPenalty()) dr*=0.5;   // a light weapon can't brace a shield → half block
   if(typeof charClass==='function' && charClass()==='guardian') dr=Math.min(0.35, dr*1.25);
-  return dr;
+  dr+=shieldHpBlockBonus();   // Aegis HP-scaled bonus — stacks past the base cap
+  return Math.min(0.55, dr);  // absolute safety ceiling so it can never trivialize a hit
 }
 /* Class combat multipliers — read live, baked into combat stats at refreshCombatStats(). */
 function classMaxHitMult(){
@@ -17127,7 +17142,7 @@ LEATHER_TIERS.forEach(function(t,ti){
     {wfx:{stun:{chance:0.12,dur:1.5}}}, "A maul forged from the throne's broken keystone; it lands like a falling world. 12% chance to stun on hit. The strongest one-handed crusher in Embervale.");
   ICONS.worldsunder_maul=_hammerSVG(WPN);
   W('aegis_of_dawn','Aegis of Dawn','🛡️',95000,'shield','',{atk:0,str:0,def:100},
-    {ubonus:{hpBoost:0.08,defBoost:0.05}}, "A shield beaten from a single sheet of dawnsteel — blows break on it like night on morning. <b>+8% max HP, +5% Defence</b> while equipped. The finest guard ever carried.");
+    {ubonus:{hpBoost:0.08,defBoost:0.05}, hpBlock:{per:120,cap:0.08}}, "A shield beaten from a single sheet of dawnsteel — blows break on it like night on morning. <b>+8% max HP, +5% Defence</b>, and its guard <b>hardens with the life it shields</b> — bonus block scaling with your max HP (up to +8%, on top of its cap). The definitive tank shield.");
   ICONS.aegis_of_dawn=_shieldSVG(PLATE);
   W('sunpiercer','Sunpiercer','🏹',120000,'weapon','stab',{atk:100,str:60,def:0},
     {}, "A recurve of god-gold strung with a thread of light; it looses shafts of pure dawn. A ranged relic — it equips and swings now, and becomes true BIS when Ranged combat arrives (coming soon).");
