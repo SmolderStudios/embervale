@@ -2563,7 +2563,8 @@ header h1 .flame{color:var(--ember)}
 .rc-title{display:flex;flex-direction:column;flex:1;min-width:0}
 .rc-nm{font-family:'Cinzel',serif;font-size:17px;color:#e7efe9;letter-spacing:.4px;line-height:1.1}
 .rc-lv{font-size:10.5px;color:var(--muted);letter-spacing:.6px}
-.rc-blurb{font-size:11.5px;line-height:1.45;color:var(--muted);font-style:italic}
+.rc-blurb{font-size:11.5px;line-height:1.45;color:var(--muted);font-style:italic;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .rc-row{display:flex;align-items:center;gap:8px}
 .rc-lbl{font-size:9.5px;letter-spacing:1.1px;text-transform:uppercase;color:#6d8079;min-width:50px}
 .rc-cnt{font-size:9.5px;color:#6d8079;margin-left:auto;white-space:nowrap;font-family:'Courier New',monospace}
@@ -2668,7 +2669,7 @@ header h1 .flame{color:var(--ember)}
   <div class="mm-btns">
     <button class="mm-btn mm-primary" id="mmPlay">▶ Play</button>
   </div>
-  <div class="mm-ver">v1.0.89</div>
+  <div class="mm-ver">v1.0.90</div>
 </div>
 
 <!-- ===== CHARACTER SELECT (added) ===== -->
@@ -3306,7 +3307,7 @@ const ITEMS={
   amethyst_pendant:{name:'Amethyst Pendant',    icon:'📿',sell:17050},
   dragon_pendant:  {name:'Dragon Pendant',      icon:'📿',sell:23100},
   bloodstone_pendant:{name:'Bloodstone Pendant',icon:'📿',sell:34100},
-  void_jewel:      {name:'Void Jewel',          icon:'💜',sell:57200},
+  void_jewel:      {name:'Void Pendant',        icon:'📿',sell:57200},
   gem_dust:        {name:'Gem Dust',            icon:'✨',sell:55, desc:'Glittering powder from cutting gems (Jeweler) or Gem Rocks (Mining Lv 40). Fuels socket drilling, gem crafting and high-tier enchants.'},
   // Farming outputs — seeds and produce
   wildberry_seed:{name:'Wildberry Seed',icon:'🌱',sell:33},
@@ -4405,7 +4406,7 @@ const SKILLS={
     {id:'jw_amu5',name:'Dragon amulet',    cat:'amulet',lvl:72,ms:18500,xp:1060,spdMult:0.760,minMs:2960, inp:{cut_dragon:1,runite_bar:1},     out:{dragon_amulet:1}},
     {id:'jw_amu8',name:'Bloodstone amulet',cat:'amulet',lvl:80,ms:20750,xp:1370,spdMult:0.780,minMs:3320, inp:{cut_bloodstone:1,starsteel_bar:1},out:{bloodstone_amulet:1}},
     {id:'jw_amu6',name:'Void amulet',      cat:'amulet',lvl:88,ms:23000,xp:1680,spdMult:0.790,minMs:3680, inp:{cut_void:1,starsteel_bar:1},    out:{void_amulet:1}},
-    // ── PENDANTS — cut gem + metal bar (void tier crafts the Void Jewel) ──
+    // ── PENDANTS — cut gem + metal bar (void tier crafts the Void Pendant) ──
     {id:'jw_pen1',name:'Sapphire pendant', cat:'pendant',lvl:9, ms:7500, xp:85,  spdMult:0.570,minMs:1280, inp:{cut_sapphire:1,iron_bar:1},     out:{sapphire_pendant:1}},
     {id:'jw_pen2',name:'Emerald pendant',  cat:'pendant',lvl:26,ms:10000,xp:215, spdMult:0.640,minMs:1650, inp:{cut_emerald:1,steel_bar:1},     out:{emerald_pendant:1}},
     {id:'jw_pen3',name:'Ruby pendant',     cat:'pendant',lvl:43,ms:13000,xp:440, spdMult:0.680,minMs:2080, inp:{cut_ruby:1,gold_bar:1},         out:{ruby_pendant:1}},
@@ -4413,7 +4414,7 @@ const SKILLS={
     {id:'jw_pen7',name:'Amethyst pendant', cat:'pendant',lvl:68,ms:18000,xp:990, spdMult:0.750,minMs:2880, inp:{cut_amethyst:1,cobalt_bar:1},   out:{amethyst_pendant:1}},
     {id:'jw_pen5',name:'Dragon pendant',   cat:'pendant',lvl:76,ms:20000,xp:1230,spdMult:0.770,minMs:3200, inp:{cut_dragon:1,runite_bar:1},     out:{dragon_pendant:1}},
     {id:'jw_pen8',name:'Bloodstone pendant',cat:'pendant',lvl:84,ms:23000,xp:1590,spdMult:0.790,minMs:3680, inp:{cut_bloodstone:1,starsteel_bar:1},out:{bloodstone_pendant:1}},
-    {id:'jw_pen6',name:'Void jewel',       cat:'pendant',lvl:92,ms:26000,xp:1950,spdMult:0.790,minMs:4160, inp:{cut_void:1,starsteel_bar:1},    out:{void_jewel:1}},
+    {id:'jw_pen6',name:'Void pendant',     cat:'pendant',lvl:92,ms:26000,xp:1950,spdMult:0.790,minMs:4160, inp:{cut_void:1,starsteel_bar:1},    out:{void_jewel:1}},
   ]},
   farming:{name:'Farming',icon:'🌾',acts:[]}, // Farming uses patch system — see renderFarming
 
@@ -9746,7 +9747,7 @@ function getBodyItemDesc(id){
     amethyst_ring:'Amethyst ring',  amethyst_pendant:'Amethyst pendant', amethyst_amulet:'Amethyst amulet',
     dragon_ring:'Dragon ring',      dragon_pendant:'Dragon pendant',   dragon_amulet:'Dragon amulet',
     bloodstone_ring:'Bloodstone ring', bloodstone_pendant:'Bloodstone pendant', bloodstone_amulet:'Bloodstone amulet',
-    void_ring:'Void ring',          void_amulet:'Void amulet',         void_jewel:'Void jewel',
+    void_ring:'Void ring',          void_amulet:'Void amulet',         void_jewel:'Void pendant',
   };
   var bname=base[id]||id;
   if(ench && ENCHANTS[ench]){
@@ -17253,6 +17254,32 @@ Object.assign(ICONS,{
   });
 })();
 
+/* ════ RAID CAPES (1.0.90) — the missing T8-T10 cape rung ══════════════════════════
+   Crafted capes cap at T7 (Starsteel, 11 def). Each high-tier raid now drops a themed
+   cape so the endgame has a cape to chase (raids dropped no cape before). Uses the
+   shared _crCapeSVG generator with each raid's palette. */
+(function(){
+  const MOLTEN={light:'#ffb24a', mid:'#d8541a', dark:'#6a1e08', edge:'#2a0c02', hl:'#ffe6b0', accent:'#ff7a1e', glow:'#ff6a10'};
+  const VOID  ={light:'#b88ae0', mid:'#6a3ab0', dark:'#2a1450', edge:'#100428', hl:'#e8c8ff', accent:'#8040c0', glow:'#8040c0'};
+  const DAWN  ={light:'#fff2c0', mid:'#e6b23e', dark:'#9a6a1e', edge:'#3a2408', hl:'#fffbe6', accent:'#c98a2a', glow:'#ffcf5a', sparkles:true};
+  // [id, name, ctier, def, atk, str, sell, palette, ubonus|null, effectText|null, desc]
+  const CAPES=[
+    ['cindermantle','Cindermantle',      8, 15, 3, 2, 36000, MOLTEN, null, null,
+      "A mantle of forge-cloth that never cools, drawn from the Emberforge Deep — embers drift from its hem."],
+    ['voidshroud',  'Voidshroud Cape',   9, 20, 3, 2, 64000, VOID,  null, null,
+      "A cloak of unravelled rift-thread from the Abyssal Throne; it drinks the light behind you."],
+    ['dawnmantle',  'Dawnmantle',        10,26, 4, 3, 115000,DAWN,  {hpBoost:0.05}, '+5% max HP',
+      "A mantle woven from the Dawnbroken God's own light — the finest cape a mortal has worn."],
+  ];
+  CAPES.forEach(function(c){
+    ITEMS[c[0]]={name:c[1], icon:'🧣', sell:c[6], rare:true, cgear:true, ctier:c[2], cslot:'cape',
+      desc: c[8] ? (c[10]+' <b>'+c[9]+'</b> while equipped.') : c[10]};
+    if(c[8]) ITEMS[c[0]].ubonus=c[8];
+    COMBAT_GEAR_STATS[c[0]]={atk:c[4], str:c[5], def:c[3]};
+    ICONS[c[0]]=_crCapeSVG(c[7]);
+  });
+})();
+
 /* Leather GEAR drops (1.0.73, reworked 1.0.75) — so leather isn't crafting-only.
    Each beast-zone boss can drop ONE piece of its tier's leather set per kill (a
    single random slot, ~5%), NOT the whole set — the crafting bench stays the main
@@ -17528,6 +17555,7 @@ const RAIDS=[
       {id:'emberforged_greaves', chance:0.018},
       {id:'cinderweave_cowl',    chance:0.018},
       {id:'emberhide_vest',      chance:0.018},
+      {id:'cindermantle',        chance:0.018},   // T8 cape (1.0.90)
     ],
     matPool:EMBERFORGE_MAT_POOL,
   },
@@ -17567,6 +17595,7 @@ const RAIDS=[
       {id:'voidforged_greaves',chance:0.018},
       {id:'riftshadow_cowl',   chance:0.018},
       {id:'voidheart_shroud',  chance:0.018},
+      {id:'voidshroud',        chance:0.018},   // T9 cape (1.0.90)
     ],
     matPool:VOID_MAT_POOL,
   },
@@ -17612,6 +17641,7 @@ const RAIDS=[
       {id:'sunweave_chest',   chance:0.018},
       {id:'sunweave_legs',    chance:0.018},
       {id:'sunweave_boots',   chance:0.018},
+      {id:'dawnmantle',       chance:0.018},   // T10 cape (1.0.90)
     ],
     matPool:DAWN_MAT_POOL,
   },
@@ -18703,6 +18733,17 @@ function openGearSlotModal(slotKey,def,currentId){
     const inSatchel=(state.items[iid]||0)>0;
     const inSkillingGear=!!(state.skillingGear&&state.skillingGear[iid]);
     if((inSatchel||inSkillingGear)&&iid!==currentId&&available.indexOf(iid)<0) available.push(iid);
+  }
+  // (1.0.90 fix) Satchel COMBAT gear (cgear: crafted armour/weapons + raid drops) — these
+  // are NOT in ITEM_BODY_SLOTS, so without this loop raid/crafted gear never appeared in
+  // the Gear doll (only in the combat gear strip). Surface them by their cslot. The combat
+  // filter keeps cgear; the skilling filter hides it (see passesGearFilter), so no clutter.
+  for(var cid in state.items){
+    if((state.items[cid]||0)<=0) continue;
+    var cit=ITEMS[cid];
+    if(!cit||!cit.cgear) continue;
+    if(cid===currentId||!passesGearFilter(cid)) continue;
+    if(itemFitsSlot(cid,slotKey)&&available.indexOf(cid)<0) available.push(cid);
   }
   // Owned shop items (state.gear) matching this slot — check both their direct slot AND
   // any extra slots declared in ITEM_BODY_SLOTS (e.g. shop rings fit either hand)
@@ -21979,7 +22020,6 @@ function buildRaidsPanelHTML(){
     const n=r.stages.length;
     const nMini=r.stages.filter(s=>s.miniBoss).length;
     const dots=r.stages.map(s=>`<span class="rd-dot${s.raidBoss?' boss':s.miniBoss?' mini':''}" data-tip="${esc(s.name)} · Lv ${s.lvl} · ${s.hp} HP${s.raidfx?' · '+esc(s.raidfx.name):''}">${s.raidBoss?'★':s.miniBoss?'◆':''}</span>`).join('');
-    const gearIcons=r.gearDrops.map(g=>`<span class="rd-gi" data-tip="${esc(ITEMS[g.id]?ITEMS[g.id].name:g.id)}${g.id==='grave_cleaver'?' — super rare 2H':' — rare'}">${iconHTML(g.id)}</span>`).join('');
     const tierCol=best?((r.ratingTiers.find(t=>t.key===best.rating)||{}).col||'#ccc'):'#ccc';
     const bestLine=best
       ? `Best <b style="color:${tierCol}">${best.rating}</b> · ${_fmtRaidTime(best.timeMs)}${clears?` · ${clears}× cleared`:''}`
@@ -21995,7 +22035,6 @@ function buildRaidsPanelHTML(){
         </div>
         <div class="rc-right">
           <div class="rc-row"><span class="rc-lbl">Gauntlet</span><span class="rc-dots">${dots}</span><span class="rc-cnt">${n} stages · ${nMini}+boss</span></div>
-          <div class="rc-row"><span class="rc-lbl">Relics</span><span class="rc-gicons">${gearIcons}</span><span class="rc-cnt">rare</span></div>
           <div class="rc-foot">
             <span class="rc-best">${bestLine}</span>
             ${unlocked
@@ -22027,7 +22066,7 @@ function buildRaidsPanelHTML(){
     }
   }
   return `<div class="raid-panel">
-    <div class="raid-intro">🗝 <b>No-retreat gauntlet</b> on <b>one health bar</b> — food works, but no heal between stages and <b>no loot unless you clear the final boss</b>. Mini-bosses &amp; the boss curse you. Faster clear = higher rating = better relic odds. Full drop rates in the <b>Log</b> tab.</div>
+    <div class="raid-intro">🗝 <b>No-retreat gauntlet</b>, one health bar — <b>no loot unless you clear the final boss</b>. Faster clear = better rating &amp; drops. Full drop rates in the <b>Log</b> tab.</div>
     ${resultBox}
     <div class="raid-list">${cards}</div>
   </div>`;
