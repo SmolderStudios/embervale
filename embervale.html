@@ -2669,7 +2669,7 @@ header h1 .flame{color:var(--ember)}
   <div class="mm-btns">
     <button class="mm-btn mm-primary" id="mmPlay">▶ Play</button>
   </div>
-  <div class="mm-ver">v1.0.93</div>
+  <div class="mm-ver">v1.0.94</div>
 </div>
 
 <!-- ===== CHARACTER SELECT (added) ===== -->
@@ -6756,7 +6756,7 @@ function combatGearStatBlock(itemId){
   if(s.aspd)  parts.push('<span style="color:#9be89b">⚡ +'+Math.round(s.aspd*100)+'% Atk Speed</span>');
   // Shield block (1.0.87) — flat damage reduction, computed from this shield's Defence.
   // Bucklers (offhand) don't block; they're the rogue's light offhand instead.
-  if(it.cslot==='shield' && !it.offhand){ var _sdr=Math.min(0.28,(s.def||0)*0.003); if(_sdr>0) parts.push('<span style="color:#8fb8ff">🛡 Blocks '+Math.round(_sdr*100)+'% of each hit</span> <span style="color:var(--muted);font-size:11px">(halved with light weapons)</span>'); if(it.hpBlock) parts.push('<span style="color:#9be89b">❤ +block scaling with max HP (up to +'+Math.round((it.hpBlock.cap||0.08)*100)+'%)</span>'); }
+  if(it.cslot==='shield' && !it.offhand){ var _sdr=Math.min(0.28,(s.def||0)*0.003); if(_sdr>0) parts.push('<span style="color:#8fb8ff">🛡 Blocks '+Math.round(_sdr*100)+'% of each hit</span> <span style="color:var(--muted);font-size:11px">(halved with light weapons)</span>'); if(it.hpBlock) parts.push('<span style="color:#9be89b">❤ +block scaling with max HP (up to +'+Math.round((it.hpBlock.cap||0.08)*100)+'%)</span>'); if(it.hpStr) parts.push('<span style="color:#ffb37a">💪 +Strength scaling with max HP (up to +'+(it.hpStr.cap||20)+')</span>'); }
   if(it.cslot==='shield' && it.offhand) parts.push('<span style="color:#9be89b">🗡 Off-hand — pairs with light weapons (no swing penalty)</span>');
   var statLine=parts.length?parts.join(' &nbsp; '):'<span style="color:var(--muted)">No combat stats</span>';
   // Equip requirement (1.0.26) — green if met, red lock if not.
@@ -11737,7 +11737,8 @@ function playerAccuracy(){
 function playerMaxHit(){
   const cs=combatStats();
   const b=combatBonusesAll();
-  return Math.max(1, Math.round((cmbLvl('strength')*COMBAT_P.HIT_LVL + cs.str*COMBAT_P.HIT_GEAR) * (1 + (b.atkBoost||0)) * classMaxHitMult()));
+  const bonusStr=(typeof shieldHpStrBonus==='function')?shieldHpStrBonus():0;   // Aegis HP-scaled shield-bash
+  return Math.max(1, Math.round((cmbLvl('strength')*COMBAT_P.HIT_LVL + (cs.str+bonusStr)*COMBAT_P.HIT_GEAR) * (1 + (b.atkBoost||0)) * classMaxHitMult()));
 }
 
 /* Player defence: (defence lvl ×1.2 + gear def ×1.0) × (1+defBoost) × class. */
@@ -11936,6 +11937,18 @@ function shieldHpBlockBonus(){
   const mhp=(typeof maxHpFromStats==='function')?maxHpFromStats():0;
   const bonus=(mhp/(hb.per||120))/100;          // +1% block per `per` max HP
   return Math.max(0, Math.min(hb.cap||0.08, bonus));
+}
+/* Aegis HP-scaled Strength (1.0.94) — the same "power scales with the life it shields"
+   identity applied to offence: bonus effective gear-Strength scaling with max HP, folded
+   into playerMaxHit(). Flag-gated on ITEMS[sid].hpStr:{per,cap} (Aegis {per:50,cap:20} →
+   +1 Str per 50 maxHp, capped +20 at ~1000 HP). Lets a sword-and-board tank still hit,
+   and rewards the exact same HP-stacking the block bonus does. 0 for any other shield. */
+function shieldHpStrBonus(){
+  const sid=eqCombatShield(); if(!sid) return 0;
+  const it=ITEMS[sid]; const hs=it&&it.hpStr;
+  if(!hs || _shieldIsBuckler(sid)) return 0;
+  const mhp=(typeof maxHpFromStats==='function')?maxHpFromStats():0;
+  return Math.max(0, Math.min(hs.cap||20, mhp/(hs.per||50)));
 }
 function shieldDamageReduction(){
   const sid=eqCombatShield(); if(!sid) return 0;
@@ -17141,8 +17154,8 @@ LEATHER_TIERS.forEach(function(t,ti){
   W('worldsunder_maul','Worldsunder Maul','🔨',130000,'weapon','crush',{atk:76,str:100,def:0},
     {wfx:{stun:{chance:0.12,dur:1.5}}}, "A maul forged from the throne's broken keystone; it lands like a falling world. 12% chance to stun on hit. The strongest one-handed crusher in Embervale.");
   ICONS.worldsunder_maul=_hammerSVG(WPN);
-  W('aegis_of_dawn','Aegis of Dawn','🛡️',95000,'shield','',{atk:0,str:18,def:100},
-    {ubonus:{hpBoost:0.08,defBoost:0.05}, hpBlock:{per:120,cap:0.08}}, "A shield beaten from a single sheet of dawnsteel — blows break on it like night on morning. <b>+8% max HP, +5% Defence</b>, and its guard <b>hardens with the life it shields</b> — bonus block scaling with your max HP (up to +8%, on top of its cap). Its dawnsteel rim is heavy enough to shield-bash — a touch of Strength on top. The definitive tank shield.");
+  W('aegis_of_dawn','Aegis of Dawn','🛡️',95000,'shield','',{atk:0,str:0,def:100},
+    {ubonus:{hpBoost:0.08,defBoost:0.05}, hpBlock:{per:120,cap:0.08}, hpStr:{per:50,cap:20}}, "A shield beaten from a single sheet of dawnsteel — blows break on it like night on morning. <b>+8% max HP, +5% Defence</b>, and its guard <b>hardens with the life it shields</b>: bonus block <i>and</i> bonus Strength both scale with your max HP (up to +8% block and +20 Str). The more life the tank carries, the harder the shield-bash lands. The definitive tank shield.");
   ICONS.aegis_of_dawn=_shieldSVG(PLATE);
   W('sunpiercer','Sunpiercer','🏹',120000,'weapon','stab',{atk:100,str:60,def:0},
     {}, "A recurve of god-gold strung with a thread of light; it looses shafts of pure dawn. A ranged relic — it equips and swings now, and becomes true BIS when Ranged combat arrives (coming soon).");
