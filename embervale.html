@@ -2618,7 +2618,7 @@ header h1 .flame{color:var(--ember)}
   <div class="mm-btns">
     <button class="mm-btn mm-primary" id="mmPlay">▶ Play</button>
   </div>
-  <div class="mm-ver">v1.0.86</div>
+  <div class="mm-ver">v1.0.87</div>
 </div>
 
 <!-- ===== CHARACTER SELECT (added) ===== -->
@@ -2785,6 +2785,10 @@ header h1 .flame{color:var(--ember)}
         <input id="devXp" class="dev-input" type="number" value="1000" min="0" style="flex:1" title="XP to add, or target level for Set Lv">
         <button class="dev-btn" id="devAddXp">+ XP</button>
         <button class="dev-btn ghost" id="devSetLevel">Set Lv</button>
+      </div>
+      <div class="dev-chips">
+        <button class="dev-chip" id="devMaxCombat" title="Set Attack, Strength, Defence & Hitpoints all to 99 — needed to equip Lv90/99 raid gear">Max Combat</button>
+        <button class="dev-chip" id="devMaxSkills" title="Set every skilling skill to 99">Max Skills</button>
       </div>
     </div>
 
@@ -3566,6 +3570,7 @@ const ITEMS={
   barrow_shield:    {name:'Barrow Shield',     icon:'🛡️',sell:17500,rare:true, cgear:true,ctier:7,cslot:'shield', desc:'A grave-knight\'s kite shield, its boss set with a shard of drowned light. Heavier than starsteel and colder to the touch — nothing crafted turns a blow so well.'},
   barrow_dagger:    {name:'Barrow Dagger',     icon:'🗡️',sell:16500,rare:true, cgear:true,ctier:7,cslot:'weapon', dmgType:'stab',  desc:'A curved bone fang from the barrow\'s honour guard, wickedly quick and unnervingly precise. The rogue\'s prize of the Sunken Barrow.'},
   grave_cleaver:    {name:'Grave Cleaver',     icon:'🪓',sell:34000,rare:true, cgear:true,ctier:7,cslot:'weapon', dmgType:'crush', twoHanded:true, wfx:{cleave:{chance:0.25}}, desc:'A colossal double-bladed greataxe torn from the Barrow Warden\'s grip — the first true two-hander to reach mortal hands. Its Reaping Arc catches a second foe-stroke on the backswing: 25% chance to strike twice. Forgoes a shield.'},
+  barrow_maul:      {name:'Barrow Maul',        icon:'🔨',sell:18000,rare:true, cgear:true,ctier:7,cslot:'weapon', dmgType:'crush', wfx:{stun:{chance:0.10,dur:1.2}}, desc:'A grave-warden\'s warhammer, its head a block of tomb-cold iron shot through with drowned light. Lands like a closing crypt door — a chance to stun. The Sunken Barrow\'s answer for those who crush.'},
   grave_iron:       {name:'Grave Iron',        icon:'⬛',sell:900,  desc:'A dark, cold ingot smelted from barrow-nails and coffin bands. Faintly green at the seams. A T7 crafting metal for smiths who reach past starsteel.'},
   barrow_dust:      {name:'Barrow Dust',       icon:'🌫️',sell:820,  desc:'Fine grey ash swept from a tomb never meant to be opened. Alchemists swear it steadies volatile brews.'},
   wraithcloth:      {name:'Wraithcloth',       icon:'🧵',sell:1050, desc:'A tattered grave-shroud that refuses to rot, threaded through with a faint spectral shimmer. Prized by crafters for banners and light armour trim.'},
@@ -3576,6 +3581,8 @@ const ITEMS={
   emberforged_blade: {name:'Emberforged Blade', icon:'🗡️',sell:42000,rare:true, cgear:true,ctier:8,cslot:'weapon', dmgType:'slash', wfx:{burn:{mult:0.15}}, desc:'A longsword quenched in the Forge-Tyrant\'s own heat, a seam of live fire running its fuller. It sears every wound it opens.'},
   cinderguard:       {name:'Cinderguard',       icon:'🛡️',sell:38000,rare:true, cgear:true,ctier:8,cslot:'shield', desc:'A tower shield with a molten core that never cools. The best guard a mortal smith or a dead titan ever forged.'},
   forgebreaker:      {name:'Forgebreaker',      icon:'🪓',sell:76000,rare:true, cgear:true,ctier:8,cslot:'weapon', dmgType:'crush', twoHanded:true, wfx:{burn:{mult:0.22}}, desc:'A colossal molten greataxe wrenched from Ignar\'s grip. Its head runs with fire; every blow leaves the wound burning. Hits harder than any two-hander yet found — and forgoes a shield.'},
+  cinderfang:        {name:'Cinderfang',         icon:'🗡️',sell:40000,rare:true, cgear:true,ctier:8,cslot:'weapon', dmgType:'stab',  wfx:{burn:{mult:0.15}}, desc:'A slender dirk forge-drawn to a white-hot needle, its edge weeping embers. Fast, precise, and it sets the wound alight. The Emberforge\'s prize for a knife-fighter.'},
+  slagbreaker:       {name:'Slagbreaker',        icon:'🔨',sell:44000,rare:true, cgear:true,ctier:8,cslot:'weapon', dmgType:'crush', wfx:{stun:{chance:0.10,dur:1.3}}, desc:'A one-handed forge-maul with a head of cooling slag, still glowing at the core. It rings like a struck anvil and rattles the skull behind it — a chance to stun.'},
   molten_bar:        {name:'Molten Bar',        icon:'🟧',sell:2100, desc:'An ingot of moltensteel drawn glowing from the Emberforge. Still warm to the touch. The T8 smithing metal — forge it into Moltensteel gear.'},
   emberweave:        {name:'Emberweave',        icon:'🧵',sell:1600, desc:'Fireproof cloth woven from the ash of the forge-thralls, threaded with living embers. A T8 leathercrafting hide.'},
   drakeforged_rune:  {name:'Drakeforged Rune',  icon:'🔥',sell:3400, rare:true, desc:'A rune-scored fragment of the anvil itself, humming with trapped heat. A rare T8 reagent.'},
@@ -3583,9 +3590,12 @@ const ITEMS={
   voidrend:      {name:'Voidrend',       icon:'🗡️',sell:88000,rare:true, cgear:true,ctier:9,cslot:'weapon', dmgType:'stab',  desc:"A sliver of the rift itself, held in a hilt of null-iron. Where its edge passes, the world briefly forgets to exist."},
   nullward:      {name:'Nullward',        icon:'🛡️',sell:70000,rare:true, cgear:true,ctier:9,cslot:'shield', desc:"A shield of solid absence. Blows land on it and simply stop being. The finest guard in all Embervale."},
   voidcleaver:   {name:'Voidcleaver',     icon:'🪓',sell:150000,rare:true, cgear:true,ctier:9,cslot:'weapon', dmgType:'slash', twoHanded:true, wfx:{cleave:{chance:0.28}}, desc:"A greatsword torn from Xor'Vael's own grip, its edge a seam of raw void. Its Rift Echo strikes twice on the backswing. The deadliest weapon a mortal has ever carried."},
+  voidedge:      {name:'Voidedge',        icon:'🗡️',sell:90000,rare:true, cgear:true,ctier:9,cslot:'weapon', dmgType:'slash', desc:"A straight longsword of null-iron, its edge a clean seam of unlight. Broader and truer than the Voidrend — the warrior's answer where a shield still matters. The finest one-handed sword a mortal has carried."},
+  riftcrusher:   {name:'Riftcrusher',     icon:'🔨',sell:92000,rare:true, cgear:true,ctier:9,cslot:'weapon', dmgType:'crush', wfx:{stun:{chance:0.12,dur:1.4}}, desc:"A one-handed maul of collapsed rift-stone, impossibly heavy for its size. Every blow folds space around the impact — a strong chance to stun. The Abyssal Throne's weapon for those who break things."},
   voidsteel_bar: {name:'Voidsteel Bar',   icon:'🟪',sell:4200, desc:'An ingot of null-forged metal, cold as the space between stars. The T9 smithing metal — forge it into Voidsteel gear.'},
   voidweave:     {name:'Voidweave',       icon:'🧵',sell:3200, desc:'Cloth spun from unravelled rift-thread; it drinks the light that touches it. A T9 leathercrafting hide.'},
   riftshard:     {name:'Riftshard',       icon:'🔮',sell:6800, rare:true, desc:'A splinter of a sealed rift, still humming with the void it once opened. A rare T9 reagent.'},
+  dawnshard:     {name:'Dawnshard',       icon:'✨',sell:12000, rare:true, desc:"A shard of the Dawnbroken God's cooling blood — warm to the touch and faintly singing. The signature relic of The Empyrean Throne; a future Dawnsteel reagent."},
 };
 
 /* ════════ COMBAT GEAR STATS ════════════════════════════════════════════════════
@@ -3722,14 +3732,19 @@ const COMBAT_GEAR_STATS={
   barrow_dagger:     {atk:40,str:31,def:0},   // T7 stab dagger  — budget 71, near-BIS, atk-slant per dagger convention; rare rogue pick (1.0.84)
   barrow_shield:     {atk:0, str:0, def:47},  // T7.5 shield       — best shield in game (above starsteel 43, runite 34)
   grave_cleaver:     {atk:46,str:42,def:0},   // 2H crush greataxe — budget 88, just under doomblade's offense (89) but at Lv70; no shield + Reaping Arc cleave is the draw (berserker heavy). Best pure-damage weapon pre-Lv90, glass-cannon trade.
+  barrow_maul:       {atk:32,str:40,def:0},   // T7 crush hammer — budget 72, str-slant per hammer convention; stun proc; fills the Barrow's missing 1H crush type (1.0.87)
   // ─── RAID gear · The Emberforge Deep (1.0.81) — T8 relics (Lv80) ───
   emberforged_blade: {atk:54,str:46,def:0},   // T8 slash sword — budget 100, above doomblade (89); burn proc; warrior staple of the tier
   cinderguard:       {atk:0, str:0, def:58},  // T8 shield — best shield in the game (above barrow 47)
   forgebreaker:      {atk:70,str:65,def:0},   // 2H crush greataxe — budget 135, well past grave_cleaver (88); marquee, heavy burn, no shield
+  cinderfang:        {atk:56,str:42,def:0},   // T8 stab dagger — budget 98, atk-slant; burn proc; fills Emberforge's missing 1H light type (1.0.87)
+  slagbreaker:       {atk:46,str:54,def:0},   // T8 crush hammer — budget 100, str-slant; stun proc; fills Emberforge's missing 1H crush type (1.0.87)
   // ─── RAID gear · The Abyssal Throne (1.0.86) — T9 relics (Lv90), near-BIS ───
   voidrend:          {atk:72,str:60,def:0},   // T9 stab sword — budget 132, BIS 1H for tier
   nullward:          {atk:0, str:0, def:78},  // T9 shield — new best shield (above cinderguard 58)
   voidcleaver:       {atk:92,str:85,def:0},   // T9 2H slash greatsword — budget 177, marquee; Rift Echo cleave; no shield
+  voidedge:          {atk:68,str:64,def:0},   // T9 slash sword — budget 132, balanced; the standard 1H for sword-and-board (voidrend is stab/light); fills Abyssal's missing 1H standard (1.0.87)
+  riftcrusher:       {atk:58,str:74,def:0},   // T9 crush hammer — budget 132, str-slant; stun proc; fills Abyssal's missing 1H crush type (1.0.87)
 };
 
 /* ---- skills ---- */
@@ -4900,6 +4915,47 @@ function _daggerSVG(p){
    as the broadest weapon silhouette and clearly distinct from sword/dagger. */
 function _hammerSVG(p){
   return `<svg class="ev-icon" viewBox="0 0 64 64">${_crGlow(p,32,16,22,12)}${_crShadow(32,58,14)}<rect x="14" y="6" width="36" height="22" rx="2" fill="${p.mid}" stroke="${p.edge}" stroke-width="1" stroke-linejoin="round"/><rect x="14" y="6" width="36" height="6" fill="${p.light}"/><rect x="16" y="10" width="32" height="14" fill="none" stroke="${p.dark}" stroke-width="0.7" opacity="0.6"/><circle cx="20" cy="12" r="1.2" fill="${p.accent}" stroke="${p.edge}" stroke-width="0.3"/><circle cx="44" cy="12" r="1.2" fill="${p.accent}" stroke="${p.edge}" stroke-width="0.3"/><circle cx="20" cy="22" r="1.2" fill="${p.accent}" stroke="${p.edge}" stroke-width="0.3"/><circle cx="44" cy="22" r="1.2" fill="${p.accent}" stroke="${p.edge}" stroke-width="0.3"/><path d="M14 6 L50 6" stroke="${p.hl}" stroke-width="0.7" opacity="0.85"/><path d="M16 20 L30 18 M34 18 L48 20" stroke="${p.dark}" stroke-width="0.5" opacity="0.5"/><rect x="29" y="28" width="6" height="22" rx="1" fill="${p.accent}" stroke="${p.edge}" stroke-width="0.7"/><path d="M29 32 L35 32 M29 38 L35 38 M29 44 L35 44" stroke="${p.edge}" stroke-width="0.5" opacity="0.7"/><circle cx="32" cy="55" r="3.4" fill="${p.mid}" stroke="${p.edge}" stroke-width="0.8"/><circle cx="32" cy="54" r="2.3" fill="${p.light}"/><circle cx="31" cy="53.5" r="0.9" fill="${p.hl}" opacity="0.85"/>${_crSparkles(p)}</svg>`;
+}
+/* Scythe (1.0.87) — long curved snath + big sweeping crescent blade. A clearly
+   distinct two-hander silhouette from the sword/greataxe. Same palette contract. */
+function _scytheSVGwpn(p){
+  return `<svg class="ev-icon" viewBox="0 0 64 64">${_crGlow(p,42,20,16,12)}${_crShadow(28,58,12)}`
+   +`<path d="M25 56 L23 16 Q23 12 27 12 L30 12 L31 56 Z" fill="${p.dark}" stroke="${p.edge}" stroke-width="0.9" stroke-linejoin="round"/>`
+   +`<path d="M26 14 L27 12 L28 14 L28 56 L26 56 Z" fill="${p.accent}" opacity="0.5"/>`
+   +`<path d="M27 12 Q51 9 57 31 Q52 20 38 20 Q49 25 47 35 Q40 22 27 22 Z" fill="${p.mid}" stroke="${p.edge}" stroke-width="0.9" stroke-linejoin="round"/>`
+   +`<path d="M27 12 Q49 11 56 29 Q49 18 36 19 Q30 15 27 16 Z" fill="${p.light}"/>`
+   +`<path d="M27 13 Q47 12 55 28" stroke="${p.hl}" stroke-width="0.7" fill="none" opacity="0.8"/>`
+   +`<rect x="23" y="11" width="9" height="4" rx="1.5" fill="${p.accent}" stroke="${p.edge}" stroke-width="0.5"/>`
+   +`<circle cx="28" cy="56" r="3.4" fill="${p.mid}" stroke="${p.edge}" stroke-width="0.8"/><circle cx="28" cy="55" r="2.2" fill="${p.light}"/><circle cx="27" cy="54.5" r="0.9" fill="${p.hl}" opacity="0.85"/>`
+   +`${_crSparkles(p)}</svg>`;
+}
+/* Bow (1.0.87) — recurve limb + string + nocked arrow. Ranged silhouette; reads
+   distinct from every melee weapon at 1em. Same palette contract. */
+function _bowSVGwpn(p){
+  return `<svg class="ev-icon" viewBox="0 0 64 64">${_crGlow(p,30,32,14,22)}${_crShadow(30,58,10)}`
+   +`<path d="M20 6 Q45 12 45 32 Q45 52 20 58" fill="none" stroke="${p.dark}" stroke-width="5" stroke-linecap="round"/>`
+   +`<path d="M20 6 Q43 12 43 32 Q43 52 20 58" fill="none" stroke="${p.mid}" stroke-width="2.6" stroke-linecap="round"/>`
+   +`<path d="M20 6 Q41 12 41 32 Q41 52 20 58" fill="none" stroke="${p.light}" stroke-width="1" stroke-linecap="round" opacity="0.85"/>`
+   +`<path d="M20 6 L20 58" stroke="${p.hl}" stroke-width="0.8" opacity="0.7"/>`
+   +`<path d="M18 32 L52 32" stroke="${p.accent}" stroke-width="1.6"/>`
+   +`<path d="M46 28 L54 32 L46 36 L49 32 Z" fill="${p.light}" stroke="${p.edge}" stroke-width="0.5"/>`
+   +`<path d="M19 29 L14 32 L19 35 Z" fill="${p.accent}"/>`
+   +`<circle cx="13" cy="8" r="1.2" fill="${p.hl}"/><circle cx="13" cy="56" r="1.2" fill="${p.hl}"/>`
+   +`${_crSparkles(p)}</svg>`;
+}
+/* Buckler (1.0.87) — a small ROUND offhand with a domed centre boss + rivets. Reads
+   clearly different from the kite _shieldSVG; the rogue's light offhand silhouette. */
+function _bucklerSVG(p){
+  return `<svg class="ev-icon" viewBox="0 0 64 64">${_crGlow(p,32,32,20,20)}${_crShadow(32,58,13)}`
+   +`<circle cx="32" cy="32" r="20" fill="${p.mid}" stroke="${p.edge}" stroke-width="1.2"/>`
+   +`<circle cx="32" cy="32" r="20" fill="none" stroke="${p.hl}" stroke-width="0.8" opacity="0.5"/>`
+   +`<circle cx="32" cy="32" r="15" fill="none" stroke="${p.dark}" stroke-width="0.8" opacity="0.6"/>`
+   +`<path d="M32 13 A19 19 0 0 1 51 32" fill="none" stroke="${p.light}" stroke-width="1.8" opacity="0.55"/>`
+   +`<circle cx="32" cy="32" r="7" fill="${p.dark}" stroke="${p.edge}" stroke-width="0.8"/>`
+   +`<circle cx="32" cy="31" r="5" fill="${p.mid}"/><circle cx="32" cy="30" r="3" fill="${p.light}"/>`
+   +`<circle cx="30.6" cy="29" r="1.1" fill="${p.hl}" opacity="0.9"/>`
+   +`<circle cx="16" cy="20" r="1.2" fill="${p.accent}" stroke="${p.edge}" stroke-width="0.3"/><circle cx="48" cy="20" r="1.2" fill="${p.accent}" stroke="${p.edge}" stroke-width="0.3"/><circle cx="16" cy="44" r="1.2" fill="${p.accent}" stroke="${p.edge}" stroke-width="0.3"/><circle cx="48" cy="44" r="1.2" fill="${p.accent}" stroke="${p.edge}" stroke-width="0.3"/>`
+   +`${_crSparkles(p)}</svg>`;
 }
 /* Combat cape — collared cloak with a brooch pin at the throat. Bell-shaped
    silhouette reads as a back-slot piece, distinct from chestplate's torso shape.
@@ -6627,6 +6683,10 @@ function combatGearStatBlock(itemId){
   if(s.crit)  parts.push('<span style="color:#ffd24a">✦ +'+Math.round(s.crit*100)+'% Crit</span>');
   if(s.dodge) parts.push('<span style="color:#7fd8c8">💨 +'+Math.round(s.dodge*100)+'% Dodge</span>');
   if(s.aspd)  parts.push('<span style="color:#9be89b">⚡ +'+Math.round(s.aspd*100)+'% Atk Speed</span>');
+  // Shield block (1.0.87) — flat damage reduction, computed from this shield's Defence.
+  // Bucklers (offhand) don't block; they're the rogue's light offhand instead.
+  if(it.cslot==='shield' && !it.offhand){ var _sdr=Math.min(0.28,(s.def||0)*0.003); if(_sdr>0) parts.push('<span style="color:#8fb8ff">🛡 Blocks '+Math.round(_sdr*100)+'% of each hit</span> <span style="color:var(--muted);font-size:11px">(halved with light weapons)</span>'); }
+  if(it.cslot==='shield' && it.offhand) parts.push('<span style="color:#9be89b">🗡 Off-hand — pairs with light weapons (no swing penalty)</span>');
   var statLine=parts.length?parts.join(' &nbsp; '):'<span style="color:var(--muted)">No combat stats</span>';
   // Equip requirement (1.0.26) — green if met, red lock if not.
   var reqLine='';
@@ -11649,6 +11709,10 @@ function refreshCombatStats(){
   // read live in combatTick from combatBonusesAll(); only aspd touches swing time.
   const _apb=(typeof combatBonusesAll==='function')?combatBonusesAll():null;
   if(_apb&&_apb.aspd>0){ combat.youSwingMs=Math.max(COMBAT_MIN_SWING_MS, Math.round(combat.youSwingMs*(1-_apb.aspd))); }
+  // Light weapon + bracing shield (1.0.87) — a dagger can't set a shield: +20% swing
+  // time. Steers rogues onto the Buckler offhand (no penalty, no block) instead. Applied
+  // after aspd so it genuinely erases the rogue's speed edge.
+  if(typeof _lightWepShieldPenalty==='function' && _lightWepShieldPenalty()){ combat.youSwingMs=Math.round(combat.youSwingMs*1.20); }
   // ── Raid debuffs (1.0.66) — a mini-boss / boss curse applied for the current
   // raid stage. Idempotent: always re-derived from the freshly computed base, so
   // repeated refreshes mid-stage don't stack. Cleared automatically when the raid
@@ -11755,6 +11819,30 @@ function weaponClass(itemId){
 }
 function eqCombatWeapon(){ return (state&&state.combatEquipped&&state.combatEquipped.weapon)||''; }
 function eqCombatShield(){ return (state&&state.combatEquipped&&state.combatEquipped.shield)||''; }
+/* Shield flat damage reduction (1.0.87) — a raised shield soaks a % of every LANDED
+   blow, scaling with the shield's Defence (capped 22%). This is the tank lever and is
+   distinct from Defence itself (which only lowers the foe's hit-chance): it cuts the
+   size of each hit, so the shield build takes far less total damage over a no-retreat
+   gauntlet and burns much less food — the trade for a two-hander's raw damage. Guardian
+   deepens it. Returns 0 with no shield (or a two-hander) equipped. */
+/* An offhand item flagged `offhand:true` (the rogue Buckler line) sits in the shield
+   slot but is NOT a bracing shield — it grants no block and doesn't slow light weapons. */
+function _shieldIsBuckler(sid){ return !!(sid && ITEMS[sid] && ITEMS[sid].offhand); }
+/* Light weapon (dagger/stab) + a real bracing shield = you can't set the shield: the
+   penalty (−½ block, +20% swing) that steers rogues onto a Buckler instead. (1.0.87) */
+function _lightWepShieldPenalty(){
+  const sid=eqCombatShield(); if(!sid || _shieldIsBuckler(sid)) return false;
+  return (typeof weaponClass==='function') && weaponClass(eqCombatWeapon())==='light';
+}
+function shieldDamageReduction(){
+  const sid=eqCombatShield(); if(!sid) return 0;
+  if(_shieldIsBuckler(sid)) return 0;   // bucklers don't block — they're a light offhand
+  const def=(COMBAT_GEAR_STATS[sid]&&COMBAT_GEAR_STATS[sid].def)||0;
+  let dr=Math.min(0.28, def*0.003);   // best shield (Aegis of Dawn, 100 def) → 28%
+  if(_lightWepShieldPenalty()) dr*=0.5;   // a light weapon can't brace a shield → half block
+  if(typeof charClass==='function' && charClass()==='guardian') dr=Math.min(0.35, dr*1.25);
+  return dr;
+}
 /* Class combat multipliers — read live, baked into combat stats at refreshCombatStats(). */
 function classMaxHitMult(){
   const c=charClass(); if(!c) return 1;
@@ -16909,6 +16997,107 @@ LEATHER_TIERS.forEach(function(t,ti){
   });
 })();
 
+/* ════ RAID BIS ARSENAL + SETS — The Empyrean Throne (1.0.87) ══════════════════════
+   The Lv99 T10 capstone. Unlike earlier raids (loose weapons + per-item plate/leather
+   uniques), the Empyrean Throne drops a BIS weapon for EVERY type PLUS two full
+   4-piece armour SETS (plate = Dawnward, leather = Sunweave) whose completion bonus is
+   the real chase — the first raid to revive COMBAT_SETS (empty since the 1.0.83
+   retire; see line ~11373). Gloves + cape BIS still come from earlier raids. Radiant
+   "Dawnsteel" gold palettes throughout. Budgets ≈ +30% over the Abyssal T9 rung. */
+(function(){
+  const WPN  ={light:'#fff2c0', mid:'#e6b23e', dark:'#9a6a1e', edge:'#3a2408', hl:'#fffbe6', accent:'#c98a2a', glow:'#ffcf5a', sparkles:true};
+  const PLATE={light:'#ffe6a0', mid:'#d8a53a', dark:'#7a5416', edge:'#2e1e06', hl:'#fff6d0', accent:'#c98a2a', glow:'#ffcf5a', sparkles:true};
+  const HIDE ={light:'#f0c86a', mid:'#b8863a', dark:'#5e4218', edge:'#241806', hl:'#fff0c0', stitch:'#ffd97a', buckle:'#c8901a'};
+
+  // ── BIS weapons — one unique per type. Weapons carry cgear/ctier:10 → equip gate Lv99. ──
+  function W(id,name,emoji,sell,slot,dmgType,stats,extra,desc){
+    ITEMS[id]=Object.assign({name:name, icon:emoji, sell:sell, rare:true, cgear:true, ctier:10, cslot:slot},
+      (slot==='weapon'?{dmgType:dmgType}:{}), extra||{}, {desc:desc});
+    COMBAT_GEAR_STATS[id]=stats;
+  }
+  W('dawnbreaker','Dawnbreaker','🗡️',130000,'weapon','slash',{atk:90,str:84,def:0},
+    {wfx:{burn:{mult:0.20}}}, "The Dawnbroken God's own longsword, its edge a line of held sunrise. Every stroke brands the wound with radiant fire. The finest one-handed blade a mortal has carried.");
+  ICONS.dawnbreaker=_swordSVGwpn(WPN);
+  W('starfang','Starfang','🗡️',120000,'weapon','stab',{atk:98,str:74,def:0},
+    {ubonus:{critChance:0.07,atkBoost:0.05}}, "A splinter of a fallen star honed to a whispering point — light as nothing, and it finds the gap in any guard. <b>+7% crit, +5% Attack</b> while equipped. The speed-and-crit BIS dagger.");
+  ICONS.starfang=_daggerSVG(WPN);
+  W('worldsunder_maul','Worldsunder Maul','🔨',130000,'weapon','crush',{atk:76,str:100,def:0},
+    {wfx:{stun:{chance:0.12,dur:1.5}}}, "A maul forged from the throne's broken keystone; it lands like a falling world. 12% chance to stun on hit. The strongest one-handed crusher in Embervale.");
+  ICONS.worldsunder_maul=_hammerSVG(WPN);
+  W('aegis_of_dawn','Aegis of Dawn','🛡️',95000,'shield','',{atk:0,str:0,def:100},
+    {ubonus:{hpBoost:0.08,defBoost:0.05}}, "A shield beaten from a single sheet of dawnsteel — blows break on it like night on morning. <b>+8% max HP, +5% Defence</b> while equipped. The finest guard ever carried.");
+  ICONS.aegis_of_dawn=_shieldSVG(PLATE);
+  W('sunpiercer','Sunpiercer','🏹',120000,'weapon','stab',{atk:100,str:60,def:0},
+    {}, "A recurve of god-gold strung with a thread of light; it looses shafts of pure dawn. A ranged relic — it equips and swings now, and becomes true BIS when Ranged combat arrives (coming soon).");
+  ICONS.sunpiercer=_bowSVGwpn(WPN);
+  W('dawnreaper','Dawnreaper','⚜️',185000,'weapon','slash',{atk:120,str:116,def:0},
+    {twoHanded:true, wfx:{cleave:{chance:0.30}, burn:{mult:0.20}}}, "A holy scythe reaped from Aureon's own grip, its crescent a seam of raw sunrise. Its Sunfall Arc catches a second foe on the backswing (30%) and leaves the wound ablaze. The deadliest weapon a mortal has ever carried — and it forgoes a shield.");
+  ICONS.dawnreaper=_scytheSVGwpn(WPN);
+
+  // ── Set-piece armour — plate (Dawnward) Σ250 def · leather (Sunweave) Σ148 def/42 atk ──
+  const PLATE_GEN={helmet:_helmSVG, chest:_chestSVG, legs:_legsSVG, boots:_bootsSVG};
+  const LTHR_GEN ={helmet:_lHelmSVG, chest:_lChestSVG, legs:_lLegsSVG, boots:_lBootsSVG};
+  const PLATE_NM ={helmet:'Helm', chest:'Cuirass', legs:'Greaves', boots:'Sabatons'};
+  const LTHR_NM  ={helmet:'Hood', chest:'Vest', legs:'Leggings', boots:'Treads'};
+  // [id, slot, def, atk, sell]
+  [['dawnward_helm','helmet',52,3,40000],['dawnward_chest','chest',84,4,72000],
+   ['dawnward_legs','legs',70,3,60000],['dawnward_boots','boots',44,2,38000]].forEach(function(p){
+    ITEMS[p[0]]={name:'Dawnward '+PLATE_NM[p[1]], icon:'🛡️', sell:p[4], rare:true, cgear:true, ctier:10, cslot:p[1], setKey:'dawnward_plate',
+      desc:"Radiant dawnsteel plate from The Empyrean Throne. Part of the <b>Dawnward Plate</b> set — wear all four for the god's own vigil."};
+    COMBAT_GEAR_STATS[p[0]]={atk:p[3], str:0, def:p[2]};
+    ICONS[p[0]]=PLATE_GEN[p[1]](PLATE);
+  });
+  // Per-piece leather perks (crit/dodge/aspd) — read by armorPerkBonuses, same as the
+  // crafted leather bands. A notch above the Voidhide `void` band; this is what gives
+  // the leather archetype its evasion + swing-speed identity (the set bonus is extra).
+  // [id, slot, def, atk, sell, perks]
+  [['sunweave_helm','helmet',30,8,34000,{dodge:0.02}],
+   ['sunweave_chest','chest',50,14,58000,{crit:0.03}],
+   ['sunweave_legs','legs',42,12,48000,{aspd:0.02}],
+   ['sunweave_boots','boots',26,8,32000,{dodge:0.03,aspd:0.03}]].forEach(function(p){
+    ITEMS[p[0]]={name:'Sunweave '+LTHR_NM[p[1]], icon:'🟨', sell:p[4], rare:true, cgear:true, ctier:10, cslot:p[1], light:true, setKey:'sunweave',
+      desc:"Sun-cured hide from The Empyrean Throne, light as a held breath. Part of the <b>Sunweave</b> set — wear all four for dawn made weightless."};
+    COMBAT_GEAR_STATS[p[0]]=Object.assign({atk:p[3], str:0, def:p[2]}, p[5]||{});
+    ICONS[p[0]]=LTHR_GEN[p[1]](HIDE);
+  });
+
+  // ── Set completion bonuses — first sets since the 1.0.83 retire (COMBAT_SETS mutated). ──
+  COMBAT_SETS.dawnward_plate={ name:'Dawnward Plate',
+    pieces:['dawnward_helm','dawnward_chest','dawnward_legs','dawnward_boots'],
+    bonus:{hpBoost:0.10, defBoost:0.06, lifesteal:0.06},
+    desc:'Full set: +10% max HP, +6% Defence and +6% lifesteal — the Dawnbroken God bleeds his light back into you.' };
+  COMBAT_SETS.sunweave={ name:'Sunweave',
+    pieces:['sunweave_helm','sunweave_chest','sunweave_legs','sunweave_boots'],
+    bonus:{critChance:0.10, atkBoost:0.08},
+    desc:'Full set: +10% crit chance and +8% Attack — you move like light off water.' };
+})();
+
+/* Empyrean Throne — zone + foe icons (1.0.87). Radiant gold silhouettes with an
+   indigo "fallen-god" accent; Aureon carries one dawn eye + one void eye to read as
+   the Dawnbroken God. Registered on the ICONS map so getMonster/iconHTML render them. */
+Object.assign(ICONS,{
+  empyrean_throne:`<svg class="ev-icon" viewBox="0 0 64 64"><circle cx="32" cy="30" r="23" fill="#ffcf5a" opacity="0.22"/><g stroke="#ffe6a0" stroke-width="1.4" stroke-linecap="round" opacity="0.7"><path d="M32 3 L32 11 M4 30 L12 30 M52 30 L60 30 M11 9 L17 15 M53 9 L47 15"/></g><path d="M18 22 L22 6 L26 22 Z M46 22 L42 6 L38 22 Z" fill="#f2c65a" stroke="#9a6a1e" stroke-width="0.7"/><path d="M20 24 Q20 16 32 16 Q44 16 44 24 L44 50 L20 50 Z" fill="#6a3ab0" stroke="#2a1450" stroke-width="1" stroke-linejoin="round"/><path d="M24 26 L40 26 L40 46 L24 46 Z" fill="#2a1450"/><circle cx="32" cy="32" r="6" fill="#fff2c0"/><circle cx="32" cy="32" r="3" fill="#fff"/><rect x="16" y="50" width="32" height="4" fill="#9a6a1e" stroke="#2a1450" stroke-width="0.6"/><circle cx="13" cy="14" r="1" fill="#fff"/><circle cx="51" cy="16" r="1" fill="#fff"/></svg>`,
+  dawnling:`<svg class="ev-icon" viewBox="0 0 64 64"><circle cx="32" cy="32" r="16" fill="#ffcf5a" opacity="0.25"/><path d="M32 24 Q16 20 10 34 Q22 30 32 36 Z" fill="#fff2c0" stroke="#c98a2a" stroke-width="0.7"/><path d="M32 24 Q48 20 54 34 Q42 30 32 36 Z" fill="#fff2c0" stroke="#c98a2a" stroke-width="0.7"/><path d="M32 37 L28 52 M32 37 L36 52 M32 37 L32 55" stroke="#e6b23e" stroke-width="1.5" stroke-linecap="round"/><circle cx="32" cy="30" r="7" fill="#f2c65a" stroke="#9a6a1e" stroke-width="0.8"/><circle cx="32" cy="29" r="4" fill="#fff2c0"/><circle cx="30.5" cy="28" r="1.4" fill="#fff"/><circle cx="18" cy="20" r="0.9" fill="#fff"/><circle cx="46" cy="20" r="0.9" fill="#fff"/></svg>`,
+  radiant_wisp:`<svg class="ev-icon" viewBox="0 0 64 64"><circle cx="32" cy="32" r="21" fill="#ffcf5a" opacity="0.25"/><g stroke="#ffe6a0" stroke-width="1.6" stroke-linecap="round" opacity="0.8"><path d="M32 6 L32 16 M32 48 L32 58 M6 32 L16 32 M48 32 L58 32 M14 14 L21 21 M50 14 L43 21 M14 50 L21 43 M50 50 L43 43"/></g><circle cx="32" cy="32" r="11" fill="#e6b23e" stroke="#9a6a1e" stroke-width="0.8"/><circle cx="32" cy="32" r="7" fill="#fff2c0"/><circle cx="32" cy="32" r="3.5" fill="#fff"/><circle cx="29" cy="29" r="1.4" fill="#fff"/></svg>`,
+  seraph_warden:`<svg class="ev-icon" viewBox="0 0 64 64"><circle cx="32" cy="28" r="22" fill="#ffcf5a" opacity="0.22"/><path d="M30 14 Q10 14 6 34 Q20 26 30 30 Z" fill="#fff2c0" stroke="#c98a2a" stroke-width="0.8"/><path d="M34 14 Q54 14 58 34 Q44 26 34 30 Z" fill="#fff2c0" stroke="#c98a2a" stroke-width="0.8"/><ellipse cx="32" cy="10" rx="7" ry="2.4" fill="none" stroke="#fff2c0" stroke-width="1.3"/><circle cx="32" cy="16" r="5" fill="#f2c65a" stroke="#9a6a1e" stroke-width="0.8"/><path d="M24 22 L40 22 L38 48 L32 54 L26 48 Z" fill="#d8a53a" stroke="#7a5416" stroke-width="1" stroke-linejoin="round"/><path d="M32 26 L32 58 M27 36 L37 36" stroke="#fff2c0" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="20" r="1" fill="#fff"/><circle cx="52" cy="20" r="1" fill="#fff"/></svg>`,
+  astral_hound:`<svg class="ev-icon" viewBox="0 0 64 64"><circle cx="32" cy="34" r="20" fill="#8040c0" opacity="0.2"/><path d="M12 30 Q10 22 16 20 L20 26 L28 24 Q40 22 48 30 L54 28 L52 36 L48 40 Q40 46 26 44 Q16 44 12 36 Z" fill="#6a3ab0" stroke="#2a1450" stroke-width="1" stroke-linejoin="round"/><path d="M14 22 L12 13 L21 20 Z" fill="#b88ae0" stroke="#2a1450" stroke-width="0.7"/><path d="M20 44 L18 56 M28 45 L28 57 M40 43 L42 56 M46 40 L50 54" stroke="#4a2480" stroke-width="2.6" stroke-linecap="round"/><circle cx="18" cy="27" r="1.6" fill="#ffcf5a"/><circle cx="30" cy="30" r="0.9" fill="#fff"/><circle cx="40" cy="34" r="0.9" fill="#fff"/><circle cx="24" cy="38" r="0.9" fill="#fff"/><circle cx="46" cy="32" r="0.7" fill="#fff"/></svg>`,
+  lightbringer_herald:`<svg class="ev-icon" viewBox="0 0 64 64"><circle cx="32" cy="30" r="20" fill="#ffcf5a" opacity="0.22"/><path d="M28 16 Q12 18 8 34 Q20 28 28 32 Z" fill="#fff2c0" stroke="#c98a2a" stroke-width="0.7"/><path d="M36 16 Q52 18 56 34 Q44 28 36 32 Z" fill="#fff2c0" stroke="#c98a2a" stroke-width="0.7"/><circle cx="32" cy="18" r="4.5" fill="#f2c65a" stroke="#9a6a1e" stroke-width="0.7"/><path d="M26 22 L38 22 L36 52 L28 52 Z" fill="#d8a53a" stroke="#7a5416" stroke-width="0.9" stroke-linejoin="round"/><path d="M38 26 L58 18 Q60 24 56 30 L40 34 Z" fill="#e6b23e" stroke="#7a5416" stroke-width="0.8" stroke-linejoin="round"/><path d="M46 22 L52 20 M47 26 L53 26" stroke="#fff2c0" stroke-width="1" opacity="0.7"/></svg>`,
+  empyrean_colossus:`<svg class="ev-icon" viewBox="0 0 64 64"><circle cx="32" cy="32" r="23" fill="#ffcf5a" opacity="0.2"/><rect x="24" y="7" width="16" height="12" rx="2" fill="#d8a53a" stroke="#7a5416" stroke-width="1"/><rect x="27" y="11" width="4" height="3" fill="#fff2c0"/><rect x="33" y="11" width="4" height="3" fill="#6a3ab0"/><path d="M18 21 L46 21 L44 45 L20 45 Z" fill="#e6b23e" stroke="#7a5416" stroke-width="1" stroke-linejoin="round"/><rect x="9" y="23" width="8" height="23" rx="2" fill="#d8a53a" stroke="#7a5416" stroke-width="1"/><rect x="47" y="23" width="8" height="23" rx="2" fill="#d8a53a" stroke="#7a5416" stroke-width="1"/><rect x="22" y="46" width="8" height="14" rx="2" fill="#c98a2a" stroke="#7a5416" stroke-width="1"/><rect x="34" y="46" width="8" height="14" rx="2" fill="#c98a2a" stroke="#7a5416" stroke-width="1"/><circle cx="32" cy="32" r="4.5" fill="#fff2c0"/><circle cx="32" cy="32" r="2" fill="#fff"/></svg>`,
+  fallen_choir:`<svg class="ev-icon" viewBox="0 0 64 64"><circle cx="32" cy="32" r="22" fill="#8040c0" opacity="0.18"/><ellipse cx="32" cy="30" rx="21" ry="8" fill="none" stroke="#ffcf5a" stroke-width="1.6" opacity="0.7"/><path d="M20 30 Q20 22 26 22 Q32 22 32 30 Q32 38 26 38 Q20 38 20 30 Z" fill="#f2c65a" stroke="#7a5416" stroke-width="0.7"/><path d="M32 32 Q32 24 38 24 Q44 24 44 32 Q44 40 38 40 Q32 40 32 32 Z" fill="#e6b23e" stroke="#7a5416" stroke-width="0.7"/><g fill="#2e1e06"><circle cx="24" cy="28" r="1.2"/><circle cx="28" cy="28" r="1.2"/><circle cx="36" cy="30" r="1.2"/><circle cx="40" cy="30" r="1.2"/></g><path d="M23 33 Q26 35 29 33 M35 35 Q38 37 41 35" stroke="#6a3ab0" stroke-width="1" fill="none"/><circle cx="14" cy="24" r="0.9" fill="#fff"/><circle cx="50" cy="24" r="0.9" fill="#fff"/></svg>`,
+  aureon:`<svg class="ev-icon" viewBox="0 0 64 64"><circle cx="32" cy="30" r="25" fill="#ffcf5a" opacity="0.28"/><g stroke="#ffe6a0" stroke-width="1.4" stroke-linecap="round" opacity="0.75"><path d="M32 2 L32 9 M4 30 L11 30 M53 30 L60 30 M9 8 L15 14 M55 8 L49 14"/></g><ellipse cx="32" cy="6" rx="12" ry="3" fill="none" stroke="#fff2c0" stroke-width="1.6"/><path d="M22 8 L26 18 L30 8 L34 18 L38 8 L42 18" fill="none" stroke="#f2c65a" stroke-width="1.4"/><path d="M18 20 Q18 40 32 52 Q46 40 46 20 Q46 12 32 12 Q18 12 18 20 Z" fill="#e6b23e" stroke="#7a5416" stroke-width="1.1" stroke-linejoin="round"/><path d="M32 12 L32 52" stroke="#6a3ab0" stroke-width="1.4" opacity="0.85"/><path d="M26 24 L30 30 L27 36 M40 22 L36 30 L39 38" stroke="#6a3ab0" stroke-width="1" fill="none" opacity="0.8"/><circle cx="26" cy="28" r="2.2" fill="#fff2c0"/><circle cx="26" cy="28" r="1" fill="#fff"/><circle cx="38" cy="28" r="2.2" fill="#6a3ab0"/><circle cx="38" cy="28" r="1" fill="#b88ae0"/><path d="M28 43 Q32 46 36 43" stroke="#7a5416" stroke-width="1" fill="none"/><circle cx="12" cy="18" r="1.1" fill="#fff"/><circle cx="52" cy="18" r="1.1" fill="#fff"/></svg>`,
+});
+// Dawnshard mat icon (1.0.87) — a faceted shard of the Dawnbroken God's cooling blood.
+ICONS.dawnshard=`<svg class="ev-icon" viewBox="0 0 64 64"><circle cx="32" cy="34" r="18" fill="#ffcf5a" opacity="0.28"/><path d="M32 5 L45 28 L36 59 L28 59 L19 28 Z" fill="#f2c65a" stroke="#9a6a1e" stroke-width="1" stroke-linejoin="round"/><path d="M32 5 L45 28 L32 34 Z" fill="#fff2c0"/><path d="M32 5 L19 28 L32 34 Z" fill="#e6b23e"/><path d="M32 34 L36 59 L28 59 Z" fill="#c98a2a"/><path d="M32 5 L32 34" stroke="#fffbe6" stroke-width="0.8" opacity="0.85"/><path d="M19 28 L45 28" stroke="#9a6a1e" stroke-width="0.6" opacity="0.6"/><circle cx="14" cy="15" r="1" fill="#fff"/><circle cx="50" cy="19" r="1.1" fill="#fff"/><circle cx="47" cy="47" r="0.9" fill="#fff"/><circle cx="32" cy="4" r="0.8" fill="#fff" opacity="0.85"/></svg>`;
+// Gap-filler raid weapons (1.0.87) — one missing 1H type per raid, bespoke SVGs themed to
+// each raid (Barrow teal · Emberforge molten · Abyssal void) to match the existing drops.
+Object.assign(ICONS,{
+  barrow_maul:`<svg class="ev-icon" viewBox="0 0 64 64"><defs><linearGradient id="bml1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#dfe4dc"/><stop offset="0.5" stop-color="#98a49c"/><stop offset="1" stop-color="#4a544e"/></linearGradient><linearGradient id="bml2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d8ccae"/><stop offset="1" stop-color="#7a6c48"/></linearGradient></defs><ellipse cx="32" cy="59" rx="9" ry="2.2" fill="#000" opacity="0.35"/><path d="M16 10 L48 10 L46 26 L18 26 Z" fill="url(#bml1)" stroke="#232a25" stroke-width="0.9" stroke-linejoin="round"/><path d="M18 13 L46 13" stroke="#eef2ee" stroke-width="0.8" opacity="0.5"/><path d="M22 20 L42 20" stroke="#4a9a8a" stroke-width="0.7" opacity="0.6"/><circle cx="22" cy="17.5" r="1.7" fill="#8ff0d8" opacity="0.85"/><circle cx="42" cy="17.5" r="1.7" fill="#8ff0d8" opacity="0.85"/><rect x="30" y="26" width="4" height="30" rx="1.4" fill="url(#bml2)" stroke="#3a3018" stroke-width="0.6"/><circle cx="32" cy="58" r="2.6" fill="#b8a878" stroke="#3a3018" stroke-width="0.4"/></svg>`,
+  cinderfang:`<svg class="ev-icon" viewBox="0 0 64 64"><defs><linearGradient id="cfg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8a837a"/><stop offset="0.5" stop-color="#3a342e"/><stop offset="1" stop-color="#161210"/></linearGradient><linearGradient id="cfg2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c8622a"/><stop offset="1" stop-color="#5a1e0c"/></linearGradient></defs><ellipse cx="34" cy="58" rx="8" ry="2" fill="#000" opacity="0.35"/><path d="M40 6 Q46 18 40 34 L34 40 L30 34 Q32 20 34 10 Z" fill="url(#cfg1)" stroke="#0a0604" stroke-width="0.8" stroke-linejoin="round"/><path d="M36 12 Q40 22 36 32" stroke="#ff6a10" stroke-width="1.3" fill="none" opacity="0.9"/><path d="M36 12 Q40 22 36 32" stroke="#ffe6a0" stroke-width="0.5" fill="none" opacity="0.8"/><path d="M24 38 L44 38 L40 43 L28 43 Z" fill="url(#cfg2)" stroke="#2a1006" stroke-width="0.6"/><circle cx="24" cy="38" r="2.2" fill="#ff9a30"/><circle cx="44" cy="38" r="2.2" fill="#ff9a30"/><rect x="32" y="43" width="4" height="14" rx="1" fill="url(#cfg2)"/><circle cx="34" cy="58" r="2.4" fill="#c8622a" stroke="#2a1006" stroke-width="0.5"/></svg>`,
+  slagbreaker:`<svg class="ev-icon" viewBox="0 0 64 64"><defs><linearGradient id="slg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7a736a"/><stop offset="0.5" stop-color="#3a342e"/><stop offset="1" stop-color="#161210"/></linearGradient><linearGradient id="slg2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c8622a"/><stop offset="1" stop-color="#5a1e0c"/></linearGradient><linearGradient id="slg3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe6a0"/><stop offset="1" stop-color="#ff4a06"/></linearGradient></defs><ellipse cx="32" cy="59" rx="9" ry="2.2" fill="#000" opacity="0.35"/><path d="M16 10 L48 10 L46 26 L18 26 Z" fill="url(#slg1)" stroke="#0a0604" stroke-width="0.9" stroke-linejoin="round"/><path d="M18 12.5 L46 12.5" stroke="url(#slg3)" stroke-width="1.4"/><path d="M22 20 L42 20" stroke="#ff6a10" stroke-width="0.8" opacity="0.6"/><circle cx="22" cy="17.5" r="1.6" fill="#ff9a30"/><circle cx="42" cy="17.5" r="1.6" fill="#ff9a30"/><rect x="30" y="26" width="4" height="30" rx="1.4" fill="url(#slg2)" stroke="#2a1006" stroke-width="0.6"/><circle cx="32" cy="58" r="2.6" fill="#c8622a" stroke="#2a1006" stroke-width="0.5"/></svg>`,
+  voidedge:`<svg class="ev-icon" viewBox="0 0 64 64"><defs><linearGradient id="ved1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8a6ab0"/><stop offset="0.5" stop-color="#3a2458"/><stop offset="1" stop-color="#140828"/></linearGradient><linearGradient id="ved2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6028a0"/><stop offset="1" stop-color="#2a1048"/></linearGradient></defs><ellipse cx="32" cy="59" rx="8" ry="2" fill="#000" opacity="0.4"/><path d="M32 4 L38 12 L37 44 L32 48 L27 44 L26 12 Z" fill="url(#ved1)" stroke="#0a0418" stroke-width="0.8" stroke-linejoin="round"/><path d="M32 8 L32 44" stroke="#c890ff" stroke-width="1.6" opacity="0.9"/><path d="M32 8 L32 44" stroke="#fff" stroke-width="0.5" opacity="0.7"/><path d="M18 46 L46 46 L42 50 L22 50 Z" fill="url(#ved2)" stroke="#140828" stroke-width="0.7"/><circle cx="18" cy="46" r="2.2" fill="#c890ff"/><circle cx="46" cy="46" r="2.2" fill="#c890ff"/><rect x="30" y="50" width="4" height="9" rx="1" fill="url(#ved2)"/><circle cx="32" cy="60" r="2.4" fill="#8040c0"/></svg>`,
+  riftcrusher:`<svg class="ev-icon" viewBox="0 0 64 64"><defs><linearGradient id="rcr1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7a5aa0"/><stop offset="0.5" stop-color="#2a1450"/><stop offset="1" stop-color="#0e0420"/></linearGradient><linearGradient id="rcr2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a2458"/><stop offset="1" stop-color="#140828"/></linearGradient></defs><ellipse cx="32" cy="59" rx="9" ry="2.2" fill="#000" opacity="0.4"/><path d="M16 10 L48 10 L46 26 L18 26 Z" fill="url(#rcr1)" stroke="#0a0418" stroke-width="0.9" stroke-linejoin="round"/><path d="M18 12.5 L46 12.5" stroke="#c890ff" stroke-width="1.2" opacity="0.8"/><path d="M22 20 L42 20" stroke="#8040c0" stroke-width="0.8" opacity="0.6"/><circle cx="22" cy="17.5" r="1.7" fill="#c890ff"/><circle cx="42" cy="17.5" r="1.7" fill="#c890ff"/><rect x="30" y="26" width="4" height="30" rx="1.4" fill="url(#rcr2)" stroke="#0a0418" stroke-width="0.6"/><circle cx="32" cy="58" r="2.6" fill="#8040c0" stroke="#0a0418" stroke-width="0.4"/></svg>`,
+});
+
 /* ════ RAID-CRAFTED METAL LINES (1.0.82) ═══════════════════════════════════════════
    Two full craftable gear tiers smithed from raid metals, sitting ALONGSIDE the mined
    ladder and slightly stronger at the same tier (the raid premium):
@@ -16957,6 +17146,43 @@ LEATHER_TIERS.forEach(function(t,ti){
       if(p.subcat) rec.subcat=p.subcat;
       if(typeof SKILLS!=='undefined'&&SKILLS.crafting&&SKILLS.crafting.acts) SKILLS.crafting.acts.push(rec);
     });
+  });
+})();
+
+/* ════ ROGUE OFF-HAND — Bucklers (1.0.87) ═══════════════════════════════════════════
+   A full craftable offhand line (ctier 1-10) for light-weapon (dagger/stab) fighters. A
+   buckler sits in the shield slot but is NOT a bracing shield: `offhand:true` makes
+   shieldDamageReduction return 0 (no block) and exempts it from the light-weapon shield
+   penalty. Instead it grants the rogue package — crit / dodge / attack-speed + a little
+   Attack and low Defence — so daggers get a real offhand that keeps them fast and squishy
+   without inflating raw damage. Crafted via the Crafting skill (shield category). */
+(function(){
+  const DAWN={light:'#fff2c0', mid:'#e6b23e', dark:'#9a6a1e', edge:'#3a2408', hl:'#fffbe6', accent:'#c98a2a', glow:'#ffcf5a', sparkles:true};
+  const PAL={1:CR_PAL.bronze,2:CR_PAL.iron,3:CR_PAL.steel,4:CR_PAL.mithril,5:CR_PAL.cobalt,6:CR_PAL.runite,7:CR_PAL.starsteel,8:CR_PAL.moltensteel,9:CR_PAL.voidsteel,10:DAWN};
+  const BAR={1:'bronze_bar',2:'iron_bar',3:'steel_bar',4:'mithril_bar',5:'cobalt_bar',6:'runite_bar',7:'starsteel_bar',8:'molten_bar',9:'voidsteel_bar',10:'voidsteel_bar'};
+  const NAME={1:'Bronze',2:'Iron',3:'Steel',4:'Mithril',5:'Cobalt',6:'Runite',7:'Starsteel',8:'Moltensteel',9:'Voidsteel',10:'Dawnsteel'};
+  // [ctier, craftLvl, def, atk, crit, dodge, aspd, sell]
+  const ROW=[
+    [1,  5,  2, 2, 0.010,0.010,0.010,   120],
+    [2, 18,  4, 3, 0.010,0.010,0.015,   300],
+    [3, 33,  6, 4, 0.015,0.015,0.020,   700],
+    [4, 48,  8, 5, 0.020,0.020,0.020,  1500],
+    [5, 60, 11, 6, 0.020,0.020,0.025,  3200],
+    [6, 72, 14, 7, 0.025,0.025,0.030,  5200],
+    [7, 84, 17, 8, 0.030,0.030,0.035,  9000],
+    [8, 90, 20, 9, 0.035,0.035,0.040, 16000],
+    [9, 93, 24,10, 0.040,0.040,0.045, 30000],
+    [10,96, 20, 8, 0.040,0.040,0.050, 60000],  // low def by design — rogue offhand, not a tank piece
+  ];
+  ROW.forEach(function(r){
+    const ct=r[0], id=NAME[ct].toLowerCase()+'_buckler', nm=NAME[ct]+' Buckler';
+    ITEMS[id]={name:nm, icon:'🛡️', sell:r[7], cgear:true, ctier:ct, cslot:'shield', light:true, offhand:true,
+      desc:'A light round off-hand for dagger fighters. <b>No block</b>, but +crit, +dodge and +attack speed — and it never slows a light weapon. Where a shield would only weigh a rogue down.'};
+    COMBAT_GEAR_STATS[id]={atk:r[3], str:0, def:r[2], crit:r[4], dodge:r[5], aspd:r[6]};
+    ICONS[id]=_bucklerSVG(PAL[ct]);
+    const rec={id:'cr_buckler_'+ct, name:nm, cat:'shield', lvl:r[1], ms:Math.round(4200+ct*1600), xp:Math.round(400+ct*380), spdMult:0.62, minMs:Math.round(1100+ct*260), inp:{}, out:{}};
+    rec.inp[BAR[ct]]=2; if(ct===10) rec.inp.dawnshard=1; rec.out[id]=1;
+    if(typeof SKILLS!=='undefined'&&SKILLS.crafting&&SKILLS.crafting.acts) SKILLS.crafting.acts.push(rec);
   });
 })();
 
@@ -17148,6 +17374,15 @@ const VOID_MAT_POOL=[
   {id:'voidweave',     qty:[2,4]},
   {id:'riftshard',     qty:[1,1]},
 ];
+/* Empyrean Throne (1.0.87) — still feeds the top CRAFTABLE ladder (voidsteel bar /
+   voidweave) since there is no T10 crafted line yet; the signature chase is the rare
+   Dawnshard (a future Dawnsteel reagent). */
+const DAWN_MAT_POOL=[
+  {id:'voidsteel_bar', qty:[4,7]},
+  {id:'voidsteel_bar', qty:[4,7]},
+  {id:'voidweave',     qty:[3,5]},
+  {id:'dawnshard',     qty:[1,1]},
+];
 const RAIDS=[
   {
     id:'sunken_barrow', name:'The Sunken Barrow', icon:'sunken_barrow',
@@ -17182,6 +17417,7 @@ const RAIDS=[
       {id:'barrow_blade',     chance:0.010},   // weapons rarer than gear (1.0.84)
       {id:'barrow_shield',    chance:0.010},
       {id:'barrow_dagger',    chance:0.010},
+      {id:'barrow_maul',      chance:0.010},   // 1H crush — fills the type gap (1.0.87)
       {id:'grave_cleaver',    chance:0.0022},  // marquee 2H — super-rare
       {id:'barrow_chest',     chance:0.018},   // Warden's Aegis (plate unique)
       {id:'barrow_legs',      chance:0.018},   // Warden's Greaves (plate unique)
@@ -17218,6 +17454,8 @@ const RAIDS=[
     gearDrops:[
       {id:'emberforged_blade',   chance:0.010},   // weapons rarer than gear (1.0.84)
       {id:'cinderguard',         chance:0.010},
+      {id:'cinderfang',          chance:0.010},   // 1H stab dagger — fills the type gap (1.0.87)
+      {id:'slagbreaker',         chance:0.010},   // 1H crush hammer — fills the type gap (1.0.87)
       {id:'forgebreaker',        chance:0.0022},  // marquee 2H — super-rare
       {id:'emberforged_aegis',   chance:0.018},
       {id:'emberforged_greaves', chance:0.018},
@@ -17255,6 +17493,8 @@ const RAIDS=[
     gearDrops:[
       {id:'voidrend',          chance:0.010},
       {id:'nullward',          chance:0.010},
+      {id:'voidedge',          chance:0.010},   // 1H slash sword — fills the type gap, sword-and-board (1.0.87)
+      {id:'riftcrusher',       chance:0.010},   // 1H crush hammer — fills the type gap (1.0.87)
       {id:'voidcleaver',       chance:0.0020},
       {id:'abyssal_aegis',     chance:0.012},   // marquee — carries cheat-death
       {id:'voidforged_greaves',chance:0.018},
@@ -17262,6 +17502,51 @@ const RAIDS=[
       {id:'voidheart_shroud',  chance:0.018},
     ],
     matPool:VOID_MAT_POOL,
+  },
+  {
+    id:'empyrean_throne', name:'The Empyrean Throne', icon:'empyrean_throne',
+    accent:'#ffcf5a', unlockLvl:97,
+    blurb:"Climb out of the void and you do not find more darkness — you find a wound of blinding light. On a throne of dead suns slumbers Aureon, the first god, still dreaming the world. Everything between the stair and the dais burns to keep him asleep.",
+    // 8 stages · ~26,650 total HP on one bar · the true capstone gauntlet (Lv99 / T10).
+    stages:[
+      {id:'dawnling',            zone:'empyrean_throne', name:'Dawnling',              icon:'dawnling',            lvl:95, hp:2200, atk:650, str:540, def:380, coins:0, xp:7000, swingMs:2200, dmgType:'stab',  weakTo:'slash'},
+      {id:'radiant_wisp',        zone:'empyrean_throne', name:'Radiant Wisp',          icon:'radiant_wisp',        lvl:96, hp:2350, atk:670, str:560, def:390, coins:0, xp:7400, swingMs:1700, dmgType:'slash', weakTo:'crush'},
+      {id:'seraph_warden',       zone:'empyrean_throne', name:'Seraph Warden',         icon:'seraph_warden',       lvl:98, hp:4200, atk:760, str:640, def:450, coins:0, xp:11000, swingMs:2500, dmgType:'slash', weakTo:'stab',  miniBoss:true,
+        raidfx:{name:'Blinding Radiance', desc:'The seraph blazes — you fight half-blind, −25% Defence.', defMult:0.75}},
+      {id:'astral_hound',        zone:'empyrean_throne', name:'Astral Hound',          icon:'astral_hound',        lvl:96, hp:2450, atk:690, str:580, def:400, coins:0, xp:7800, swingMs:2000, dmgType:'crush', weakTo:'slash'},
+      {id:'lightbringer_herald', zone:'empyrean_throne', name:'Lightbringer Herald',   icon:'lightbringer_herald', lvl:97, hp:2650, atk:720, str:610, def:415, coins:0, xp:8200, swingMs:2100, dmgType:'stab',  weakTo:'crush'},
+      {id:'empyrean_colossus',   zone:'empyrean_throne', name:'Empyrean Colossus',     icon:'empyrean_colossus',   lvl:98, hp:3000, atk:760, str:650, def:440, coins:0, xp:9000, swingMs:2700, dmgType:'crush', weakTo:'slash'},
+      {id:'fallen_choir',        zone:'empyrean_throne', name:'The Fallen Choir',      icon:'fallen_choir',        lvl:97, hp:2800, atk:730, str:620, def:420, coins:0, xp:8600, swingMs:2300, dmgType:'slash', weakTo:'stab'},
+      {id:'aureon', zone:'empyrean_throne', name:'Aureon, the Dawnbroken God', icon:'aureon', lvl:99, hp:7000, atk:860, str:720, def:500, coins:0, xp:16000, swingMs:2700, dmgType:'slash', weakTo:'stab', boss:true, raidBoss:true,
+        raidfx:{name:'Judgment', desc:'The god unmakes you in light — −30% Defence and your strikes drag 20% slower.', defMult:0.70, swingMult:1.20},
+        bossfx:{kind:'voidbomb', everyMs:8000, reqDmg:1000, frac:0.34, label:'Radiant Judgment', desc:'A verdict gathers every 8s — deal 1000 damage in the window or the light passes judgment for 34% max HP. Keep your damage up.'}},
+    ],
+    ratingTiers:[
+      {key:'S', maxMs:260000,   mult:3.0, gold:20000, mats:11, col:'#ffe27a'},
+      {key:'A', maxMs:340000,   mult:2.2, gold:16000, mats:9,  col:'#a8e0ff'},
+      {key:'B', maxMs:430000,   mult:1.7, gold:12500, mats:8,  col:'#9be89b'},
+      {key:'C', maxMs:540000,   mult:1.3, gold:9500,  mats:7,  col:'#d8c8a0'},
+      {key:'D', maxMs:Infinity, mult:1.0, gold:7000,  mats:6,  col:'#b0a494'},
+    ],
+    // BIS weapon for every type + two 4-piece SETS (Dawnward plate / Sunweave leather).
+    // Dawnreaper (2H holy scythe) is the marquee super-rare.
+    gearDrops:[
+      {id:'dawnbreaker',      chance:0.010},
+      {id:'starfang',         chance:0.010},
+      {id:'worldsunder_maul', chance:0.010},
+      {id:'sunpiercer',       chance:0.010},
+      {id:'aegis_of_dawn',    chance:0.010},
+      {id:'dawnreaper',       chance:0.0020},  // marquee 2H — super-rare
+      {id:'dawnward_helm',    chance:0.018},
+      {id:'dawnward_chest',   chance:0.018},
+      {id:'dawnward_legs',    chance:0.018},
+      {id:'dawnward_boots',   chance:0.018},
+      {id:'sunweave_helm',    chance:0.018},
+      {id:'sunweave_chest',   chance:0.018},
+      {id:'sunweave_legs',    chance:0.018},
+      {id:'sunweave_boots',   chance:0.018},
+    ],
+    matPool:DAWN_MAT_POOL,
   },
 ];
 const RAID_BY_ID=(function(){ const m={}; for(const r of RAIDS) m[r.id]=r; return m; })();
@@ -20748,6 +21033,10 @@ function combatTick(){
       const _db=(typeof combatBonusesAll==='function')?combatBonusesAll():null;
       if(_db&&_db.dodge>0&&Math.random()<_db.dodge){ foeDmg=0; _dodged=true; }
     }
+    // ── Shield block (1.0.87) — a raised shield soaks a flat % of the landed blow
+    // (scales with shield Defence). Applied after dodge; never fully negates (min 1).
+    // This is what makes the shield build the true tank: smaller hits → far less food.
+    if(foeDmg>0){ const _sdr=(typeof shieldDamageReduction==='function')?shieldDamageReduction():0; if(_sdr>0) foeDmg=Math.max(1,Math.round(foeDmg*(1-_sdr))); }
     combat.youHp=Math.max(0,combat.youHp-foeDmg);
     cmbLog(_dodged?`💨 You dodge the ${mon.name}!`:(foeDmg>0?`${mon.name} hits you for ${foeDmg}.`:`${mon.name} misses.`), foeDmg>0?'hit':(_dodged?'':''));
 
@@ -22718,6 +23007,20 @@ $('tabSocket').addEventListener('click',()=>{ closeCombatPanel(); viewTab='socke
       state.xp[key]=XP_CUM[lvl];
       renderAll(); saveGame(); toast(`${SKILLS[key].name} set to level ${lvl}`);
     }
+  });
+  // Max Combat — sets all four combat stats to 99 in one click. Fixes the common
+  // "spawned raid gear won't equip" case: armour gates on Defence, weapons on
+  // Attack, so a single-stat "Set Lv" leaves the others below the tier's requirement.
+  $('devMaxCombat').addEventListener('click',()=>{
+    if(!state.combatXp) state.combatXp={attack:0,strength:0,defence:0,hitpoints:0};
+    for(const k in COMBAT_STATS) state.combatXp[k]=XP_CUM[MAX_LEVEL];
+    refreshCombatStats(); renderAll(); saveGame();
+    toast(`All combat stats set to level ${MAX_LEVEL}`);
+  });
+  $('devMaxSkills').addEventListener('click',()=>{
+    for(const k in SKILLS) state.xp[k]=XP_CUM[MAX_LEVEL];
+    renderAll(); saveGame();
+    toast(`All skills set to level ${MAX_LEVEL}`);
   });
 
   function addGold(amt){ amt=Math.max(0,amt|0); if(!amt) return; state.coins+=amt*SILVER_PER_GOLD; renderHeader(); if(viewTab==='shop') renderShop(); saveGame(); toast(`+${amt.toLocaleString()} gold added`); }
