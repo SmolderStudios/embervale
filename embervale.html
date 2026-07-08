@@ -2522,6 +2522,33 @@ header h1 .flame{color:var(--ember)}
 .raid-panel{display:flex;flex-direction:column;gap:9px;padding:3px 0}
 .raid-intro{font-size:11.5px;line-height:1.5;color:var(--muted);background:linear-gradient(180deg,#171f1e,#101615);border:1px solid var(--trim-d);border-left:3px solid #4a9a8a;border-radius:6px;padding:7px 11px}
 .raid-intro b{color:#bfe6db}
+/* Shared skill "how-to" intro (1.0.89) — one consistent, readable style for the
+   handful of skills that explain their flow at the top (crafting/jeweler/enchant/socket). */
+.skill-intro{margin-bottom:10px;padding:8px 11px;background:var(--raised);border:1px solid var(--trim-d);
+  border-left:3px solid var(--ember);border-radius:6px;font-size:13px;color:var(--muted);line-height:1.55}
+.skill-intro b{color:var(--trim);font-weight:600}
+.skill-intro .k{color:var(--ember)}
+.skill-intro .cap{display:block;margin-top:3px;font-size:12px;color:var(--muted)}
+/* ════ New-character tutorial (1.0.89) — dim + spotlight + callout ════ */
+.tut-overlay{position:fixed;inset:0;z-index:4000;pointer-events:auto}
+.tut-spot{position:absolute;border-radius:8px;pointer-events:none;
+  box-shadow:0 0 0 9999px rgba(6,4,2,.80), 0 0 0 2px var(--ember), 0 0 22px rgba(224,118,47,.55);
+  transition:left .28s cubic-bezier(.4,0,.2,1),top .28s cubic-bezier(.4,0,.2,1),width .28s cubic-bezier(.4,0,.2,1),height .28s cubic-bezier(.4,0,.2,1)}
+.tut-callout{position:absolute;width:300px;max-width:calc(100vw - 24px);z-index:4001;pointer-events:auto;
+  background:linear-gradient(180deg,#241711,#140b08);border:1px solid var(--ember);border-radius:9px;
+  padding:14px 16px;box-shadow:0 12px 34px rgba(0,0,0,.75);transition:left .28s ease,top .28s ease}
+.tut-callout h4{margin:0 0 6px;font-size:16px;color:var(--trim);font-family:'Crimson Pro',Georgia,serif;letter-spacing:.3px}
+.tut-callout p{margin:0 0 13px;font-size:13.5px;color:#d3c4a6;line-height:1.55}
+.tut-actions{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.tut-dots{display:flex;gap:5px}
+.tut-dots i{width:6px;height:6px;border-radius:50%;background:var(--trim-d);transition:background .2s}
+.tut-dots i.on{background:var(--ember)}
+.tut-skip{background:none;border:none;color:var(--muted);font-size:12px;cursor:pointer;padding:4px 2px}
+.tut-skip:hover{color:var(--text)}
+.tut-next{background:var(--ember);border:1px solid #f0a050;color:#1a0e05;font-weight:600;font-size:13px;
+  padding:6px 15px;border-radius:5px;cursor:pointer}
+.tut-next:hover{background:#f0a050}
+@media(prefers-reduced-motion:reduce){.tut-spot,.tut-callout{transition:none}}
 .raid-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(400px,1fr));gap:10px;align-items:start}
 .raid-card{background:linear-gradient(180deg,#161c1b,#0e1312);border:1px solid var(--trim-d);border-radius:9px;padding:10px 13px 10px 15px;position:relative;overflow:hidden}
 .raid-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--raid-accent,#4a9a8a)}
@@ -2641,7 +2668,7 @@ header h1 .flame{color:var(--ember)}
   <div class="mm-btns">
     <button class="mm-btn mm-primary" id="mmPlay">▶ Play</button>
   </div>
-  <div class="mm-ver">v1.0.88</div>
+  <div class="mm-ver">v1.0.89</div>
 </div>
 
 <!-- ===== CHARACTER SELECT (added) ===== -->
@@ -2766,7 +2793,7 @@ header h1 .flame{color:var(--ember)}
 
   <div class="panel combat-panel" id="combatPanel" style="display:none"></div>
 
-  <div class="panel">
+  <div class="panel" id="rightPanel">
     <div class="tabs rp-tab-strip" style="margin-bottom:8px;flex-wrap:wrap">
       <button class="tab on" id="tabSatchel">Satchel</button>
       <button class="tab" id="tabGear">Gear</button>
@@ -10260,6 +10287,7 @@ function defaultState(){
     charName:'Adventurer',
     charType:null,    // 'normal'|'hardcore'|'accelerated' — chosen once at creation (null = prompt)
     charClass:null,   // 'rogue'|'berserker'|'guardian'|'artisan' — chosen once at creation
+    tutorialSeen:false, // (1.0.89) one-time new-character tour; existing saves default to true in normalizeState
     tree:{},
     gear:[],
     equipped:{},
@@ -10353,6 +10381,9 @@ function normalizeState(){
   // one-time prompt on load. Never auto-default to 'normal' here.
   if(typeof CHAR_TYPES!=='undefined'  && !CHAR_TYPES[state.charType])   state.charType=null;
   if(typeof CHAR_CLASSES!=='undefined'&& !CHAR_CLASSES[state.charClass]) state.charClass=null;
+  // (1.0.89) Existing saves have no tutorialSeen flag → treat them as already-seen so
+  // the one-time tour only fires for brand-new characters (defaultState sets it false).
+  if(typeof state.tutorialSeen!=='boolean') state.tutorialSeen=true;
   for(const s in SKILLS) if(typeof state.xp[s]!=='number') state.xp[s]=0;
   if(!state.items||typeof state.items!=='object'||Array.isArray(state.items)) state.items={};
   if(typeof state.coins!=='number') state.coins=0;
@@ -13941,8 +13972,8 @@ function needsHtml(act,m){
     return `<span class="mat${have>=need?'':' miss'}" data-tip="${nm} — have ${have}, need ${need} per craft">`
       +`${iconHTML(id)}<b>${have}</b><span class="sl">/${need}</span></span>`;
   }).filter(Boolean).join('');
-  const runs=runsLeft===Infinity ? ''
-    : runsLeft<=0 ? `<span class="runs miss">can't craft</span>`
+  // When you can't craft, show no label — the red chip(s) + the dimmed card already say it.
+  const runs=(runsLeft===Infinity||runsLeft<=0) ? ''
     : `<span class="runs">${runsLeft>999?'999+':runsLeft} run${runsLeft===1?'':'s'}</span>`;
   return `<div class="needs">${chips}${runs}</div>`;
 }
@@ -14189,8 +14220,8 @@ function renderJeweler(){
 
   // Intro banner
   const intro=document.createElement('div');
-  intro.style.cssText='margin-bottom:12px;font-size:14px;color:var(--muted);line-height:1.7;padding:10px 12px;background:var(--raised);border-radius:6px;border:1px solid var(--trim-d)';
-  intro.innerHTML='<b style="color:var(--trim)">Jeweler</b> — a two-step craft. First <b style="color:var(--ember)">Refine</b> a raw gem into a cut gem (this also yields Gem Dust), then craft the cut gem with a metal bar into a <b style="color:var(--text)">ring</b>, <b style="color:var(--text)">amulet</b>, or <b style="color:var(--text)">pendant</b>.';
+  intro.className='skill-intro';
+  intro.innerHTML='<b>Jeweler</b> — two steps: <span class="k">Refine</span> a raw gem into a cut gem (also gives Gem Dust), then combine the cut gem + a metal bar into a ring, amulet or pendant.';
   grid.appendChild(intro);
 
   const activeCat=(state.action&&state.action.skill==='jeweler')
@@ -14308,8 +14339,8 @@ function renderCrafting(){
 
   // Intro banner
   const intro=document.createElement('div');
-  intro.style.cssText='margin-bottom:12px;font-size:14px;color:var(--muted);line-height:1.7;padding:10px 12px;background:var(--raised);border-radius:6px;border:1px solid var(--trim-d)';
-  intro.innerHTML='<b style="color:var(--trim)">Crafting</b> — forge combat gear from raw materials. In each armour category, choose <b style="color:var(--ember)">Plate</b> (smelted <b style="color:var(--ember)">bars</b> + logs — heavy Defence) or <b style="color:var(--ember)">Leather</b> (mob-dropped <b style="color:var(--ember)">hides</b> + logs — lighter Defence, but crit, dodge &amp; attack-speed). Plate tanks; leather bites.';
+  intro.className='skill-intro';
+  intro.innerHTML='<b>Crafting</b> — forge combat gear from raw materials. Pick <span class="k">Plate</span> (bars + logs → heavy Defence) or <span class="k">Leather</span> (mob hides + logs → lighter, but crit, dodge &amp; attack speed).';
   grid.appendChild(intro);
 
   const activeCat=(state.action&&state.action.skill==='crafting')
@@ -19989,9 +20020,8 @@ function renderEnchanting(){
 
   // ── One-line intro ──
   const intro=document.createElement('div');
-  intro.style.cssText='margin-bottom:10px;padding:7px 10px;background:var(--raised);border-radius:6px;border:1px solid var(--trim-d);font-size:13px;color:var(--muted);line-height:1.5';
-  intro.innerHTML='<b style="color:var(--trim)">Enchanting</b> — Bind one enchant per jewelry piece; the bonus applies while it\'s <b style="color:var(--text)">equipped</b>. '
-    +'A matching enchanted ring + amulet of the same gem awakens a <b style="color:var(--ember)">Set Bonus</b>.';
+  intro.className='skill-intro';
+  intro.innerHTML='<b>Enchanting</b> — bind one enchant per jewelry piece; the bonus works while it\'s equipped. A matching ring + amulet of the same gem unlocks a <span class="k">Set Bonus</span>.';
   box.appendChild(intro);
 
   // ── Build list of owned jewelry (in satchel and/or equipped) ──
@@ -20284,10 +20314,9 @@ function renderSockets(){
 
   // ── Header / intro (tight) ──
   const intro=document.createElement('div');
-  intro.style.cssText='margin-bottom:10px;padding:7px 10px;background:var(--raised);border-radius:6px;border:1px solid var(--trim-d);font-size:13px;color:var(--muted);line-height:1.5';
-  intro.innerHTML='<b style="color:var(--trim)">Socketing</b> — Drill sockets in combat gear &amp; jewelry, slot gems for bonuses while equipped. '
-    +'<span style="color:var(--text)">Caps:</span> Helmet 1 · Chest 2 · Legs 2 · Boots 1 · Jewelry 1.'
-    +'<br><span style="color:var(--muted);font-size:12px">Gems drop from combat (better tiers from tougher foes) or craft them from Gem Dust below.</span>';
+  intro.className='skill-intro';
+  intro.innerHTML='<b>Socketing</b> — drill sockets into combat gear &amp; jewelry, then slot gems for bonuses while equipped.'
+    +'<span class="cap">Caps: Helmet 1 · Chest 2 · Legs 2 · Boots 1 · Jewelry 1. Gems drop from combat or craft from Gem Dust below.</span>';
   box.appendChild(intro);
 
   // ── Owned socketable gear ──
@@ -23286,11 +23315,103 @@ function mmFinishStart(slot,isNew){
   }
   saveGame();
   mmStartEngine();
+  // (1.0.89) One-time tour — gated on `isNew` so ONLY a freshly-created character sees
+  // it. (Can't rely on the flag alone: applySave Object.assigns a loaded save onto
+  // defaultState, so an old flagless save inherits defaultState's tutorialSeen:false.)
+  // The delay lets the freshly-rendered panels settle so spotlight rects are accurate.
+  if(isNew && !state.tutorialSeen){ setTimeout(function(){ if(typeof startTutorial==='function') startTutorial(); }, 450); }
 }
 function mmQuitToMenu(){
   if(mmSlot && !mmAtMenu){ state.lastSeen=Date.now(); saveGame(); }
   mmShowMenu();
 }
+
+/* ════ New-character tutorial (1.0.89) ══════════════════════════════════════════════
+   A short, skippable guided tour: dims the screen, spotlights one UI area at a time,
+   and explains it in a callout. Fires once for a brand-new character (see mmFinishStart
+   + the tutorialSeen flag). Drive it with Next/Skip; game clicks are blocked meanwhile
+   so the player can't wander mid-tour. Re-runnable via replayTutorial() from the menu. */
+const TUTORIAL_STEPS=[
+  {sel:null, title:'Welcome to Embervale', text:"A quick tour of the basics — it takes about 20 seconds. You can skip anytime.", place:'center'},
+  {sel:'#leftPanel', title:'Your skills', text:"Your 12 skills live here. Click one to open it — then pick an activity to train.", place:'right'},
+  {sel:'#activityGrid .act', title:'Start training', text:"Click an activity to begin. It runs on its own, so you keep earning XP and loot even while you're away.", place:'right'},
+  {sel:'#rightPanel', title:'Your satchel', text:"Everything you gather, cook or craft lands here in your Satchel.", place:'left'},
+  {sel:'#tabCombat', title:'Combat', text:"When you're ready to fight, jump into Combat — clear zones, bosses and raids for powerful gear.", place:'bottom'},
+  {sel:null, title:"You're all set!", text:"Level your skills, gear up, and dive into combat. Have fun, adventurer!", place:'center'},
+];
+let _tutStep=0;
+// The game scales the whole UI via `zoom` on <html>. getBoundingClientRect() returns
+// post-zoom VISUAL px, but px we set on elements inside the zoomed root get re-scaled by
+// that zoom — so we divide our computed positions by it to land on the real element.
+function _rootZoom(){ var z=parseFloat(getComputedStyle(document.documentElement).zoom||'1'); return (z&&z>0)?z:1; }
+function _tutReposition(){ if(document.getElementById('tutOverlay')) renderTutStep(); }
+function _tutKey(e){ if(e.key==='Escape') endTutorial(); else if(e.key==='Enter'||e.key===' '){ e.preventDefault(); _tutAdvance(); } }
+function startTutorial(){
+  if(document.getElementById('tutOverlay')) return;
+  _tutStep=0;
+  const ov=document.createElement('div');
+  ov.id='tutOverlay'; ov.className='tut-overlay';
+  ov.innerHTML='<div class="tut-spot" id="tutSpot"></div><div class="tut-callout" id="tutCallout"></div>';
+  document.body.appendChild(ov);
+  renderTutStep();
+  window.addEventListener('resize', _tutReposition);
+  window.addEventListener('keydown', _tutKey);
+}
+function _tutAdvance(){
+  if(_tutStep>=TUTORIAL_STEPS.length-1) endTutorial();
+  else { _tutStep++; renderTutStep(); }
+}
+function renderTutStep(){
+  const ov=document.getElementById('tutOverlay'); if(!ov) return;
+  const step=TUTORIAL_STEPS[_tutStep];
+  const spot=document.getElementById('tutSpot'), call=document.getElementById('tutCallout');
+  const target=step.sel?document.querySelector(step.sel):null;
+  const rect=(target&&target.getBoundingClientRect().width>0)?target.getBoundingClientRect():null;
+  // Spotlight: the .tut-spot box-shadow dims everything around the highlighted rect.
+  // For center steps (no target) hide the spot and dim the whole overlay instead.
+  if(rect){
+    const pad=8, z=_rootZoom();
+    spot.style.display='block';
+    spot.style.left=((rect.left-pad)/z)+'px'; spot.style.top=((rect.top-pad)/z)+'px';
+    spot.style.width=((rect.width+pad*2)/z)+'px'; spot.style.height=((rect.height+pad*2)/z)+'px';
+    ov.style.background='transparent';
+  }else{
+    spot.style.display='none';
+    ov.style.background='rgba(6,4,2,.82)';
+  }
+  const last=_tutStep===TUTORIAL_STEPS.length-1;
+  const dots=TUTORIAL_STEPS.map((s,i)=>`<i class="${i===_tutStep?'on':''}"></i>`).join('');
+  call.innerHTML=`<h4>${step.title}</h4><p>${step.text}</p>`
+    +`<div class="tut-actions"><button class="tut-skip" id="tutSkip">${last?'Close':'Skip tour'}</button>`
+    +`<div class="tut-dots">${dots}</div>`
+    +`<button class="tut-next" id="tutNext">${last?'Done':'Next ›'}</button></div>`;
+  _positionCallout(call, rect, step.place);
+  document.getElementById('tutSkip').onclick=endTutorial;
+  document.getElementById('tutNext').onclick=_tutAdvance;
+}
+function _positionCallout(call, rect, place){
+  const z=_rootZoom();
+  call.style.visibility='hidden'; call.style.left='0px'; call.style.top='0px';
+  // offsetWidth/Height are layout px; ×z gives the callout's VISUAL size to match rect + viewport.
+  const cw=call.offsetWidth*z, ch=call.offsetHeight*z, gap=14, vw=window.innerWidth, vh=window.innerHeight;
+  let left, top;
+  if(!rect){ left=(vw-cw)/2; top=(vh-ch)/2; }
+  else if(place==='right'){ left=rect.right+gap; top=rect.top; }
+  else if(place==='left'){ left=rect.left-cw-gap; top=rect.top; }
+  else if(place==='top'){ left=rect.left; top=rect.top-ch-gap; }
+  else { left=rect.left; top=rect.bottom+gap; }
+  left=Math.max(12, Math.min(left, vw-cw-12));
+  top=Math.max(12, Math.min(top, vh-ch-12));
+  call.style.left=(left/z)+'px'; call.style.top=(top/z)+'px'; call.style.visibility='visible';
+}
+function endTutorial(){
+  const ov=document.getElementById('tutOverlay'); if(ov) ov.remove();
+  window.removeEventListener('resize', _tutReposition);
+  window.removeEventListener('keydown', _tutKey);
+  if(state && !state.tutorialSeen){ state.tutorialSeen=true; if(typeof saveGame==='function') saveGame(); }
+}
+/* Replay from the menu — resets the flag so the tour runs again. */
+function replayTutorial(){ if(state) state.tutorialSeen=false; startTutorial(); }
 function mmFirstEmpty(){
   for(let n=1;n<=MM_SLOTS;n++){ if(!localStorage.getItem(mmKey(n))) return n; }
   return 0;
