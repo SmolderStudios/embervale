@@ -78,6 +78,11 @@ header h1 .flame{color:var(--ember)}
 .hdr-menu-btn:hover{border-color:var(--trim);color:var(--trim)}
 .hdr-menu-btn.on{border-color:var(--trim);color:var(--trim);background:var(--raised-s)}
 .hdr-menu-btn.has-new:not(.on){animation:new-pulse 1.6s ease-in-out infinite;color:var(--ember)}
+/* Base size for stroke icons used OUTSIDE the header (mm-del trash, empty-slot plus,
+   modal headers, dev toggle). Without this, .nav-ic collapses to 0×0 and its button
+   becomes unclickable (v1.0.98 delete-character bug). Header rules below are more
+   specific and still win there. (1.0.102) */
+.nav-ic{width:1em;height:1em;display:inline-block;vertical-align:-0.12em}
 .hdr-menu-btn .nav-ic{width:13px;height:13px;vertical-align:-2px;margin-right:5px}
 /* brand lockup — Vale mark + wordmark */
 .brand{display:flex;align-items:center;gap:11px}
@@ -2671,7 +2676,7 @@ header h1 .flame{color:var(--ember)}
   <div class="mm-btns">
     <button class="mm-btn mm-primary" id="mmPlay">▶ Play</button>
   </div>
-  <div class="mm-ver">v1.0.101</div>
+  <div class="mm-ver">v1.0.102</div>
 </div>
 
 <!-- ===== CHARACTER SELECT (added) ===== -->
