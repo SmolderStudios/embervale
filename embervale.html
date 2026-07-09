@@ -2671,7 +2671,7 @@ header h1 .flame{color:var(--ember)}
   <div class="mm-btns">
     <button class="mm-btn mm-primary" id="mmPlay">▶ Play</button>
   </div>
-  <div class="mm-ver">v1.0.97</div>
+  <div class="mm-ver">v1.0.98</div>
 </div>
 
 <!-- ===== CHARACTER SELECT (added) ===== -->
@@ -2755,7 +2755,7 @@ header h1 .flame{color:var(--ember)}
     <button class="hdr-btn" id="btnExport" title="Export save"><svg class="nav-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/><path d="M7 11l5 5l5-5"/><path d="M12 4v12"/></svg>Export</button>
     <button class="hdr-btn" id="btnImport" title="Import save"><svg class="nav-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/><path d="M7 9l5-5l5 5"/><path d="M12 4v12"/></svg>Import</button>
     <button class="hdr-btn" id="btnReset" title="Reset save" style="border-color:var(--red);color:var(--red)"><svg class="nav-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12"/><path d="M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3"/></svg>Reset</button>
-    <button class="hdr-btn" id="btnMenu">☰ Menu</button>
+    <button class="hdr-btn" id="btnMenu"><svg class="nav-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16"/><path d="M4 12h16"/><path d="M4 17h16"/></svg>Menu</button>
   </div>
 </header>
 <div id="xpPopups" class="xp-popups"></div>
@@ -2821,10 +2821,10 @@ header h1 .flame{color:var(--ember)}
   box-shadow:0 8px 24px rgba(0,0,0,.7);font-size:14px;color:#ead9b5;font-family:inherit"></div>
 
 <!-- Dev Tool — no visible button; open via secret click action -->
-<button class="dev-toggle hidden" id="devToggle" aria-hidden="true">🛠 Dev</button>
+<button class="dev-toggle hidden" id="devToggle" aria-hidden="true"><svg class="nav-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0 5 5l-9 9a2.1 2.1 0 0 1-3-3z"/><path d="M14.7 6.3 18 3l3 3-3.3 3.3"/></svg>Dev</button>
 <div class="dev-panel hidden" id="devPanel">
   <div class="dev-head">
-    <span class="dev-title">🛠 Dev Tools</span>
+    <span class="dev-title"><svg class="nav-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0 5 5l-9 9a2.1 2.1 0 0 1-3-3z"/><path d="M14.7 6.3 18 3l3 3-3.3 3.3"/></svg> Dev Tools</span>
     <button class="dev-x" id="devClose" title="Close">✕</button>
   </div>
   <div class="dev-body">
@@ -11190,7 +11190,7 @@ function showGoldDrop(amount){
   }
   const el=document.createElement('div');
   el.className='item-drop-row id-flash';
-  el.innerHTML=`<span class="id-icon">🪙</span>`
+  el.innerHTML=`<span class="id-icon">${iconHTML('ui_coin')}</span>`
     +`<span class="id-name" style="color:var(--trim)">Coins</span>`
     +`<span class="id-qty">+${fmtCoins(amount,true)}</span>`;
   container.insertBefore(el, container.firstChild);
@@ -12780,13 +12780,13 @@ function renderEffectsBar(){
 
     // Build tooltip with stat breakdown
     const statLines=[];
-    if(e.speed)        statLines.push(`⚡ +${Math.round(e.speed*100)}% Speed`);
-    if(e.xp)           statLines.push(`📖 +${Math.round(e.xp*100)}% XP Gain`);
-    if(e.gp)           statLines.push(`🪙 +${Math.round(e.gp*100)}% Gold`);
-    if(e.doubleChance) statLines.push(`✦ +${Math.round(e.doubleChance*100)}% Yield`);
-    if(e.atk)          statLines.push(`⚔️ +${e.atk} Attack`);
-    if(e.str)          statLines.push(`💪 +${e.str} Strength`);
-    if(e.def)          statLines.push(`🛡️ +${e.def} Defence`);
+    if(e.speed)        statLines.push(`${iconHTML('ui_bolt')} +${Math.round(e.speed*100)}% Speed`);
+    if(e.xp)           statLines.push(`${iconHTML('ui_book')} +${Math.round(e.xp*100)}% XP Gain`);
+    if(e.gp)           statLines.push(`${iconHTML('ui_coin')} +${Math.round(e.gp*100)}% Gold`);
+    if(e.doubleChance) statLines.push(`${iconHTML('ui_spark')} +${Math.round(e.doubleChance*100)}% Yield`);
+    if(e.atk)          statLines.push(`${iconHTML('ui_swords')} +${e.atk} Attack`);
+    if(e.str)          statLines.push(`${iconHTML('ui_muscle')} +${e.str} Strength`);
+    if(e.def)          statLines.push(`${iconHTML('ui_shield')} +${e.def} Defence`);
     if(stacks>1)       statLines.push(`Stacked ×${stacks}`);
     const tipHtml=`<div style="font-size:14px;color:var(--trim);font-weight:bold;margin-bottom:5px">${it?iconHTML(e._itemId)+' ':''} ${fullName}</div>`
       +statLines.map(s=>`<div style="font-size:14px;color:var(--text);margin:2px 0">${s}</div>`).join('')
@@ -14169,7 +14169,7 @@ function buildActBtn(act,reqLvl,lvl,m,bestXph,bestRph){
     const p=SK_PFX[selectedSkill];
     const coinMult=1+(treeRank(selectedSkill,p+'_coins')*0.03)+(treeRank(selectedSkill,p+'_master1')>0?0.25:0)+(treeRank(selectedSkill,p+'_master3')>0?0.25:0)+(treeRank(selectedSkill,'ag_gm_coins2')>0?0.75:0);
     const effCoins=Math.round(act.coins*coinMult);
-    coinDisplay=`🪙 ${fmtCoins(effCoins)} per lap`;
+    coinDisplay=`${iconHTML('ui_coin')} ${fmtCoins(effCoins)} per lap`;
   }
   // (1.0.88) Drop the output name from meta for material skills — it's redundant with
   // the act name + output icon, and the tighter meta reads cleaner. Agility keeps coins.
@@ -14181,7 +14181,7 @@ function buildActBtn(act,reqLvl,lvl,m,bestXph,bestRph){
     const isBestRph=rph===bestRph;
     statsHtml=`<div class="act-stats">
       <span class="chip xph${isBestXp?' best-xp':''}">${isBestXp?'⭐ ':''}${fmtK(xph)} xp/hr</span>
-      <span class="chip gph${isBestRph?' best-gp':''}">${isBestRph?'💰 ':''}${fmtK(rph)} ${rphLabel}</span>
+      <span class="chip gph${isBestRph?' best-gp':''}">${isBestRph?iconHTML('ui_coin')+' ':''}${fmtK(rph)} ${rphLabel}</span>
     </div>`;
   }
 
@@ -15154,7 +15154,7 @@ function renderShop(){
     } else {
       const btn=document.createElement('button');
       btn.className='buy';
-      btn.innerHTML='🪙 '+item.cost.toLocaleString()+'g';
+      btn.innerHTML=iconHTML('ui_coin')+' '+item.cost.toLocaleString()+'g';
       btn.disabled=!canBuy;
       if(!reqMet) btn.title='Buy previous tier first';
       else if(!lvlMet) btn.title='Requires Level '+item.reqLvl+(skName?' '+skName:'');
@@ -16000,7 +16000,7 @@ function renderInventory(){
     upBtn.className='sat-expand';
     const canAfford=state.coins>=nextCost*SILVER_PER_GOLD;
     if(!canAfford) upBtn.classList.add('poor');
-    upBtn.innerHTML=`<span class="se-ic">＋</span>Expand +5 slots · 🪙 ${nextCost.toLocaleString()}g`;
+    upBtn.innerHTML=`<span class="se-ic">＋</span>Expand +5 slots · ${iconHTML('ui_coin')} ${nextCost.toLocaleString()}g`;
     upBtn.disabled=!canAfford;
     upBtn.addEventListener('click',()=>{
       const cost=satchelTierCost(state.satchelUpgrades||0);
@@ -18786,7 +18786,7 @@ function openGearSlotModal(slotKey,def,currentId){
       sellBtn.className='m-btn';
       sellBtn.style.cssText='font-size:12px;padding:4px 8px;color:var(--muted);border-color:var(--trim-d)';
       var refund=Math.floor(shopItem.cost*0.5);
-      sellBtn.innerHTML='Sell &middot; 🪙'+refund.toLocaleString()+'g';
+      sellBtn.innerHTML='Sell &middot; '+iconHTML('ui_coin')+refund.toLocaleString()+'g';
       sellBtn.title='Sell back for 50% refund';
       sellBtn.addEventListener('click',function(ev){
         ev.stopPropagation();
@@ -19184,8 +19184,8 @@ function showItemTooltip(itemId, x, y){
   }
   if(it.sell>0){
     const effSell=effectiveItemSell(itemId);
-    if(effSell>it.sell) html+=`<div class="tt-sell">💰 Sells for ${fmtCoins(effSell,true)} <span style="color:#6e552c">(base ${fmtCoins(it.sell,true)})</span></div>`;
-    else html+=`<div class="tt-sell">💰 Sells for ${fmtCoins(it.sell,true)}</div>`;
+    if(effSell>it.sell) html+=`<div class="tt-sell">${iconHTML('ui_coin')} Sells for ${fmtCoins(effSell,true)} <span style="color:#6e552c">(base ${fmtCoins(it.sell,true)})</span></div>`;
+    else html+=`<div class="tt-sell">${iconHTML('ui_coin')} Sells for ${fmtCoins(it.sell,true)}</div>`;
   }
 
   tt.innerHTML=html;
@@ -19756,7 +19756,7 @@ function renderMastery(){
     const tile=document.createElement('div');
     tile.className=`ma-tile${tier!=='none'?' mb-'+tier:''}`;
     tile.title=tip;
-    tile.innerHTML=`<span class="ma-ic">${outIc?iconHTML(outIc):'🪙'}</span>`
+    tile.innerHTML=`<span class="ma-ic">${outIc?iconHTML(outIc):iconHTML('ui_coin')}</span>`
       +`<div class="ma-body"><div class="ma-nm">${act.name}</div><div class="ma-bar"><i style="width:${mb.pct}%;background:${mb.barColor}"></i></div></div>`
       +`<span class="ma-lvl" style="color:${mb.barColor}">${mb.lvl||'·'}</span>`;
     grid.appendChild(tile);
@@ -20504,7 +20504,7 @@ function renderSockets(){
     matRow.style.cssText='display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px';
     var goldChip=document.createElement('div');
     goldChip.style.cssText='background:var(--raised-s);border:1px solid var(--trim-d);border-radius:5px;padding:4px 10px;font-size:13px;color:var(--text)';
-    goldChip.innerHTML='💰 '+fmtCoins(state.coins||0);
+    goldChip.innerHTML=iconHTML('ui_coin')+' '+fmtCoins(state.coins||0);
     matRow.appendChild(goldChip);
     var dustQty=state.items['gem_dust']||0;
     var dustChip=document.createElement('div');
@@ -20647,8 +20647,8 @@ function renderSocketDetail(box, itemId){
     var coinHave=state.coins||0, coinNeed=cost.coins*SILVER_PER_GOLD;
     var dustHave=state.items['gem_dust']||0, dustNeed=cost.gem_dust||0;
     var canAfford=coinHave>=coinNeed && dustHave>=dustNeed;
-    var costStr='<span style="color:'+(coinHave>=coinNeed?'var(--green)':'var(--red)')+'">💰 '+cost.coins.toLocaleString()+'g</span>'
-              +'  <span style="color:'+(dustHave>=dustNeed?'var(--green)':'var(--red)')+'">✨ '+dustNeed+' Gem Dust</span>';
+    var costStr='<span style="color:'+(coinHave>=coinNeed?'var(--green)':'var(--red)')+'">'+iconHTML('ui_coin')+' '+cost.coins.toLocaleString()+'g</span>'
+              +'  <span style="color:'+(dustHave>=dustNeed?'var(--green)':'var(--red)')+'">'+iconHTML('gem_dust')+' '+dustNeed+' Gem Dust</span>';
     var drillRow=document.createElement('div');
     drillRow.style.cssText='display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding-top:8px;border-top:1px solid var(--trim-d)';
     drillRow.innerHTML='<div style="font-size:13px;color:var(--muted)">Drill socket '+nextIdx+' of '+cap+':  '+costStr+'</div>';
@@ -23335,14 +23335,14 @@ function mmRenderSlots(){
           (s.charClass?'<span class="mm-badge mm-badge-cls">'+CHAR_CLASSES[s.charClass].name+'</span>':'')+
           '</div>';
       }
-      el.innerHTML='<div class="mm-ic">🛡️</div>'+
+      el.innerHTML='<div class="mm-ic">'+iconHTML('ui_shield')+'</div>'+
         '<div class="mm-info"><div class="mm-nm">'+mmEsc(s.name)+'</div>'+
-        '<div class="mm-mt">Total Lv '+s.totalLevel+' · 🪙 '+fmtCoins(s.coins,true)+
+        '<div class="mm-mt">Total Lv '+s.totalLevel+' · '+iconHTML('ui_coin')+' '+fmtCoins(s.coins,true)+
         (s.lastSeen?' · '+mmFmtAgo(s.lastSeen):'')+'</div>'+badges+'</div>'+
-        '<button class="mm-del" data-del="'+n+'" title="Delete">🗑</button>';
+        '<button class="mm-del" data-del="'+n+'" title="Delete"><svg class="nav-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12"/><path d="M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3"/></svg></button>';
       el.addEventListener('click',e=>{ if(e.target.closest('[data-del]')) return; mmStart(n,false); });
     }else{
-      el.innerHTML='<div class="mm-ic">➕</div>'+
+      el.innerHTML='<div class="mm-ic"><svg class="nav-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg></div>'+
         '<div class="mm-info"><div class="mm-nm">Empty Slot '+n+'</div>'+
         '<div class="mm-mt">Click to create a new character</div></div>';
       el.addEventListener('click',()=>mmNewChar(n));
