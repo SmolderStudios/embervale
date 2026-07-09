@@ -2676,7 +2676,7 @@ header h1 .flame{color:var(--ember)}
   <div class="mm-btns">
     <button class="mm-btn mm-primary" id="mmPlay">▶ Play</button>
   </div>
-  <div class="mm-ver">v1.0.104</div>
+  <div class="mm-ver">v1.0.105</div>
 </div>
 
 <!-- ===== CHARACTER SELECT (added) ===== -->
@@ -8502,7 +8502,7 @@ const PASSIVE_TIPS={
   wc_gm_sell:   'Grandmaster bonus (Lv 80). Raises sell value of all logs.\n+7% per rank, up to +70% at max 10 ranks.',
   wc_gm_xp:     'Grandmaster bonus (Lv 80). Boosts all Woodcutting XP gains.\n+3% per rank, up to +30% at max 10 ranks. Adds into the additive XP bonus below the 1.5× Arborist multiplier.',
   wc_gm_2x_xp:  'Grandmaster pinnacle (Lv 85). Permanently multiplies all Woodcutting XP by 1.5×.\nApplied on top of the summed additive XP bonuses (tree + potion + gear).',
-  wc_gm_double: 'Level 99 pinnacle. Unlocks a second woodcutting bar running at 50% speed.\nChoose a different tree type to chop in parallel — both bars run simultaneously.\nAll passives (Timber!, Keen Edge, Ancient Grove, Heartwood) apply to both bars.\nRequires 97 points spent AND the Woodcutting Cape (coming with the shop update).',
+  wc_gm_double: 'Level 99 pinnacle. Unlocks a second woodcutting bar running at 50% speed.\nChoose a different tree type to chop in parallel — both bars run simultaneously.\nAll passives (Timber!, Keen Edge, Ancient Grove, Heartwood) apply to both bars.\nRequires 97 points spent AND the Woodcutting Cape (buy from the Shop at Lv 99).',
   // Mining
   mi_speed:     'Reduces time per mining action.\nEach rank: +1% faster, up to +15% at max 15 ranks.',
   mi_vein:      'Each mine swing has a chance to produce a second ore automatically.\nAt max (15 ranks): 30% chance for a bonus ore every action.\nAlso boosted by Deep Veins (grandmaster).',
@@ -8517,7 +8517,7 @@ const PASSIVE_TIPS={
   mi_gm_vein:   'Grandmaster bonus (Lv 80). Adds to bonus ore chance on top of Rich Vein.\n+3% per rank, up to +24% extra at max 8 ranks.',
   mi_gm_coal:   'Grandmaster bonus (Lv 80). When Coal Seeker procs, this gives a chance for it to yield 2 Coal instead of 1.\n+8% double-coal chance per rank, up to 48% at max 6 ranks.',
   mi_gm_2x_xp:  'Grandmaster pinnacle (Lv 85). Permanently multiplies all Mining XP by 1.5×.\nApplied on top of the summed additive XP bonuses.',
-  mi_gm_double: 'Level 99 pinnacle. Unlocks a second mining action bar running at 50% speed.\nChoose a different ore to mine in parallel — both bars run simultaneously.\nCombines with all passives. A single mining session produces two ore streams.\nRequires 97 points spent AND the Mining Cape (coming with the shop update).',
+  mi_gm_double: 'Level 99 pinnacle. Unlocks a second mining action bar running at 50% speed.\nChoose a different ore to mine in parallel — both bars run simultaneously.\nCombines with all passives. A single mining session produces two ore streams.\nRequires 97 points spent AND the Mining Cape (buy from the Shop at Lv 99).',
   // Fishing
   fi_speed:     'Reduces time per cast.\nEach rank: +1% faster, up to +15% at max 15 ranks.',
   fi_double:    'Each cast has a chance to land a bonus fish on top of the normal catch.\nAt max (12 ranks): 24% bonus fish chance per cast.',
@@ -8532,7 +8532,7 @@ const PASSIVE_TIPS={
   fi_gm_sell:   'Grandmaster bonus (Lv 80). Raises sell value of all fish.\n+7% per rank, up to +70% at max 10 ranks.',
   fi_gm_xp:     'Grandmaster bonus (Lv 80). Boosts all Fishing XP.\n+3% per rank, up to +24% at max 8 ranks. Adds into the additive XP bonus below the 1.5× Master of Tides multiplier.',
   fi_gm_2x_xp:  'Grandmaster pinnacle (Lv 85). Permanently multiplies all Fishing XP by 1.5×.\nApplied on top of the summed additive XP bonuses.',
-  fi_gm_double_act:'Level 99 pinnacle. Unlocks a second fishing bar running at 50% speed.\nChoose a different spot to fish in parallel — both bars run simultaneously.\nAll passives (Haul Net, Steady Hands, Schooling, Lucky Lure) apply to both bars.\nRequires 97 points spent AND the Fishing Cape (coming with the shop update).',
+  fi_gm_double_act:'Level 99 pinnacle. Unlocks a second fishing bar running at 50% speed.\nChoose a different spot to fish in parallel — both bars run simultaneously.\nAll passives (Haul Net, Steady Hands, Schooling, Lucky Lure) apply to both bars.\nRequires 97 points spent AND the Fishing Cape (buy from the Shop at Lv 99).',
   // Foraging
   fo_speed:     'Reduces time per forage action. +2% per rank, up to +30%.',
   fo_double:    'Each forage action has a chance to find a bonus resource.\nAt max (20): 40% chance for a second item every action.',
@@ -8545,7 +8545,7 @@ const PASSIVE_TIPS={
   fo_gm_speed:  'Grandmaster bonus (Lv 75). +3% forage speed per rank.',
   fo_gm_xp:     'Grandmaster bonus (Lv 80). +3% Foraging XP per rank.',
   fo_gm_sell:   'Grandmaster bonus (Lv 85). +6% foraged goods sell value per rank.',
-  fo_gm_cape:   'Level 99 pinnacle — Primal Bloom. 20% chance on each forage to unearth a Bountiful Cache: +3 of that resource at once.\nRequires 97 points spent AND the Foraging Cape (coming with the shop update).',
+  fo_gm_cape:   'Level 99 pinnacle — Primal Bloom. 20% chance on each forage to unearth a Bountiful Cache: +3 of that resource at once.\nRequires 97 points spent AND the Foraging Cape (buy from the Shop at Lv 99).',
   // Smithing
   sm_speed:     'Reduces time per smelt. +2% per rank, up to +30%.',
   sm_thrift:    'Each smelt has a chance for ingredients NOT to be consumed.\nFree bar — no ore cost, still produces the bar.',
@@ -8558,7 +8558,7 @@ const PASSIVE_TIPS={
   sm_gm_speed:  'Grandmaster bonus (Lv 75). +3% smelt speed per rank.',
   sm_gm_xp:     'Grandmaster bonus (Lv 80). +4% Smithing XP per rank.',
   sm_gm_sell:   'Grandmaster bonus (Lv 85). +6% bar sell value per rank.',
-  sm_gm_cape:   'Level 99 pinnacle — Living Forge. Smithing recipes consume no Coal at all (overrides Endurance and Starsteel Mastery).\nRequires 97 points spent AND the Smithing Cape (coming with the shop update).',
+  sm_gm_cape:   'Level 99 pinnacle — Living Forge. Smithing recipes consume no Coal at all (overrides Endurance and Starsteel Mastery).\nRequires 97 points spent AND the Smithing Cape (buy from the Shop at Lv 99).',
   // Cooking
   co_speed:     'Reduces time per cook. +0.6% per rank, up to +10.8% faster at max 18 ranks.\nThis is craft speed only — it does not affect the fire/fuel system.',
   co_thrift:    'Each cook has a chance for the raw fish NOT to be consumed.\nFree cooked food — the raw fish stays in your satchel. +0.5% per rank, up to 6% at max.',
@@ -8573,7 +8573,7 @@ const PASSIVE_TIPS={
   co_gm_sell:   'Grandmaster bonus (Lv 80). +1.5% cooked food sell value per rank, up to +6% at max 4.',
   co_gm_feast:  'Grandmaster pinnacle. Each cook has a 25% chance to produce a second meal (no longer a guaranteed double).\nRequires Lv 90 and 90 points spent in this tree. Stacks with Batch Cook.',
   co_gm_2x_xp:  'Grandmaster pinnacle. Multiplies ALL Cooking XP by 1.25× permanently.\nRequires Lv 90 and 97 points spent (take Feasting Table first). Applies on top of every additive XP bonus.',
-  co_gm_cape:   'Level 99 pinnacle — Eternal Flame. Your cooking fire never consumes fuel; light it once with any log and cook indefinitely.\nRequires 97 points spent AND the Cooking Cape (coming with the shop update).',
+  co_gm_cape:   'Level 99 pinnacle — Eternal Flame. Your cooking fire never consumes fuel; light it once with any log and cook indefinitely.\nRequires 97 points spent AND the Cooking Cape (buy from the Shop at Lv 99).',
   // Alchemy
   al_speed:     'Speeds up brewing — each potion takes less time to make.\nThis affects crafting time only, NOT how long a potion lasts once drunk.\n+1.3% per rank, up to +23.4% faster at max 18 ranks.',
   al_thrift:    'Each brew has a chance to not consume any ingredients.\nFree potion — herbs/materials stay in satchel. +1.5% per rank, up to 21% at max.',
@@ -8588,7 +8588,7 @@ const PASSIVE_TIPS={
   al_gm_potency:'Grandmaster bonus (Lv 80). Potions last +3% longer per rank, up to +12% at max 4.\nStacks with the Lingering Brew base node.',
   al_gm_2x_xp:  'Grandmaster pinnacle. Multiplies ALL Alchemy XP by 1.5× permanently.\nRequires 90 points spent in this tree. Applies on top of every additive XP bonus.',
   al_gm_twin:   'Grandmaster pinnacle. Every brew produces one extra potion, guaranteed.\nRequires 97 points spent in this tree (take Philosopher\'s Mind first). Stacks with Double Brew.',
-  al_gm_cape:   'Level 99 pinnacle — Grand Elixir. Every brew produces three potions instead of one (supersedes Double Brew and Twin Cauldron).\nRequires 97 points spent AND the Alchemy Cape (coming with the shop update).',
+  al_gm_cape:   'Level 99 pinnacle — Grand Elixir. Every brew produces three potions instead of one (supersedes Double Brew and Twin Cauldron).\nRequires 97 points spent AND the Alchemy Cape (buy from the Shop at Lv 99).',
   // Firemaking
   fm_speed:     'Reduces time per burn. +0.9% per rank, up to +16.2% faster at max 18.',
   fm_thrift:    'Each burn has a chance to not consume the log — a free burn with full rewards.\n+1.5% per rank, up to 18% at max 12.',
@@ -8603,7 +8603,7 @@ const PASSIVE_TIPS={
   fm_gm_sell:   'Grandmaster bonus (Lv 80). +4% firemaking output sell value per rank, up to +16% at max 4.',
   fm_master3:   'Grandmaster pinnacle. Multiplies ALL Firemaking XP by 1.5× permanently.\nRequires Lv 90 and 90 points spent in this tree. Applies on top of every additive XP bonus.',
   fm_master2:   'Grandmaster pinnacle. Every burn produces double its base outputs — 2× Ash, 2× Charcoal, 2× Ember Dust, etc.\nRequires Lv 90 and 97 points spent (take Void Furnace first).',
-  fm_gm_cape:   'Level 99 pinnacle — Phoenix Rebirth. Every 10th log burned is reborn from the ashes: refunded to your satchel and grants its Firemaking XP a second time.\nRequires 97 points spent AND the Firemaking Cape (coming with the shop update).',
+  fm_gm_cape:   'Level 99 pinnacle — Phoenix Rebirth. Every 10th log burned is reborn from the ashes: refunded to your satchel and grants its Firemaking XP a second time.\nRequires 97 points spent AND the Firemaking Cape (buy from the Shop at Lv 99).',
   // Agility
   ag_speed:     'Reduces lap time. +2% per rank, up to +30%.',
   ag_coins:     'Increases coin reward for completing each lap.\nAt max (15): +45% coins per lap.',
@@ -8628,8 +8628,8 @@ const PASSIVE_TIPS={
   jw_gm_speed:  'Grandmaster bonus (Lv 75). +3% cut speed per rank.',
   jw_gm_xp:     'Grandmaster bonus (Lv 80). +4% Jeweler XP per rank.',
   jw_gm_sell:   'Grandmaster bonus (Lv 85). +6% jewelry sell value per rank.',
-  jw_gm_cape:   'Level 99 pinnacle — Flawless Cut. 15% chance on each jewelry cut for a flawless result that yields +2 bonus pieces (jewelry crafts only, not gem refining).\nRequires 97 points spent AND the Jeweler Cape (coming with the shop update).',
-  ag_gm_cape:   'Level 99 pinnacle — Runner\'s High. 20% chance per lap to instantly bank a second lap\'s full coins and XP.\nRequires 97 points spent AND the Agility Cape (coming with the shop update).',
+  jw_gm_cape:   'Level 99 pinnacle — Flawless Cut. 15% chance on each jewelry cut for a flawless result that yields +2 bonus pieces (jewelry crafts only, not gem refining).\nRequires 97 points spent AND the Jeweler Cape (buy from the Shop at Lv 99).',
+  ag_gm_cape:   'Level 99 pinnacle — Runner\'s High. 20% chance per lap to instantly bank a second lap\'s full coins and XP.\nRequires 97 points spent AND the Agility Cape (buy from the Shop at Lv 99).',
   // Farming
   fa_speed:     'Reduces tending time per patch. +2% per rank, up to +30%.',
   fa_yield:     'Each harvest has a 4% per rank chance for a bonus harvest roll.\nAt max (15): 60% bonus yield chance.',
@@ -8644,7 +8644,7 @@ const PASSIVE_TIPS={
   fa_gm_sell:   'Grandmaster bonus (Lv 85). +6% farm produce sell value per rank.',
   fa_gm_2x_xp:  'Pinnacle (Lv 90). Permanently doubles all Farming XP.\nStacks multiplicatively with Herbalist, Elder Farmer, and potions.',
   fa_gm_tend:   'Pinnacle (Lv 90). Each tend action removes 2× the normal growth time.\n25% → 50% boost per tend, letting you harvest crops much faster.',
-  fa_gm_cape:   'Level 99 pinnacle — Bountiful Soil. 50% chance on each harvest for a Bumper Crop that doubles the entire harvest (stacks with Abundance for up to 4×).\nRequires 97 points spent AND the Farming Cape (coming with the shop update).',
+  fa_gm_cape:   'Level 99 pinnacle — Bountiful Soil. 50% chance on each harvest for a Bumper Crop that doubles the entire harvest (stacks with Abundance for up to 4×).\nRequires 97 points spent AND the Farming Cape (buy from the Shop at Lv 99).',
   // Crafting
   cr_speed:     'Reduces time per craft. +1.3% per rank, up to +19.5%.',
   cr_thrift:    'Each craft has a chance to skip ALL input costs (bars + log preserved).\nAt max (15): 30% chance to preserve a craft\'s inputs.',
