@@ -2671,7 +2671,7 @@ header h1 .flame{color:var(--ember)}
   <div class="mm-btns">
     <button class="mm-btn mm-primary" id="mmPlay">▶ Play</button>
   </div>
-  <div class="mm-ver">v1.0.95</div>
+  <div class="mm-ver">v1.0.96</div>
 </div>
 
 <!-- ===== CHARACTER SELECT (added) ===== -->
@@ -2750,7 +2750,7 @@ header h1 .flame{color:var(--ember)}
     <button class="hdr-menu-btn" id="tabComp"><svg class="nav-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 19a9 9 0 0 1 9 0a9 9 0 0 1 9 0"/><path d="M3 6a9 9 0 0 1 9 0a9 9 0 0 1 9 0"/><path d="M3 6v13"/><path d="M12 6v13"/><path d="M21 6v13"/></svg>Collection Log</button>
   </div>
   <div class="stat-pill">
-    <span class="coins-wrap">🪙 <b id="coins">0</b></span>
+    <span class="coins-wrap"><svg class="ev-icon" viewBox="0 0 64 64"><defs><radialGradient id="uic_hdr" cx="0.4" cy="0.34" r="0.72"><stop offset="0" stop-color="#ffe9a0"/><stop offset="0.5" stop-color="#e6b23e"/><stop offset="1" stop-color="#8a5e18"/></radialGradient></defs><ellipse cx="32" cy="55" rx="17" ry="2.8" fill="#000" opacity="0.32"/><circle cx="32" cy="32" r="22" fill="url(#uic_hdr)" stroke="#5a3c10" stroke-width="1.6"/><circle cx="32" cy="32" r="16" fill="none" stroke="#7a5418" stroke-width="1.1" opacity="0.7"/><path d="M32 21 L35 29.5 L44 29.5 L37 35 L39.5 44 L32 38.5 L24.5 44 L27 35 L20 29.5 L29 29.5 Z" fill="#fff6d0" opacity="0.85"/></svg> <b id="coins">0</b></span>
     <span>Total Lv <b id="totalLevel">6</b></span>
     <button class="hdr-btn" id="btnExport" title="Export save"><svg class="nav-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/><path d="M7 11l5 5l5-5"/><path d="M12 4v12"/></svg>Export</button>
     <button class="hdr-btn" id="btnImport" title="Import save"><svg class="nav-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/><path d="M7 9l5-5l5 5"/><path d="M12 4v12"/></svg>Import</button>
@@ -6488,6 +6488,24 @@ const ICONS = {
   pet_wyvern_hatchling: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><radialGradient id="wh_scale" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#5fb8e0"/><stop offset="0.6" stop-color="#2f78a0"/><stop offset="1" stop-color="#0a283a"/></radialGradient></defs><ellipse cx="32" cy="56" rx="16" ry="3" fill="#000" opacity="0.4"/><path d="M14 28 L8 18 L18 24 Z" fill="url(#wh_scale)" stroke="#0a283a" stroke-width="0.6"/><path d="M50 28 L56 18 L46 24 Z" fill="url(#wh_scale)" stroke="#0a283a" stroke-width="0.6"/><ellipse cx="32" cy="42" rx="16" ry="12" fill="url(#wh_scale)" stroke="#0a283a" stroke-width="0.8"/><ellipse cx="32" cy="26" rx="12" ry="11" fill="url(#wh_scale)" stroke="#0a283a" stroke-width="0.8"/><path d="M18 24 Q22 14 28 12" stroke="#5fb8e0" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M46 24 Q42 14 36 12" stroke="#5fb8e0" stroke-width="2" fill="none" stroke-linecap="round"/><ellipse cx="26" cy="26" rx="2.6" ry="2.4" fill="#fbd24e"/><ellipse cx="38" cy="26" rx="2.6" ry="2.4" fill="#fbd24e"/><circle cx="26" cy="26" r="1.1" fill="#1a0e04"/><circle cx="38" cy="26" r="1.1" fill="#1a0e04"/><path d="M28 32 Q32 36 36 32" stroke="#1a0e04" stroke-width="1" fill="none"/><path d="M28 30 L30 32 L28 34 M36 30 L34 32 L36 34" stroke="#fff8dc" stroke-width="0.7" fill="none"/><path d="M48 48 Q58 46 60 38" stroke="#2f78a0" stroke-width="3" fill="none" stroke-linecap="round"/></svg>',
   pet_imp: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><radialGradient id="im_skin" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#e0762f"/><stop offset="0.6" stop-color="#a02818"/><stop offset="1" stop-color="#3a0808"/></radialGradient><radialGradient id="im_flame" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#fbd24e"/><stop offset="0.5" stop-color="#e0762f"/><stop offset="1" stop-color="#a02818" stop-opacity="0"/></radialGradient></defs><ellipse cx="32" cy="56" rx="14" ry="3" fill="#000" opacity="0.4"/><path d="M28 14 L22 4 L26 12 Z" fill="url(#im_skin)" stroke="#3a0808" stroke-width="0.6"/><path d="M36 14 L42 4 L38 12 Z" fill="url(#im_skin)" stroke="#3a0808" stroke-width="0.6"/><ellipse cx="32" cy="40" rx="16" ry="14" fill="url(#im_skin)" stroke="#3a0808" stroke-width="0.8"/><circle cx="32" cy="26" r="13" fill="url(#im_skin)" stroke="#3a0808" stroke-width="0.8"/><path d="M14 36 L4 30 L10 38 L4 42 L16 42 Z" fill="url(#im_skin)" stroke="#3a0808" stroke-width="0.6"/><path d="M50 36 L60 30 L54 38 L60 42 L48 42 Z" fill="url(#im_skin)" stroke="#3a0808" stroke-width="0.6"/><ellipse cx="26" cy="26" rx="2.8" ry="2.4" fill="#fbd24e"/><ellipse cx="38" cy="26" rx="2.8" ry="2.4" fill="#fbd24e"/><circle cx="26" cy="26" r="1.2" fill="#3a0808"/><circle cx="38" cy="26" r="1.2" fill="#3a0808"/><path d="M27 32 L29 30 L31 32 L33 30 L35 32 L37 30" stroke="#3a0808" stroke-width="1" fill="none"/><ellipse cx="32" cy="6" rx="6" ry="8" fill="url(#im_flame)" opacity="0.7"/><path d="M48 54 Q56 50 56 42" stroke="#a02818" stroke-width="2" fill="none" stroke-linecap="round"/></svg>',
   pet_unknown: '<svg class="ev-icon" viewBox="0 0 64 64"><circle cx="32" cy="32" r="28" fill="#1a1410" stroke="#3a2818" stroke-width="1.5"/><circle cx="32" cy="32" r="22" fill="#0f0a08"/><text x="32" y="44" text-anchor="middle" fill="#5a4838" font-size="32" font-family="serif" font-weight="700">?</text></svg>',
+  // ── [JS-ICONS-UI] chrome icons (1.0.96) — small inline SVGs replacing decorative
+  // UI emoji (tabs, stat rows, currency, headers). Reused via iconHTML('ui_*'). ──
+  ui_coin: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><radialGradient id="uic_g" cx="0.4" cy="0.34" r="0.72"><stop offset="0" stop-color="#ffe9a0"/><stop offset="0.5" stop-color="#e6b23e"/><stop offset="1" stop-color="#8a5e18"/></radialGradient></defs><ellipse cx="32" cy="55" rx="17" ry="2.8" fill="#000" opacity="0.32"/><circle cx="32" cy="32" r="22" fill="url(#uic_g)" stroke="#5a3c10" stroke-width="1.6"/><circle cx="32" cy="32" r="16" fill="none" stroke="#7a5418" stroke-width="1.1" opacity="0.7"/><path d="M32 21 L35 29.5 L44 29.5 L37 35 L39.5 44 L32 38.5 L24.5 44 L27 35 L20 29.5 L29 29.5 Z" fill="#fff6d0" opacity="0.85"/><ellipse cx="25" cy="24" rx="4" ry="2.2" fill="#fff" opacity="0.55" transform="rotate(-35 25 24)"/></svg>',
+  ui_swords: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><linearGradient id="uisw_b" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f0f2f8"/><stop offset="0.5" stop-color="#9aa0ac"/><stop offset="1" stop-color="#4a4e58"/></linearGradient></defs><g stroke="#2a2c34" stroke-width="0.7"><path d="M11 9 L19 9 L45 43 L41 49 L35 47 Z" fill="url(#uisw_b)"/><path d="M53 9 L45 9 L19 43 L23 49 L29 47 Z" fill="url(#uisw_b)"/></g><path d="M39 45 L51 57 M25 45 L13 57" stroke="#6a4a20" stroke-width="4" stroke-linecap="round"/><path d="M43 41 L53 51 M21 41 L11 51" stroke="#c79b4e" stroke-width="3" stroke-linecap="round"/></svg>',
+  ui_sword: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><linearGradient id="uis_b" x1="0.2" y1="0" x2="0.8" y2="1"><stop offset="0" stop-color="#f0f2f8"/><stop offset="0.5" stop-color="#9aa0ac"/><stop offset="1" stop-color="#4a4e58"/></linearGradient></defs><path d="M30 6 L38 6 L36 40 L32 40 Z" fill="url(#uis_b)" stroke="#2a2c34" stroke-width="0.7"/><path d="M31 8 L34 8 L33 38 Z" fill="#fff" opacity="0.35"/><rect x="24" y="40" width="20" height="4" rx="1.5" fill="#c79b4e" stroke="#6e552c" stroke-width="0.6"/><rect x="31" y="44" width="6" height="12" rx="1.5" fill="#6a4a20"/><circle cx="34" cy="58" r="2.6" fill="#c79b4e" stroke="#6e552c" stroke-width="0.6"/></svg>',
+  ui_shield: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><linearGradient id="uish_g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7a90c0"/><stop offset="0.5" stop-color="#3f5488"/><stop offset="1" stop-color="#1a2848"/></linearGradient></defs><path d="M32 6 L54 14 Q54 40 32 58 Q10 40 10 14 Z" fill="url(#uish_g)" stroke="#0e1730" stroke-width="1.4"/><path d="M32 6 L54 14 Q54 40 32 58 Z" fill="#000" opacity="0.18"/><path d="M32 14 L44 18 Q44 36 32 48 Q20 36 20 18 Z" fill="none" stroke="#a8bce8" stroke-width="1.2" opacity="0.6"/><path d="M32 6 L32 58" stroke="#a8bce8" stroke-width="0.7" opacity="0.4"/></svg>',
+  ui_spark: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><radialGradient id="uisp_g" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#fff6d0"/><stop offset="0.5" stop-color="#fbd24e"/><stop offset="1" stop-color="#c77a1e"/></radialGradient></defs><path d="M32 4 Q35 26 40 30 Q45 34 60 32 Q45 34 40 38 Q35 42 32 60 Q29 42 24 38 Q19 34 4 32 Q19 34 24 30 Q29 26 32 4 Z" fill="url(#uisp_g)"/><circle cx="32" cy="32" r="3.5" fill="#fff" opacity="0.9"/><path d="M52 12 L53.5 16 L57.5 17.5 L53.5 19 L52 23 L50.5 19 L46.5 17.5 L50.5 16 Z" fill="#fbd24e" opacity="0.8"/></svg>',
+  ui_paw: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><radialGradient id="uip_g" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#c79b4e"/><stop offset="1" stop-color="#6e4a20"/></radialGradient></defs><ellipse cx="32" cy="42" rx="13" ry="11" fill="url(#uip_g)"/><ellipse cx="16" cy="30" rx="5" ry="6.5" fill="url(#uip_g)"/><ellipse cx="48" cy="30" rx="5" ry="6.5" fill="url(#uip_g)"/><ellipse cx="24" cy="18" rx="4.6" ry="6" fill="url(#uip_g)"/><ellipse cx="40" cy="18" rx="4.6" ry="6" fill="url(#uip_g)"/><ellipse cx="32" cy="40" rx="6" ry="4.5" fill="#3a2810" opacity="0.5"/></svg>',
+  ui_scroll: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><linearGradient id="uisc_g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f0e2b8"/><stop offset="0.5" stop-color="#d4b878"/><stop offset="1" stop-color="#9a7a40"/></linearGradient></defs><rect x="16" y="12" width="32" height="40" rx="2" fill="url(#uisc_g)" stroke="#6e552c" stroke-width="1"/><path d="M12 12 Q12 18 16 18 L16 12 Z M52 46 Q52 52 48 52 L48 46 Z" fill="#b89858"/><rect x="12" y="10" width="8" height="44" rx="4" fill="#c79b4e" stroke="#6e552c" stroke-width="0.8"/><rect x="44" y="10" width="8" height="44" rx="4" fill="#b08840" stroke="#6e552c" stroke-width="0.8"/><path d="M23 24 L41 24 M23 30 L41 30 M23 36 L37 36" stroke="#6e552c" stroke-width="1.2" opacity="0.6" stroke-linecap="round"/></svg>',
+  ui_muscle: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><radialGradient id="uim_g" cx="0.4" cy="0.35" r="0.7"><stop offset="0" stop-color="#f0c8a4"/><stop offset="0.6" stop-color="#c89070"/><stop offset="1" stop-color="#7a4a30"/></radialGradient></defs><path d="M10 24 Q10 16 20 16 L40 16 Q52 16 54 30 Q56 44 44 50 Q30 56 18 50 Q8 44 12 36 Q6 32 10 24 Z" fill="url(#uim_g)" stroke="#5a3420" stroke-width="1"/><path d="M20 20 Q34 22 40 34 Q44 42 38 48" stroke="#8a5638" stroke-width="1.4" fill="none" opacity="0.6"/><path d="M14 24 Q18 22 24 24" stroke="#fff" stroke-width="1" opacity="0.35" fill="none"/></svg>',
+  ui_heart: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><radialGradient id="uih_g" cx="0.4" cy="0.35" r="0.7"><stop offset="0" stop-color="#ff8a7a"/><stop offset="0.5" stop-color="#d83a3a"/><stop offset="1" stop-color="#7a1018"/></radialGradient></defs><path d="M32 54 Q10 38 8 22 Q7 10 18 9 Q28 9 32 20 Q36 9 46 9 Q57 10 56 22 Q54 38 32 54 Z" fill="url(#uih_g)" stroke="#4a0810" stroke-width="1.2"/><ellipse cx="22" cy="20" rx="5" ry="3.4" fill="#fff" opacity="0.4" transform="rotate(-30 22 20)"/></svg>',
+  ui_bolt: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><linearGradient id="uib_g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff6d0"/><stop offset="0.5" stop-color="#fbd24e"/><stop offset="1" stop-color="#e0762f"/></linearGradient></defs><path d="M38 4 L18 36 L30 36 L26 60 L48 26 L34 26 Z" fill="url(#uib_g)" stroke="#a3521a" stroke-width="1.2" stroke-linejoin="round"/><path d="M36 10 L24 32 L32 32 Z" fill="#fff" opacity="0.4"/></svg>',
+  ui_flame: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><linearGradient id="uifl_g" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#7a1820"/><stop offset="0.4" stop-color="#e0762f"/><stop offset="0.8" stop-color="#fbd24e"/><stop offset="1" stop-color="#fff8dc"/></linearGradient></defs><path d="M32 6 Q22 18 19 30 Q15 42 20 52 Q25 58 32 58 Q39 58 44 52 Q49 42 45 30 Q42 18 32 6 Z" fill="url(#uifl_g)"/><path d="M32 22 Q26 30 25 38 Q24 46 28 52 Q30 54 32 54 Q34 54 36 52 Q40 46 39 38 Q38 30 32 22 Z" fill="#fff8dc" opacity="0.85"/></svg>',
+  ui_book: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><linearGradient id="uibk_g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5a86c0"/><stop offset="1" stop-color="#243c6a"/></linearGradient></defs><path d="M8 14 Q20 10 32 14 L32 52 Q20 48 8 52 Z" fill="url(#uibk_g)" stroke="#16233f" stroke-width="1"/><path d="M56 14 Q44 10 32 14 L32 52 Q44 48 56 52 Z" fill="url(#uibk_g)" stroke="#16233f" stroke-width="1"/><path d="M32 14 L32 52" stroke="#16233f" stroke-width="1.4"/><path d="M14 22 L27 20 M14 28 L27 26 M37 20 L50 22 M37 26 L50 28" stroke="#cdd8ee" stroke-width="1" opacity="0.6" stroke-linecap="round"/></svg>',
+  ui_gem: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><linearGradient id="uig_g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9be0ff"/><stop offset="0.5" stop-color="#3a9bd8"/><stop offset="1" stop-color="#123a6a"/></linearGradient></defs><path d="M20 16 L44 16 L56 30 L32 56 L8 30 Z" fill="url(#uig_g)" stroke="#0e2848" stroke-width="1.2" stroke-linejoin="round"/><path d="M20 16 L28 30 L8 30 Z" fill="#7ac8f0" opacity="0.5"/><path d="M44 16 L36 30 L56 30 Z" fill="#1a5a92" opacity="0.6"/><path d="M20 16 L44 16 L36 30 L28 30 Z" fill="#bfeeff" opacity="0.55"/><path d="M8 30 L56 30 L32 56 Z" fill="#000" opacity="0.12"/><path d="M28 30 L32 56 L36 30" stroke="#0e2848" stroke-width="0.7" fill="none" opacity="0.5"/></svg>',
+  ui_skull: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><radialGradient id="uisk_g" cx="0.5" cy="0.4" r="0.6"><stop offset="0" stop-color="#eee6d0"/><stop offset="0.6" stop-color="#b0a488"/><stop offset="1" stop-color="#5a4e3c"/></radialGradient></defs><path d="M16 28 Q16 10 32 10 Q48 10 48 28 L48 40 L42 44 L42 50 L38 50 L38 46 L26 46 L26 50 L22 50 L22 44 L16 40 Z" fill="url(#uisk_g)" stroke="#33281a" stroke-width="1"/><ellipse cx="24" cy="30" rx="5" ry="6" fill="#100804"/><ellipse cx="40" cy="30" rx="5" ry="6" fill="#100804"/><path d="M30 38 L32 34 L34 38 L33 42 L31 42 Z" fill="#33281a"/><path d="M27 46 L27 50 M31 46 L31 50 M35 46 L35 50" stroke="#33281a" stroke-width="0.9"/></svg>',
+  ui_food: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><linearGradient id="uifd_g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d87848"/><stop offset="0.5" stop-color="#a84a28"/><stop offset="1" stop-color="#5a2410"/></linearGradient></defs><path d="M14 50 L20 44 Q14 34 24 24 Q34 14 44 20 Q54 26 46 38 Q40 48 30 46 L24 52 Q18 56 14 50 Z" fill="url(#uifd_g)" stroke="#3a1608" stroke-width="1"/><path d="M28 26 Q36 20 42 26" stroke="#f0c088" stroke-width="1.4" fill="none" opacity="0.6"/><rect x="8" y="44" width="14" height="6" rx="3" transform="rotate(-45 15 47)" fill="#eee0c8" stroke="#8a7a58" stroke-width="0.8"/></svg>',
+  ui_potion: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><linearGradient id="uipo_g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c060e0"/><stop offset="0.5" stop-color="#7a2aa0"/><stop offset="1" stop-color="#3a0e58"/></linearGradient></defs><rect x="26" y="6" width="12" height="6" rx="1.4" fill="#a86c3b"/><rect x="28" y="12" width="8" height="8" fill="#40384a" opacity="0.4"/><path d="M28 18 Q14 28 14 44 Q14 56 32 56 Q50 56 50 44 Q50 28 36 18 Z" fill="#1a1020"/><path d="M28 26 Q18 34 18 44 Q18 52 32 52 Q46 52 46 44 Q46 34 36 26 Z" fill="url(#uipo_g)"/><circle cx="26" cy="42" r="2.4" fill="#e0a0f0" opacity="0.7"/><circle cx="37" cy="38" r="1.6" fill="#e0a0f0" opacity="0.8"/><path d="M22 30 Q17 40 19 50" stroke="#fff" stroke-width="1.4" fill="none" opacity="0.35" stroke-linecap="round"/></svg>',
 };
 
 /* Returns SVG markup for ids in the ICONS registry, falling back to
@@ -15212,17 +15230,17 @@ function renderStats(){
    +'</div>';
   cBlock.innerHTML=
     '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">'
-   +  '<span style="font-size:16px">⚔️</span>'
+   +  '<span style="font-size:16px">'+iconHTML('ui_swords')+'</span>'
    +  '<b style="color:var(--trim);font-variant:small-caps;letter-spacing:1.5px">Combat</b>'
    +  '<span style="color:var(--muted);font-size:12px;margin-left:8px">Lv '+cLvl+'</span>'
    +  '<span style="color:var(--muted);font-size:12px;margin-left:auto">levels + worn gear</span>'
    +'</div>'
     // Base skill levels — 2×2 compact grid
    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:3px 12px;font-size:13px;margin-bottom:8px;padding-bottom:8px;border-bottom:1px dashed var(--trim-d)">'
-   +  '<div><span style="color:var(--muted)">⚔️ Attack</span> <b style="color:var(--text);float:right">'+aLvl+'</b></div>'
-   +  '<div><span style="color:var(--muted)">💪 Strength</span> <b style="color:var(--text);float:right">'+sLvl+'</b></div>'
-   +  '<div><span style="color:var(--muted)">🛡️ Defence</span> <b style="color:var(--text);float:right">'+dLvl+'</b></div>'
-   +  '<div><span style="color:var(--muted)">❤️ Hitpoints</span> <b style="color:var(--text);float:right">'+hLvl+'</b></div>'
+   +  '<div><span style="color:var(--muted)">'+iconHTML('ui_swords')+' Attack</span> <b style="color:var(--text);float:right">'+aLvl+'</b></div>'
+   +  '<div><span style="color:var(--muted)">'+iconHTML('ui_muscle')+' Strength</span> <b style="color:var(--text);float:right">'+sLvl+'</b></div>'
+   +  '<div><span style="color:var(--muted)">'+iconHTML('ui_shield')+' Defence</span> <b style="color:var(--text);float:right">'+dLvl+'</b></div>'
+   +  '<div><span style="color:var(--muted)">'+iconHTML('ui_heart')+' Hitpoints</span> <b style="color:var(--text);float:right">'+hLvl+'</b></div>'
    +'</div>'
     // Derived stats — base + gear = total
    +breakRow('Accuracy',  accBase, accGear, accTot)
@@ -22344,9 +22362,9 @@ function renderCombat(){
   // Training-style badge — small icon-only chip floating in player's card top-right.
   // The actual picker buttons live inside the player card too (see styleInCardPicker),
   // so this badge acts as a status glance from a distance.
-  const styleIcons={attack:'⚔', strength:'💪', defence:'🛡'};
+  const styleIcons={attack:iconHTML('ui_swords'), strength:iconHTML('ui_muscle'), defence:iconHTML('ui_shield')};
   const styleNames={attack:'Attack', strength:'Strength', defence:'Defence'};
-  const styleBadge=`<div class="cmb-style-badge${active?' locked':''}" title="Training: ${styleNames[style]||'Attack'}${active?' (locked mid-fight)':''}">${styleIcons[style]||'⚔'}</div>`;
+  const styleBadge=`<div class="cmb-style-badge${active?' locked':''}" title="Training: ${styleNames[style]||'Attack'}${active?' (locked mid-fight)':''}">${styleIcons[style]||iconHTML('ui_swords')}</div>`;
 
   // In-card picker — three small icon buttons inside the player fighter card so
   // switching training is a one-click reach from the live arena. Disabled when
@@ -22390,11 +22408,11 @@ function renderCombat(){
   for(const m of MONSTERS){ if((state.monKills&&state.monKills[m.id])>0) _monLogSeen++; }
   const subTabsHTML=`
     <div class="cmb-subtabs">
-      <button class="cmb-subtab${subTab==='arena'?' on':''}" data-sub="arena">⚔ ARENA</button>
-      <button class="cmb-subtab${subTab==='mastery'?' on':''}" data-sub="mastery">✦ MASTERY <span class="badge">${cmastAvail}/${cmastGranted}</span></button>
-      <button class="cmb-subtab${subTab==='slayer'?' on':''}" data-sub="slayer">🗡 SLAYER <span class="badge">${(function(){var t=state.slayer&&state.slayer.task;return t&&t.done<t.need?(t.done+'/'+t.need):('Lv'+slayerLevel());})()}</span></button>
-      <button class="cmb-subtab${subTab==='pets'?' on':''}" data-sub="pets">🐾 PETS <span class="badge">${_petOwned}/${_petTotal}</span></button>
-      <button class="cmb-subtab${subTab==='log'?' on':''}" data-sub="log">🗒 LOG <span class="badge">${_monLogSeen}/${_monLogTotal}</span></button>
+      <button class="cmb-subtab${subTab==='arena'?' on':''}" data-sub="arena">${iconHTML('ui_swords')} ARENA</button>
+      <button class="cmb-subtab${subTab==='mastery'?' on':''}" data-sub="mastery">${iconHTML('ui_spark')} MASTERY <span class="badge">${cmastAvail}/${cmastGranted}</span></button>
+      <button class="cmb-subtab${subTab==='slayer'?' on':''}" data-sub="slayer">${iconHTML('ui_sword')} SLAYER <span class="badge">${(function(){var t=state.slayer&&state.slayer.task;return t&&t.done<t.need?(t.done+'/'+t.need):('Lv'+slayerLevel());})()}</span></button>
+      <button class="cmb-subtab${subTab==='pets'?' on':''}" data-sub="pets">${iconHTML('ui_paw')} PETS <span class="badge">${_petOwned}/${_petTotal}</span></button>
+      <button class="cmb-subtab${subTab==='log'?' on':''}" data-sub="log">${iconHTML('ui_scroll')} LOG <span class="badge">${_monLogSeen}/${_monLogTotal}</span></button>
     </div>
   `;
 
@@ -22508,13 +22526,13 @@ function renderCombat(){
       <div class="cmb-engage-wrap">
         ${active
           ? `<button class="cmb-engage-btn flee" id="cmbFlee"><span class="ceb-ic">✕</span>Disengage</button>`
-          : `<button class="cmb-engage-btn engage" id="cmbEngage"><span class="ceb-ic">⚔</span>Engage <b>${mon.name}</b></button>`}
+          : `<button class="cmb-engage-btn engage" id="cmbEngage"><span class="ceb-ic">${iconHTML('ui_swords')}</span>Engage <b>${mon.name}</b></button>`}
       </div>
     </div>
     <div class="cmb-logfood">
       <div class="cmb-log" id="cmbLog">${combat.log.map(l=>`<div class="ln ${l.c}">${l.t}</div>`).join('')||'<div class="ln sys">The arena is quiet…</div>'}</div>
       <div class="cmb-foodmenu">
-        <div class="cmb-foodmenu-head">🍖 Food &amp; Potions</div>
+        <div class="cmb-foodmenu-head">${iconHTML('ui_food')} Food &amp; Potions</div>
         ${healPickHTML}
         ${buffPickHTML}
       </div>
@@ -22545,7 +22563,7 @@ function renderCombat(){
   panel.innerHTML=`
     <div class="cmb-head">
       <button class="cmb-back" id="cmbBack">← Skilling</button>
-      <h2>⚔ Combat</h2>
+      <h2>${iconHTML('ui_swords')} Combat</h2>
     </div>
     ${subTabsHTML}
     ${subTab==='mastery' ? buildCmastViewHTML() : ''}
