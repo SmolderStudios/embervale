@@ -2671,7 +2671,7 @@ header h1 .flame{color:var(--ember)}
   <div class="mm-btns">
     <button class="mm-btn mm-primary" id="mmPlay">▶ Play</button>
   </div>
-  <div class="mm-ver">v1.0.99</div>
+  <div class="mm-ver">v1.0.100</div>
 </div>
 
 <!-- ===== CHARACTER SELECT (added) ===== -->
@@ -10398,9 +10398,9 @@ function defaultState(){
     zone:'rat_warrens',   // currently-selected combat zone (Rat Warrens is the starter)
     bossUnlocked:{},      // {monsterId:true} — persistent boss tile unlocks (sticky once earned)
     // Auto-heal — if enabled, the combat tick drinks the lowest-waste heal
-    // potion when HP drops to/below `thresholdPct` of max. Disabled by default
-    // so new players don't accidentally burn early brews.
-    autoHeal:{enabled:false, thresholdPct:30, itemId:''},
+    // potion when HP drops to/below `thresholdPct` of max. ON @ 50% by default
+    // (1.0.100) so new players survive — the old off/30% default lost fights.
+    autoHeal:{enabled:true, thresholdPct:50, itemId:''},
     autoBuff:{enabled:false, itemId:''}, // (1.0.30) keep combat buff potions topped up; itemId='' = keep all
     // Combat Mastery (v1.0.69) — separate from the activity-card mastery system.
     //   cmast            — {nodeId: rank} allocated ranks on combat mastery nodes
@@ -10580,13 +10580,25 @@ function normalizeState(){
   })();
   if(!state.discovered||typeof state.discovered!=='object'||Array.isArray(state.discovered)) state.discovered={};
   // Auto-heal config default for older saves (1.0.63 introduced this field).
+  // (1.0.100) Default is now ON @ 50% — the old off/30% default was a survival trap
+  // (fights & raids lost because new players never found the toggle).
   if(!state.autoHeal||typeof state.autoHeal!=='object'){
-    state.autoHeal={enabled:false, thresholdPct:30, itemId:''};
+    state.autoHeal={enabled:true, thresholdPct:50, itemId:''};
   } else {
-    if(typeof state.autoHeal.enabled!=='boolean') state.autoHeal.enabled=false;
+    if(typeof state.autoHeal.enabled!=='boolean') state.autoHeal.enabled=true;
     const t=+state.autoHeal.thresholdPct;
-    if(!isFinite(t)||t<5||t>95) state.autoHeal.thresholdPct=30;
+    if(!isFinite(t)||t<5||t>95) state.autoHeal.thresholdPct=50;
     if(typeof state.autoHeal.itemId!=='string') state.autoHeal.itemId=''; // auto-eat pick (1.0.8)
+  }
+  // (1.0.100) One-time upgrade: players still sitting on the untouched OLD default
+  // (off + 30% + no pick) get bumped to the new safe default. Runs once (flag-guarded)
+  // so a deliberate "off" set AFTER this migration is never re-enabled.
+  if(!state._autoEatV2){
+    state._autoEatV2=1;
+    var _ah=state.autoHeal;
+    if(_ah && _ah.enabled===false && (+_ah.thresholdPct===30) && !_ah.itemId){
+      _ah.enabled=true; _ah.thresholdPct=50;
+    }
   }
   // Auto-buff config default (1.0.30).
   if(!state.autoBuff||typeof state.autoBuff!=='object') state.autoBuff={enabled:false,itemId:''};
