@@ -2671,7 +2671,7 @@ header h1 .flame{color:var(--ember)}
   <div class="mm-btns">
     <button class="mm-btn mm-primary" id="mmPlay">▶ Play</button>
   </div>
-  <div class="mm-ver">v1.0.96</div>
+  <div class="mm-ver">v1.0.97</div>
 </div>
 
 <!-- ===== CHARACTER SELECT (added) ===== -->
@@ -6506,6 +6506,8 @@ const ICONS = {
   ui_skull: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><radialGradient id="uisk_g" cx="0.5" cy="0.4" r="0.6"><stop offset="0" stop-color="#eee6d0"/><stop offset="0.6" stop-color="#b0a488"/><stop offset="1" stop-color="#5a4e3c"/></radialGradient></defs><path d="M16 28 Q16 10 32 10 Q48 10 48 28 L48 40 L42 44 L42 50 L38 50 L38 46 L26 46 L26 50 L22 50 L22 44 L16 40 Z" fill="url(#uisk_g)" stroke="#33281a" stroke-width="1"/><ellipse cx="24" cy="30" rx="5" ry="6" fill="#100804"/><ellipse cx="40" cy="30" rx="5" ry="6" fill="#100804"/><path d="M30 38 L32 34 L34 38 L33 42 L31 42 Z" fill="#33281a"/><path d="M27 46 L27 50 M31 46 L31 50 M35 46 L35 50" stroke="#33281a" stroke-width="0.9"/></svg>',
   ui_food: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><linearGradient id="uifd_g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d87848"/><stop offset="0.5" stop-color="#a84a28"/><stop offset="1" stop-color="#5a2410"/></linearGradient></defs><path d="M14 50 L20 44 Q14 34 24 24 Q34 14 44 20 Q54 26 46 38 Q40 48 30 46 L24 52 Q18 56 14 50 Z" fill="url(#uifd_g)" stroke="#3a1608" stroke-width="1"/><path d="M28 26 Q36 20 42 26" stroke="#f0c088" stroke-width="1.4" fill="none" opacity="0.6"/><rect x="8" y="44" width="14" height="6" rx="3" transform="rotate(-45 15 47)" fill="#eee0c8" stroke="#8a7a58" stroke-width="0.8"/></svg>',
   ui_potion: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><linearGradient id="uipo_g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c060e0"/><stop offset="0.5" stop-color="#7a2aa0"/><stop offset="1" stop-color="#3a0e58"/></linearGradient></defs><rect x="26" y="6" width="12" height="6" rx="1.4" fill="#a86c3b"/><rect x="28" y="12" width="8" height="8" fill="#40384a" opacity="0.4"/><path d="M28 18 Q14 28 14 44 Q14 56 32 56 Q50 56 50 44 Q50 28 36 18 Z" fill="#1a1020"/><path d="M28 26 Q18 34 18 44 Q18 52 32 52 Q46 52 46 44 Q46 34 36 26 Z" fill="url(#uipo_g)"/><circle cx="26" cy="42" r="2.4" fill="#e0a0f0" opacity="0.7"/><circle cx="37" cy="38" r="1.6" fill="#e0a0f0" opacity="0.8"/><path d="M22 30 Q17 40 19 50" stroke="#fff" stroke-width="1.4" fill="none" opacity="0.35" stroke-linecap="round"/></svg>',
+  ui_wind: '<svg class="ev-icon" viewBox="0 0 64 64"><g fill="none" stroke="#9fe6d8" stroke-width="4" stroke-linecap="round"><path d="M8 22 L38 22 Q48 22 48 15 Q48 8 41 8 Q35 8 35 14"/><path d="M6 34 L44 34 Q56 34 56 42 Q56 50 48 50 Q41 50 41 43"/><path d="M8 46 L30 46 Q38 46 38 52 Q38 58 32 58 Q27 58 27 53"/></g></svg>',
+  ui_lock: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><linearGradient id="uilk_g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e6c25a"/><stop offset="1" stop-color="#8a6018"/></linearGradient></defs><path d="M20 30 L20 20 Q20 8 32 8 Q44 8 44 20 L44 30" fill="none" stroke="#b8b0a0" stroke-width="5"/><rect x="14" y="28" width="36" height="30" rx="4" fill="url(#uilk_g)" stroke="#4a3410" stroke-width="1.2"/><rect x="16" y="30" width="32" height="6" rx="3" fill="#fff" opacity="0.25"/><circle cx="32" cy="42" r="4.5" fill="#3a2810"/><rect x="30" y="44" width="4" height="9" rx="2" fill="#3a2810"/></svg>',
 };
 
 /* Returns SVG markup for ids in the ICONS registry, falling back to
@@ -6771,13 +6773,13 @@ function combatGearStatBlock(itemId){
   if(s.str) parts.push('<span style="color:#e0762f"><span style="display:inline-block;font-size:14px;line-height:1;vertical-align:-2px;margin-right:2px">'+iconHTML('strength')+'</span>+'+s.str+' Str</span>');
   if(s.def) parts.push('<span style="color:#5478c8"><span style="display:inline-block;font-size:14px;line-height:1;vertical-align:-2px;margin-right:2px">'+iconHTML('defence')+'</span>+'+s.def+' Def</span>');
   // Leather secondary perks — crit / dodge / attack-speed (fractions → %).
-  if(s.crit)  parts.push('<span style="color:#ffd24a">✦ +'+Math.round(s.crit*100)+'% Crit</span>');
-  if(s.dodge) parts.push('<span style="color:#7fd8c8">💨 +'+Math.round(s.dodge*100)+'% Dodge</span>');
-  if(s.aspd)  parts.push('<span style="color:#9be89b">⚡ +'+Math.round(s.aspd*100)+'% Atk Speed</span>');
+  if(s.crit)  parts.push('<span style="color:#ffd24a">'+iconHTML('ui_spark')+' +'+Math.round(s.crit*100)+'% Crit</span>');
+  if(s.dodge) parts.push('<span style="color:#7fd8c8">'+iconHTML('ui_wind')+' +'+Math.round(s.dodge*100)+'% Dodge</span>');
+  if(s.aspd)  parts.push('<span style="color:#9be89b">'+iconHTML('ui_bolt')+' +'+Math.round(s.aspd*100)+'% Atk Speed</span>');
   // Shield block (1.0.87) — flat damage reduction, computed from this shield's Defence.
   // Bucklers (offhand) don't block; they're the rogue's light offhand instead.
-  if(it.cslot==='shield' && !it.offhand){ var _sdr=Math.min(0.28,(s.def||0)*0.003); if(_sdr>0) parts.push('<span style="color:#8fb8ff">🛡 Blocks '+Math.round(_sdr*100)+'% of each hit</span> <span style="color:var(--muted);font-size:11px">(halved with light weapons)</span>'); if(it.hpBlock) parts.push('<span style="color:#9be89b">❤ +block scaling with max HP (up to +'+Math.round((it.hpBlock.cap||0.08)*100)+'%)</span>'); if(it.hpStr) parts.push('<span style="color:#ffb37a">💪 +Strength scaling with max HP (up to +'+(it.hpStr.cap||20)+')</span>'); }
-  if(it.cslot==='shield' && it.offhand) parts.push('<span style="color:#9be89b">🗡 Off-hand — pairs with light weapons (no swing penalty)</span>');
+  if(it.cslot==='shield' && !it.offhand){ var _sdr=Math.min(0.28,(s.def||0)*0.003); if(_sdr>0) parts.push('<span style="color:#8fb8ff">'+iconHTML('ui_shield')+' Blocks '+Math.round(_sdr*100)+'% of each hit</span> <span style="color:var(--muted);font-size:11px">(halved with light weapons)</span>'); if(it.hpBlock) parts.push('<span style="color:#9be89b">'+iconHTML('ui_heart')+' +block scaling with max HP (up to +'+Math.round((it.hpBlock.cap||0.08)*100)+'%)</span>'); if(it.hpStr) parts.push('<span style="color:#ffb37a">'+iconHTML('ui_muscle')+' +Strength scaling with max HP (up to +'+(it.hpStr.cap||20)+')</span>'); }
+  if(it.cslot==='shield' && it.offhand) parts.push('<span style="color:#9be89b">'+iconHTML('ui_sword')+' Off-hand — pairs with light weapons (no swing penalty)</span>');
   var statLine=parts.length?parts.join(' &nbsp; '):'<span style="color:var(--muted)">No combat stats</span>';
   // Equip requirement (1.0.26) — green if met, red lock if not.
   var reqLine='';
@@ -6786,7 +6788,7 @@ function combatGearStatBlock(itemId){
     var met=(typeof cmbLvl==='function')&&cmbLvl(req.stat)>=req.level;
     var statName=req.stat==='attack'?'Attack':'Defence';
     reqLine='<div style="font-size:12px;margin-top:6px;color:'+(met?'#7da33f':'#d04848')+'">'
-      +(met?'✓':'🔒')+' Requires '+req.level+' '+statName+(met?'':' (you have '+cmbLvl(req.stat)+')')+'</div>';
+      +(met?'✓':iconHTML('ui_lock'))+' Requires '+req.level+' '+statName+(met?'':' (you have '+cmbLvl(req.stat)+')')+'</div>';
   }
   // On-hit effect (1.0.60) — poison / stun procs from the weapon's wfx field.
   var fxLine=(typeof wfxTipHTML==='function')?wfxTipHTML(itemId):'';
@@ -6800,10 +6802,10 @@ function combatGearStatBlock(itemId){
     for(var i=0;i<st.pieces.length;i++){ if(wornSet[st.pieces[i]]) worn++; }
     var complete=worn>=st.pieces.length;
     setLine='<div style="margin-top:7px;padding-top:6px;border-top:1px solid var(--trim-d);font-size:12px">'
-      +'<span style="color:'+(complete?'#7fd8c8':'#9c8c72')+';letter-spacing:.5px">✦ '+st.name+' set · '+worn+'/'+st.pieces.length+(complete?' — ACTIVE':'')+'</span>'
+      +'<span style="color:'+(complete?'#7fd8c8':'#9c8c72')+';letter-spacing:.5px">'+iconHTML('ui_spark')+' '+st.name+' set · '+worn+'/'+st.pieces.length+(complete?' — ACTIVE':'')+'</span>'
       +'<div style="color:'+(complete?'#bfe6db':'var(--muted)')+';font-size:11.5px;line-height:1.45;margin-top:2px">'+st.desc+'</div></div>';
   }
-  return '<div style="color:var(--ember);font-size:12px;letter-spacing:.5px;margin-bottom:6px">⚔ '+tierName+' · Tier '+it.ctier+' · '+slotLabel+'</div>'
+  return '<div style="color:var(--ember);font-size:12px;letter-spacing:.5px;margin-bottom:6px">'+iconHTML('ui_swords')+' '+tierName+' · Tier '+it.ctier+' · '+slotLabel+'</div>'
     +'<div style="font-size:14px;line-height:1.7">'+statLine+'</div>'+fxLine+setLine+reqLine;
 }
 
@@ -6815,13 +6817,13 @@ function wfxTipHTML(itemId){
   if(!it||!it.wfx) return '';
   var fx=it.wfx, parts=[];
   if(fx.poison)
-    parts.push('<span style="color:#8fd44a">☠ '+Math.round(POISON_CHANCE*100)+'% chance to poison on hit</span> <span style="color:var(--muted)">(stacks · lowers defence)</span>');
+    parts.push('<span style="color:#8fd44a">'+iconHTML('ui_skull')+' '+Math.round(POISON_CHANCE*100)+'% chance to poison on hit</span> <span style="color:var(--muted)">(stacks · lowers defence)</span>');
   if(fx.burn)
-    parts.push('<span style="color:#ff8a3a">🔥 '+Math.round(BURN_CHANCE*100)+'% chance to burn foes on hit</span>');
+    parts.push('<span style="color:#ff8a3a">'+iconHTML('ui_flame')+' '+Math.round(BURN_CHANCE*100)+'% chance to burn foes on hit</span>');
   if(fx.stun){ var s=fx.stun;
-    parts.push('<span style="color:#ffd24a">💫 '+Math.round(s.chance*100)+'% chance to stun on hit</span>'); }
+    parts.push('<span style="color:#ffd24a">'+iconHTML('ui_spark')+' '+Math.round(s.chance*100)+'% chance to stun on hit</span>'); }
   if(fx.reflect){ var r=fx.reflect;
-    parts.push('<span style="color:#e88">🛡️ '+Math.round(r.chance*100)+'% chance to reflect '+Math.round(r.pct*100)+'% of damage taken</span>'); }
+    parts.push('<span style="color:#e88">'+iconHTML('ui_shield')+' '+Math.round(r.chance*100)+'% chance to reflect '+Math.round(r.pct*100)+'% of damage taken</span>'); }
   if(!parts.length) return '';
   return '<div style="font-size:12.5px;line-height:1.5;margin-top:6px;padding-top:6px;border-top:1px solid #3a2a18">'+parts.join('<br>')+'</div>';
 }
@@ -8418,6 +8420,32 @@ const TREES = {
       next:()=>'15% chance for +2 bonus pieces · requires the Crafting Cape'},
   ]
 };
+
+/* (1.0.97) Emoji→SVG for skill-tree node icons. Skills with hand-drawn tree icons
+   (woodcutting, mining, crafting…) already ship SVG; the rest (fishing/foraging/smithing)
+   passed emoji. Map each remaining emoji node to a chrome icon by effect suffix (speed→bolt,
+   double→spark, xp→book, sell/thrift→coin, cook→flame) or the parent skill emblem for
+   mastery/capstone nodes. Data-driven so any future emoji node is auto-covered. */
+(function(){
+  var EMOJI=/[\u{1F000}-\u{1FAFF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{2B00}-\u{2BFF}\u{FE0F}]/u;
+  function pick(id, sk){
+    if(/master[0-9]$/.test(id) || /gm_cape$/.test(id)) return sk;   // mastery/capstone → skill emblem
+    if(/speed$/.test(id) || /double_act$/.test(id))    return 'ui_bolt';
+    if(/(double|school)$/.test(id))                    return 'ui_spark';
+    if(/xp$/.test(id))                                 return 'ui_book';
+    if(/(sell|thrift)$/.test(id))                      return 'ui_coin';
+    if(/cook$/.test(id))                               return 'ui_flame';
+    return sk;                                          // fallback → skill emblem
+  }
+  for(var sk in TREES){
+    (TREES[sk]||[]).forEach(function(n){
+      if(!n || typeof n.icon!=='string') return;
+      if(/<svg/.test(n.icon)) return;          // already an SVG
+      if(!EMOJI.test(n.icon)) return;          // leave plain-text markers
+      n.icon=iconHTML(pick(n.id, sk));
+    });
+  }
+})();
 
 /* Budget: base nodes are unlocked by points-spent; grandmaster nodes by level (75/80/90)
    AND require every base node maxed first. earnedPoints = level − 1, so a maxed skill at
