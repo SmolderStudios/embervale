@@ -2671,7 +2671,7 @@ header h1 .flame{color:var(--ember)}
   <div class="mm-btns">
     <button class="mm-btn mm-primary" id="mmPlay">▶ Play</button>
   </div>
-  <div class="mm-ver">v1.0.100</div>
+  <div class="mm-ver">v1.0.101</div>
 </div>
 
 <!-- ===== CHARACTER SELECT (added) ===== -->
@@ -11611,22 +11611,58 @@ function combatUniqueBonuses(){
   }
   return b;
 }
+/* Combat Mastery node effects (1.0.101) — the cmast tree finally MODIFIES combat.
+   Aggregates every allocated node's always-on effect into the shared bonus channels
+   so it flows through the normal combat math. `effect:{}` scalars scale by rank; a few
+   flat unique/capstone effects are added by id. Returns extra channels beyond the gear
+   set (maxHpFlat, dmgReduce, combatXpMult, gpMult) consumed at their own call sites.
+   DEFERRED (bespoke per-tick procs, not yet wired): Bleeder, Rending Blows crit-dmg,
+   Savage Edge, Executioner, Cleaving Edge, Dagger Finesse, Ember Wrath, Second Wind,
+   Berserker, Stonewall, Retribution, Last Stand, Undying, Trophy/Head Hunter, Scavenger,
+   Warmonger, Plunder, Giant Slayer, rareDrop/doubleDrop loot, Warlord, Champion. */
+function cmastBonuses(){
+  const b={atkBoost:0,hpBoost:0,defBoost:0,critChance:0,lifesteal:0,aspd:0,
+           maxHpFlat:0,dmgReduce:0,combatXpMult:0,gpMult:0};
+  if(!state||!state.cmast) return b;
+  // effect-key → channel (only always-on scalars; conditional/proc keys ignored here)
+  for(const id in state.cmast){
+    const rank=state.cmast[id]||0; if(rank<=0) continue;
+    const node=(typeof CMAST_BY_ID!=='undefined')&&CMAST_BY_ID[id]; if(!node) continue;
+    const ef=node.effect;
+    if(ef){
+      if(ef.meleeDmg)   b.atkBoost     += ef.meleeDmg*rank;
+      if(ef.critChance) b.critChance   += ef.critChance*rank;
+      if(ef.maxHp)      b.maxHpFlat     += ef.maxHp*rank;
+      if(ef.dmgReduce)  b.dmgReduce     += ef.dmgReduce*rank;
+      if(ef.lifesteal)  b.lifesteal     += ef.lifesteal*rank;
+      if(ef.atkSpeed)   b.aspd          += ef.atkSpeed*rank;
+      if(ef.combatXp)   b.combatXpMult  += ef.combatXp*rank;
+      if(ef.gp)         b.gpMult        += ef.gp*rank;
+    }
+    // Flat always-on unique/capstone effects (by id)
+    if(id==='g_cap'){ b.atkBoost+=0.05; b.defBoost+=0.05; b.hpBoost+=0.05; }        // Conqueror
+    if(id==='g_t5_m'){ b.combatXpMult+=0.10; b.gpMult+=0.10; }                       // War Banner
+    if(id==='r_t5_r' && typeof eqCombatShield==='function' && eqCombatShield()){ b.dmgReduce+=0.10; } // Shield Wall
+  }
+  return b;
+}
 function combatBonusesAll(){
   const e=(typeof combatEnchantBonuses==='function')?combatEnchantBonuses():{atkBoost:0,hpBoost:0,defBoost:0,critChance:0,lifesteal:0};
   const s=(typeof combatSocketBonuses==='function')?combatSocketBonuses():{atkBoost:0,hpBoost:0,defBoost:0,critChance:0,lifesteal:0};
   const a=armorPerkBonuses();
   const st=combatSetBonus();
   const u=combatUniqueBonuses();
+  const cm=cmastBonuses();
   return {
-    atkBoost:  (e.atkBoost||0)  + (s.atkBoost||0) + (st.atkBoost||0) + (u.atkBoost||0),
-    hpBoost:   (e.hpBoost||0)   + (s.hpBoost||0)  + (st.hpBoost||0)  + (u.hpBoost||0),
-    defBoost:  (e.defBoost||0)  + (s.defBoost||0) + (st.defBoost||0) + (u.defBoost||0),
+    atkBoost:  (e.atkBoost||0)  + (s.atkBoost||0) + (st.atkBoost||0) + (u.atkBoost||0) + cm.atkBoost,
+    hpBoost:   (e.hpBoost||0)   + (s.hpBoost||0)  + (st.hpBoost||0)  + (u.hpBoost||0)  + cm.hpBoost,
+    defBoost:  (e.defBoost||0)  + (s.defBoost||0) + (st.defBoost||0) + (u.defBoost||0) + cm.defBoost,
     // Leather crit stacks on top of enchant/socket/set/unique crit — all flow through
     // the single crit roll in combatTick.
-    critChance:(e.critChance||0)+ (s.critChance||0) + a.crit + (st.critChance||0) + (u.critChance||0),
-    lifesteal: (e.lifesteal||0) + (s.lifesteal||0) + (st.lifesteal||0) + (u.lifesteal||0),
+    critChance:(e.critChance||0)+ (s.critChance||0) + a.crit + (st.critChance||0) + (u.critChance||0) + cm.critChance,
+    lifesteal: (e.lifesteal||0) + (s.lifesteal||0) + (st.lifesteal||0) + (u.lifesteal||0) + cm.lifesteal,
     dodge:     a.dodge,   // chance to fully avoid a foe's landed hit
-    aspd:      a.aspd,    // fractional swing-time reduction
+    aspd:      a.aspd + cm.aspd,    // fractional swing-time reduction
   };
 }
 
@@ -11816,7 +11852,8 @@ function playerDefence(){
 function maxHpFromStats(){
   const cs=combatStats();
   const b=combatBonusesAll();
-  return Math.max(10, Math.round((cmbLvl('hitpoints')*COMBAT_P.HP_LVL + cs.def*COMBAT_P.HP_GEAR) * (1 + (b.hpBoost||0)*COMBAT_P.HP_BOOST_FACTOR) * classHpMult()));
+  const cmHpFlat=(typeof cmastBonuses==='function')?(cmastBonuses().maxHpFlat||0):0;  // Bulwark flat HP nodes
+  return Math.max(10, Math.round((cmbLvl('hitpoints')*COMBAT_P.HP_LVL + cs.def*COMBAT_P.HP_GEAR) * (1 + (b.hpBoost||0)*COMBAT_P.HP_BOOST_FACTOR) * classHpMult()) + cmHpFlat);
 }
 
 /* Player swing time (ms per attack) — base 2400ms, Agility shaves 12ms per level.
@@ -16403,7 +16440,8 @@ function bossUnlocked(mon){
 // inherited from the old three-tree engine — they no longer mean ranged/magic.
 // Column map: melee = ONSLAUGHT (offense), ranged = BULWARK (survival),
 // magic = WARFARE (tactics/rewards); mr/rm are the cross-discipline bridges.
-// Effects remain deferred (allocations persist but don't yet alter formulas).
+// (1.0.101) Always-on effects now wired via cmastBonuses() → combatBonusesAll/maxHp/
+// combat-tick DR/XP/gold. Bespoke per-tick procs (bleed/execute/second-wind/etc.) still deferred.
 const CMAST_NODES=[
   // ───────── ONSLAUGHT — raw offense (30 pts) ─────────
   {id:'m_t1', tree:'melee', tier:1, branch:'c', max:4, name:'Iron Discipline', desc:'+4% combat XP per rank.', effect:{combatXp:0.04}},
@@ -21119,7 +21157,9 @@ function combatTick(){
       if(combat.raid){ handleRaidKill(baseMon); updateCombatBars(); return; }
       // Capture rare state for THIS kill — we reroll after rewards are awarded.
       const wasRare=combat.rare;
-      state.coins+=mon.coins*SILVER_PER_GOLD;
+      // Combat Mastery gold nodes (Spoils of War / War Banner) — always-on gold multiplier. (1.0.101)
+      const _cmGp=(typeof cmastBonuses==='function')?(cmastBonuses().gpMult||0):0;
+      state.coins+=Math.round(mon.coins*SILVER_PER_GOLD*(1+_cmGp));
       grantCombatXp(style,Math.round(mon.xp*0.75));
       grantCombatXp('hitpoints',Math.round(mon.xp*0.25));
       // ── Combat Mastery grants — first boss kill + first zone clear (v1.0.69) ──
@@ -21158,7 +21198,7 @@ function combatTick(){
       // that hold their own `once:true` trophy (always rolls).
       let consolationGold=0;
       if(drops.length===0){
-        consolationGold=Math.max(1, Math.ceil(baseMon.coins*0.6));
+        consolationGold=Math.max(1, Math.ceil(baseMon.coins*0.6*(1+_cmGp)));   // cmast gold mult (1.0.101)
         state.coins += consolationGold * SILVER_PER_GOLD;
       }
       let dropLine='';
@@ -21269,6 +21309,9 @@ function combatTick(){
     // (scales with shield Defence). Applied after dodge; never fully negates (min 1).
     // This is what makes the shield build the true tank: smaller hits → far less food.
     if(foeDmg>0){ const _sdr=(typeof shieldDamageReduction==='function')?shieldDamageReduction():0; if(_sdr>0) foeDmg=Math.max(1,Math.round(foeDmg*(1-_sdr))); }
+    // ── Combat Mastery damage reduction (1.0.101) — Bulwark's Ironhide/Stonewall/Shield
+    // Wall soak a further flat %, applied after shield block. Clamped so it can't zero a hit.
+    if(foeDmg>0){ const _cdr=(typeof cmastBonuses==='function')?Math.min(0.60,cmastBonuses().dmgReduce||0):0; if(_cdr>0) foeDmg=Math.max(1,Math.round(foeDmg*(1-_cdr))); }
     combat.youHp=Math.max(0,combat.youHp-foeDmg);
     cmbLog(_dodged?`💨 You dodge the ${mon.name}!`:(foeDmg>0?`${mon.name} hits you for ${foeDmg}.`:`${mon.name} misses.`), foeDmg>0?'hit':(_dodged?'':''));
 
@@ -21312,7 +21355,10 @@ function combatTick(){
 function grantCombatXp(stat,amount){
   if(!COMBAT_STATS[stat]||!amount||amount<=0) return;
   // Character-type global XP dial (hardcore 0.75× / accelerated 2×) applies to combat too.
-  amount=Math.max(1, Math.round(amount*charTypeXpMult()));
+  amount=amount*charTypeXpMult();
+  // Combat Mastery XP nodes (Iron Discipline/Veteran/War Banner) — always-on multiplier. (1.0.101)
+  if(typeof cmastBonuses==='function'){ const _xm=cmastBonuses().combatXpMult||0; if(_xm>0) amount*=(1+_xm); }
+  amount=Math.max(1, Math.round(amount));
   if(!state.combatXp) state.combatXp={attack:0,strength:0,defence:0,hitpoints:0};
   const beforeStat=cmbLvl(stat);
   const beforeCl=combatLevel();
@@ -22022,7 +22068,7 @@ function buildCmastViewHTML(){
         <div class="cmast-tree-h ranged">🛡 BULWARK</div>
         <div class="cmast-tree-h magic">⚑ WARFARE</div>
       </div>
-      <div class="cmast-soon-note">A melee mastery tree of three disciplines. Ranged &amp; Magic combat styles — and their own trees — arrive later; surplus points bank as Mastery Shards.</div>
+      <div class="cmast-soon-note">Three mastery disciplines. Always-on node effects (damage, crit, max HP, damage reduction, lifesteal, XP &amp; gold) now apply to combat — a few advanced procs are still being wired. Ranged &amp; Magic trees arrive later; surplus points bank as Mastery Shards.</div>
       <div class="cmast-detail">
         ${_cmastDetailHTML()}
       </div>
