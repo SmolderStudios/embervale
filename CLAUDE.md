@@ -14,7 +14,7 @@ A dark-fantasy idle/incremental RPG. Solo developer (Jordan). Distributed via El
 
 - Edit `embervale.html` in this directory directly.
 - `version.json` mirrors the version string in the HTML banner — keep them in sync.
-- All work stays in **`1.0.x`**. Never bump to `1.1.0`. Increment patch number with every release.
+- **Pre-release versioning (changed 2026-07):** work stays in **`0.9.x`** (beta). `1.0.0` is reserved for the full release — never ship `1.0.0` or higher until then. Increment the zero-padded patch every release: `0.9.01` → `0.9.02` → … The prior scheme was `1.0.x` (ended at `1.0.106`). The Electron wrapper updates on a plain string-inequality (`remoteVer !== localVer`), so the downgrade to `0.9.01` still triggers auto-update for existing installs.
 - Version lives in two spots inside the HTML: the UI `<div class="mm-ver">` banner and the JS-ICONS comment header. Update both.
 
 ## Validation pipeline (MANDATORY before every commit)
