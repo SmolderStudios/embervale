@@ -1928,6 +1928,8 @@ header h1 .flame{color:var(--ember)}
 .comp-cat{background:#0d0905;border:1px solid var(--trim-d);color:var(--muted);border-radius:10px;
   padding:3px 9px;font-size:13px;cursor:pointer}
 .comp-cat.on{background:var(--raised-s);border-color:var(--trim);color:var(--trim)}
+.comp-cat .cc-ico{display:inline-flex;vertical-align:-1px;font-size:14px}
+.comp-cat .cc-ico .ev-icon{width:1em;height:1em}
 .comp-search{flex:1;min-width:0;background:var(--raised-s);color:var(--text);border:1px solid var(--trim-d);
   border-radius:6px;padding:6px 10px;font-size:14px;font-family:inherit}
 .comp-search::placeholder{color:var(--muted)}
@@ -2669,7 +2671,7 @@ header h1 .flame{color:var(--ember)}
   <div class="mm-btns">
     <button class="mm-btn mm-primary" id="mmPlay">▶ Play</button>
   </div>
-  <div class="mm-ver">v1.0.94</div>
+  <div class="mm-ver">v1.0.95</div>
 </div>
 
 <!-- ===== CHARACTER SELECT (added) ===== -->
@@ -19273,22 +19275,24 @@ let compCat='all', compSearch='';
 let compPage=0;
 const COMP_PAGE_SIZE=35;  // 1.0.58: 5 rows (×7 at the common width) — tighter grid, more pages
 
+// (1.0.95) Category chips reuse existing item/skill SVGs instead of emoji — `ico`
+// points at a representative registered ICON; render swaps textContent→innerHTML.
 const COMP_CATEGORIES=[
   {id:'all',   label:'All'},
-  {id:'logs',  label:'🪵 Logs'},
-  {id:'ores',  label:'🪨 Ores'},
-  {id:'fish',  label:'🐟 Fish'},
-  {id:'cooked',label:'🍢 Food'},
-  {id:'bars',  label:'⬜ Bars'},
-  {id:'forage',label:'🌿 Plants'},
-  {id:'farm',  label:'🌾 Farm'},
-  {id:'jewelry',label:'💍 Jewelry'},
-  {id:'gems',  label:'💎 Gems'},
-  {id:'fire',  label:'🔥 Fire'},
-  {id:'potions',label:'⚗️ Potions'},
-  {id:'skilling_gear', label:'⚔ Skilling Gear'},
-  {id:'crafted_gear',  label:'⚔️ Combat Gear'},
-  {id:'rare',  label:'✦ Rare'},
+  {id:'logs',  label:'Logs',        ico:'pine_log'},
+  {id:'ores',  label:'Ores',        ico:'copper_ore'},
+  {id:'fish',  label:'Fish',        ico:'raw_trout'},
+  {id:'cooked',label:'Food',        ico:'cooked_trout'},
+  {id:'bars',  label:'Bars',        ico:'bronze_bar'},
+  {id:'forage',label:'Plants',      ico:'dewleaf'},
+  {id:'farm',  label:'Farm',        ico:'wildberries'},
+  {id:'jewelry',label:'Jewelry',    ico:'sapphire_ring'},
+  {id:'gems',  label:'Gems',        ico:'sapphire'},
+  {id:'fire',  label:'Fire',        ico:'firemaking'},
+  {id:'potions',label:'Potions',    ico:'alchemy'},
+  {id:'skilling_gear', label:'Skilling Gear', ico:'bronze_axe'},
+  {id:'crafted_gear',  label:'Combat Gear',   ico:'bronze_sword'},
+  {id:'rare',  label:'Rare',        ico:'gem_dust'},
 ];
 
 /* ════ [JS-24a] compendium view ══════════════════════════════════════════════════ */
@@ -19381,7 +19385,7 @@ function renderCompendium(){
   const cats=document.createElement('div'); cats.className='comp-cats';
   for(const cat of COMP_CATEGORIES){
     const b=document.createElement('button'); b.className='comp-cat'+(compCat===cat.id?' on':'');
-    b.textContent=cat.label;
+    b.innerHTML=(cat.ico?'<span class="cc-ico">'+iconHTML(cat.ico)+'</span> ':'')+cat.label;
     // Count newly-discovered items in this category (or the whole "Rare" set for the rare tab)
     let newCount=0;
     for(const nid in state.newlyDiscovered){
