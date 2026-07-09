@@ -2676,7 +2676,7 @@ header h1 .flame{color:var(--ember)}
   <div class="mm-btns">
     <button class="mm-btn mm-primary" id="mmPlay">▶ Play</button>
   </div>
-  <div class="mm-ver">v1.0.102</div>
+  <div class="mm-ver">v1.0.103</div>
 </div>
 
 <!-- ===== CHARACTER SELECT (added) ===== -->
@@ -8450,6 +8450,28 @@ const TREES = {
       if(/<svg/.test(n.icon)) return;          // already an SVG
       if(!EMOJI.test(n.icon)) return;          // leave plain-text markers
       n.icon=iconHTML(pick(n.id, sk));
+    });
+  }
+})();
+
+/* (1.0.103) Skill-tree DEAD-ZONE fix. GM nodes gate on a fixed level (req 75/80/85) AND
+   "all base nodes maxed first". But base tiers vary in depth — Woodcutting's base fills at
+   level 55, so levels 55-74 earned points with nowhere to spend (GM still level-locked).
+   This pass adds a `lvl` field to each GM node, lowering its LEVEL gate so the GM tier opens
+   right when the base tree is mastered (base-done level). Points always have a home; effects,
+   ranks and the 98-point invariant are untouched, and GM still requires every base node maxed.
+   The req≥75 CLASSIFICATION is unchanged — only the level check reads (node.lvl||node.req). */
+(function(){
+  for(var sk in TREES){
+    var nodes=TREES[sk]||[];
+    var baseMax=0, gmMin=99;
+    nodes.forEach(function(n){ var rq=n.req||0; if(rq>=75){ if(rq<gmMin) gmMin=rq; } else baseMax+=(n.max||0); });
+    var baseDoneLvl=baseMax+1;                        // level the base tier fills at
+    var offset=Math.max(0, gmMin-baseDoneLvl);        // idle levels to reclaim
+    if(offset<=0) continue;                           // cooking/alchemy/firemaking already tight
+    nodes.forEach(function(n){
+      var rq=n.req||0;
+      if(rq>=75 && rq<99){ n.lvl=Math.max(2, rq-offset); }   // shift level gate; keep the Lv99 pinnacle
     });
   }
 })();
@@ -14986,7 +15008,7 @@ function renderPassives(){
     // Grandmaster nodes gate on LEVEL + all base nodes maxed.
     // An optional reqPts adds a points-spent gate on top (used by the pinnacle nodes).
     const isGM=node.req>=75;
-    const lvlLocked=isGM&&lvl<node.req;
+    const lvlLocked=isGM&&lvl<(node.lvl||node.req);
     const baseLocked=isGM&&!allBasesMaxed;
     const ptsSpentLocked=node.reqPts&&spent<node.reqPts;
     const pointsLocked=!isGM&&node.req&&spent<node.req;
@@ -14998,17 +15020,17 @@ function renderPassives(){
       shownGM=true;
       const hdr=document.createElement('div');
       hdr.style.cssText='grid-column:1/-1;margin:8px 0 2px;font-size:13px;letter-spacing:2px;text-transform:uppercase;color:var(--ember);border-top:1px solid var(--trim-d);padding-top:8px';
-      hdr.textContent='✦ Grandmaster Tier — Requires Lv '+node.req+' and all base nodes maxed';
+      hdr.textContent='✦ Grandmaster Tier — Requires Lv '+(node.lvl||node.req)+' and all base nodes maxed';
       box.appendChild(hdr);
     }
 
     // Build lock reason string
     let lockReason='';
     if(pointsLocked) lockReason=`Requires ${node.req} points spent first`;
-    else if(baseLocked&&lvlLocked) lockReason=`Requires Level ${node.req} and all base nodes maxed`;
+    else if(baseLocked&&lvlLocked) lockReason=`Requires Level ${node.lvl||node.req} and all base nodes maxed`;
     else if(baseLocked) lockReason='Max all base nodes first ('+TREES[skill].filter(n=>n.req<75).map(n=>n.max-treeRank(skill,n.id)).reduce((a,b)=>a+b,0)+' ranks remaining)';
-    else if(lvlLocked&&ptsSpentLocked) lockReason=`Requires Level ${node.req} and ${node.reqPts} points spent`;
-    else if(lvlLocked) lockReason=`Requires Level ${node.req}`;
+    else if(lvlLocked&&ptsSpentLocked) lockReason=`Requires Level ${node.lvl||node.req} and ${node.reqPts} points spent`;
+    else if(lvlLocked) lockReason=`Requires Level ${node.lvl||node.req}`;
     else if(ptsSpentLocked) lockReason=`Requires ${node.reqPts} points spent (${node.reqPts-spent} more)`;
     else if(capeLocked) lockReason=`🧣 Requires the ${SKILLS[skill].name} Cape (Shop)`;
 
@@ -15063,7 +15085,7 @@ function spendPoint(skill,nodeId){
   if(!node||availPoints(skill)<=0||treeRank(skill,nodeId)>=node.max) return;
   const isGM=node.req>=75;
   if(isGM){
-    if(levelFromXp(state.xp[skill])<node.req) return; // level gate
+    if(levelFromXp(state.xp[skill])<(node.lvl||node.req)) return; // level gate (node.lvl lowers it — dead-zone fix 1.0.103)
     // All base nodes must be maxed first
     const allBasesMaxed=TREES[skill].filter(n=>n.req<75).every(n=>treeRank(skill,n.id)>=n.max);
     if(!allBasesMaxed) return;
