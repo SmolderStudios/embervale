@@ -102,10 +102,14 @@ header h1 .flame{color:var(--ember)}
    lowering both together scales the whole UI up while the rendered layout stays
    the same fraction of the window. That is the readability lever — a tighter
    cap plus a matching design width means bigger text at the same edge coverage.
-   Tuned to zoom 1.231 at 1920 (a 24px title renders ~29.5px); 1440 proved too
-   large on a real 1080p display. Keep the two constants in step when tuning. */
+   Sized against the REAL Electron client area (~1904x1000 once the title bar and
+   borders eat into a 1920x1080 window), not a bare 1920x1080 viewport. At zoom
+   1.231 the document ran 1075px tall and overflowed that client area by 75px.
+   Raising this cap and UI_DESIGN_W together drops zoom to ~1.12 — the document
+   fits, text sits near its original size, and the layout still reaches the edges.
+   Keep the two constants in step when tuning. */
 .layout{display:grid;grid-template-columns:320px 1fr 300px;gap:14px;padding:14px;
-  max-width:1500px;margin:0 auto;
+  max-width:1640px;margin:0 auto;
   align-items:start;
   overflow:visible;
 }
@@ -2720,7 +2724,7 @@ header h1 .flame{color:var(--ember)}
   <div class="mm-btns">
     <button class="mm-btn mm-primary" id="mmPlay">▶ Play</button>
   </div>
-  <div class="mm-ver">v0.9.07</div>
+  <div class="mm-ver">v0.9.08</div>
 </div>
 
 <!-- ===== CHARACTER SELECT (added) ===== -->
@@ -24011,8 +24015,8 @@ function _rootZoom(){ var z=parseFloat(getComputedStyle(document.documentElement
 
    _rootZoom() reads this back off the computed style, so every rect-based
    position (tooltips, tutorial spotlight, popovers) follows with no extra work. */
-const UI_DESIGN_W = 1560;   // .layout max-width (1500) + padding + scrollbar allowance
-const UI_ZOOM_MIN = 0.55;   // floor puts the minimum usable window near 860px
+const UI_DESIGN_W = 1700;   // .layout max-width (1640) + padding + scrollbar allowance
+const UI_ZOOM_MIN = 0.55;   // floor puts the minimum usable window near 930px
 const UI_ZOOM_MAX = 1.80;   // stop 4K monitors from ballooning the chrome
 let _zoomRaf = 0;
 function applyRootZoom(){
