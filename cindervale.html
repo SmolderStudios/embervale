@@ -3114,7 +3114,7 @@ select.dev-input{padding-right:26px}
       <button class="mm-btn" id="mmCredits">Credits</button>
     </div>
   </div>
-  <div class="mm-ver">v0.9.29</div>
+  <div class="mm-ver">v0.9.30</div>
   <div class="mm-copy">© Smolder Studios</div>
 </div>
 
@@ -3222,8 +3222,8 @@ select.dev-input{padding-right:26px}
 <div id="mmReportModal" class="mm-hidden">
   <div class="mm-card">
     <h3>Report a bug</h3>
-    <p>Tell me what went wrong. Sent straight to the dev's Discord.</p>
-    <textarea class="rep-ta" id="mmReportText" maxlength="1400" placeholder="What happened? What were you doing when it broke?"></textarea>
+    <p>Describe the bug, and what you clicked or did right before it. Sent straight to the dev's Discord.</p>
+    <textarea class="rep-ta" id="mmReportText" maxlength="1400" placeholder="What went wrong? What were you doing — which buttons/actions led to it?"></textarea>
     <div class="rep-note">Auto-attached so I can reproduce it:</div>
     <div class="rep-ctx" id="mmReportCtx"></div>
     <div class="mm-row" style="margin-top:4px">
@@ -3716,7 +3716,7 @@ let mmStarted = false; // start gameplay loops only once
    (Channel → Integrations → Webhooks) and paste a fresh one below. One-way —
    players can only post, never read the channel. Leave BUG_WEBHOOK empty to
    hide the Report-a-bug buttons entirely. */
-const BUG_WEBHOOK = '';   // <-- paste your Discord webhook URL between the quotes
+const BUG_WEBHOOK = 'https://discord.com/api/webhooks/1525224836258070528/LQk3rRgxUPgOwG4n30z_NUSXXIaA7S6OpivvNdDey-mTyao5JxCRbIOHyjCGu48p9CI9';   // <-- public in the client; regenerate in Discord if spammed
 const BUG_COOLDOWN_MS = 30000;
 let _bugLastSent = 0;
 const _bugErrors = [];
