@@ -1786,6 +1786,27 @@ select.dev-input{padding-right:26px}
 .ach-when{font-family:'Courier New',monospace;font-size:10.5px;color:#6e552c;margin-top:3px}
 #emberMenu .mm-ver{position:absolute;bottom:14px;left:18px;color:#6e552c;
   font-family:'Courier New',monospace;font-size:13px;letter-spacing:1px}
+
+/* ── DEMO build chrome (hidden unless <body class="is-demo">) ── */
+body:not(.is-demo) .demo-only{display:none !important}
+.mm-demo-badge{align-self:center;margin:2px 0 2px;padding:4px 14px;border-radius:999px;
+  font-family:'Iowan Old Style',Palatino,Georgia,serif;text-transform:uppercase;letter-spacing:.32em;
+  font-size:12px;color:#e0762f;border:1px solid rgba(224,118,47,.5);background:rgba(224,118,47,.07)}
+.mm-btn.mm-buy{border-color:#e0762f;color:#f0b070}
+.mm-btn.mm-buy:hover{border-color:#fbd24e;color:#fbd24e}
+.gm-row.gm-buy{border-color:rgba(224,118,47,.5)}
+.gm-row.gm-buy,.gm-row.gm-buy span{color:#f0b070}
+#demoRibbon{position:fixed;top:10px;left:12px;z-index:9998;pointer-events:none;
+  font:700 11px/1 'Courier New',monospace;letter-spacing:.22em;color:#e0762f;
+  background:rgba(13,9,6,.72);border:1px solid rgba(224,118,47,.5);padding:5px 9px;border-radius:6px}
+.cmb-zone-tile.demo-locked{opacity:.9;border-color:rgba(224,118,47,.45);cursor:var(--cur-pointer)}
+.cmb-zone-tile.demo-locked .ztl-lock{color:#e0762f}
+.cmb-zmode.demo-lk{opacity:.55}
+.cmb-zmode.demo-lk::after{content:'🔒';font-size:.82em;margin-left:5px;opacity:.85}
+.demo-buy-copy{color:#a08a64;font-size:14px;line-height:1.55;margin:0 0 6px}
+.demo-buy-btns{flex-direction:column;gap:10px;margin-top:14px}
+.demo-buy-btns .mm-mini{width:100%}
+.mm-mini.mm-primary{border-color:#e0762f}
 #gameMenuModal p{color:#a08a64;font-size:14px;margin:0 0 12px}
 .mm-seg{background:transparent;border:1px solid #4a3820;color:#7a6048;
   border-radius:3px;padding:4px 9px;font-family:'Courier New',monospace;font-size:11px;
@@ -3093,6 +3114,7 @@ select.dev-input{padding-right:26px}
    ════════════════════════════════════════════════════════════════════════════════ -->
 <!-- ══════ [HTML-01] MENU & CHARACTER-SELECT MODALS ══════ -->
 <!-- ===== MAIN MENU (added) ===== -->
+<div id="demoRibbon" class="demo-only" aria-hidden="true">DEMO</div>
 <div id="emberMenu">
   <canvas id="mmEmbers" aria-hidden="true"></canvas>
   <div class="mm-lock">
@@ -3107,13 +3129,15 @@ select.dev-input{padding-right:26px}
     </div>
     <h1 class="mm-wm">Cinder<span>vale</span></h1>
     <div class="mm-idle">Idle</div>
+    <div class="mm-demo-badge demo-only">Demo Version</div>
     <div class="mm-btns">
       <button class="mm-btn mm-primary" id="mmPlay">Select Character</button>
       <button class="mm-btn" id="mmSettings">Settings</button>
       <button class="mm-btn" id="mmCredits">Credits</button>
+      <button class="mm-btn mm-buy demo-only" id="mmBuy">Get the Full Game</button>
     </div>
   </div>
-  <div class="mm-ver">v0.9.33</div>
+  <div class="mm-ver">v0.9.34</div>
   <div class="mm-copy">© Smolder Studios</div>
 </div>
 
@@ -3206,6 +3230,7 @@ select.dev-input{padding-right:26px}
     <div class="gm-rows">
       <button class="gm-row" id="gmSettings">Settings<span>Scale, fullscreen, cursor</span></button>
       <button class="gm-row" id="gmCredits">Credits<span>Who made this</span></button>
+      <button class="gm-row gm-buy demo-only" id="gmBuy">Get the full game<span>Unlock every zone, skill &amp; raid</span></button>
       <button class="gm-row" id="gmReport" hidden>Report a bug<span>Send a report to the dev</span></button>
       <button class="gm-row" id="gmTutorial">Replay the tutorial<span>Run the intro tour again</span></button>
       <button class="gm-row" id="gmExport">Export save<span>Copy a backup code</span></button>
@@ -3256,6 +3281,20 @@ select.dev-input{padding-right:26px}
     </dl>
     <div class="mm-row" style="margin-top:16px">
       <button class="mm-mini mm-primary" id="mmCreditsClose">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== DEMO: BUY FULL GAME ===== -->
+<div id="demoBuyModal" class="mm-hidden">
+  <div class="mm-card" style="max-width:430px">
+    <h3>Unlock the full game</h3>
+    <p id="demoBuyReason">This is the free demo of Cindervale Idle.</p>
+    <p class="demo-buy-copy">The demo runs to level 10 and the first two zones. The full game opens all 12 skills, 12 zones, raids, pets and the whole passive-tree endgame — one purchase, no microtransactions.</p>
+    <div class="mm-row demo-buy-btns">
+      <button class="mm-mini mm-primary" id="demoBuySite">Get the full game →</button>
+      <button class="mm-mini" id="demoBuySteam" disabled>Buy on Steam (coming soon)</button>
+      <button class="mm-mini" id="demoBuyClose">Keep playing the demo</button>
     </div>
   </div>
 </div>
@@ -3861,13 +3900,47 @@ function legacyLevelFromXp(xp){ let l=1; while(l<MAX_LEVEL&&xp>=XP_CUM_LEGACY[l+
    there is no achievement for it, and levelFromXp still stops at 99. It exists
    so the XP panel keeps showing progress after max level instead of going blank. */
 const XP_CAP = 200000000;
+
+/* ════ DEMO BUILD ══════════════════════════════════════════════════════════
+   The public browser build is the free demo; the Electron desktop / Steam build
+   is the full game (same file, detected at runtime via the UA). The demo caps
+   every skill and combat stat at level 10 and locks combat to the first two
+   zones. Everything below is a no-op when IS_DEMO is false, and every demo-only
+   DOM element is hidden unless <body> carries the .is-demo class. */
+const IS_DEMO = !/electron/i.test(navigator.userAgent);
+const DEMO_LEVEL_CAP = 10;
+const DEMO_ZONES = ['rat_warrens','spider_hollow'];
+const SITE_URL = 'https://cindervaleidle.com';
+const STEAM_URL = '';   // set to the Steam store page once it exists
+function demoXpCap(){ return XP_CUM[DEMO_LEVEL_CAP] || Infinity; }
+function demoZoneLocked(id){ return IS_DEMO && DEMO_ZONES.indexOf(id)<0; }
+let _demoCapShown=false;
+function showDemoBuy(reason){
+  const m=document.getElementById('demoBuyModal'); if(!m) return;
+  const r=document.getElementById('demoBuyReason'); if(r&&reason) r.textContent=reason;
+  m.classList.remove('mm-hidden');
+}
+/* Fires the buy prompt at most once per session; the DEMO badge + buy buttons
+   stay visible afterwards so the nudge is never lost. */
+function demoCapHit(kind){
+  if(!IS_DEMO || _demoCapShown) return;
+  _demoCapShown=true;
+  showDemoBuy(kind==='zone'
+    ? 'That region is part of the full game.'
+    : 'You’ve reached the demo level cap (Lv '+DEMO_LEVEL_CAP+').');
+}
+function openFullGame(){ try{ window.open(SITE_URL,'_blank','noopener'); }catch(e){} }
+
 /* Single funnel for every XP grant, so the cap can't be bypassed by one stray
    `state.xp[k] +=` site. Returns the amount actually granted (0 at the cap). */
 function addSkillXp(skill, amt){
   if(!(amt>0)) return 0;
   const before=state.xp[skill]||0;
-  const after=Math.min(XP_CAP, before+amt);
+  let cap=XP_CAP;
+  if(IS_DEMO){ cap=Math.min(cap, demoXpCap()); if(before>=cap){ demoCapHit('level'); return 0; } }
+  const after=Math.min(cap, before+amt);
   state.xp[skill]=after;
+  if(IS_DEMO && after>=cap && before<cap) demoCapHit('level');
   return after-before;
 }
 
@@ -22135,6 +22208,7 @@ function selectMonster(id){
 function selectZone(id){
   if(combat.active) return;
   const z=ZONES.find(z=>z.id===id); if(!z) return;
+  if(demoZoneLocked(id)){ demoCapHit('zone'); return; }
   state.zone=id;
   combat.rare=false;  // zone change clears rare context (1.0.70)
   const list=monstersInZone(id);
@@ -22147,6 +22221,7 @@ function selectZone(id){
 function engageCombat(){
   // Starting a fight stops the active skilling action — this is the hand-off point.
   const mon=getMonster(combat.monId);
+  if(demoZoneLocked(state.zone)){ demoCapHit('zone'); return; }
   // Guard rails: don't let an out-of-zone selection or a locked boss tile sneak through.
   if(mon.boss && !bossUnlocked(mon)){
     const it=ITEMS[mon.bossReq];
@@ -22615,6 +22690,7 @@ function grantCombatXp(stat,amount){
   const beforeStat=cmbLvl(stat);
   const beforeCl=combatLevel();
   state.combatXp[stat]=(state.combatXp[stat]||0)+amount;
+  if(IS_DEMO){ const _dc=demoXpCap(); if(state.combatXp[stat]>_dc){ state.combatXp[stat]=_dc; demoCapHit('level'); } }
   const afterStat=cmbLvl(stat);
   const afterCl=combatLevel();
   if(afterStat>beforeStat){
@@ -23697,14 +23773,21 @@ function renderCombat(){
   if(state.zoneMode!=='raids' && !_modeZones.find(z=>z.id===state.zone)) state.zone=(_modeZones[0]&&_modeZones[0].id)||'rat_warrens';
   const curZone=getZone(state.zone);
   const zoneTiles=_modeZones.map(z=>{
-    const unlocked=zoneUnlocked(z);
+    const dLock=demoZoneLocked(z.id);
+    const lvlUnlocked=zoneUnlocked(z);
+    const unlocked=lvlUnlocked && !dLock;
     const sel=z.id===state.zone;
     const mons=monstersInZone(z.id);
     const count=mons.length;
-    return `<button class="cmb-zone-tile ${sel?'sel':''} ${unlocked?'':'locked'}" data-zone="${z.id}" ${active||!unlocked?'disabled':''} style="--zone-accent:${z.accent}">
+    // Demo-locked tiles stay clickable (not disabled) so a tap opens the buy prompt.
+    const dis=(active || (!lvlUnlocked && !dLock))?'disabled':'';
+    const meta=dLock ? `<span class="ztl-lock">Full game</span>`
+              : unlocked ? `<span class="ztl-count">${count} foe${count===1?'':'s'}</span>`
+              : `<span class="ztl-lock">Lv ${z.unlockLvl}</span>`;
+    return `<button class="cmb-zone-tile ${sel?'sel':''} ${unlocked?'':'locked'} ${dLock?'demo-locked':''}" data-zone="${z.id}" ${dis} style="--zone-accent:${z.accent}">
       <span class="ztl-ic">${iconHTML(z.id)}</span>
       <span class="ztl-nm">${z.name}</span>
-      <span class="ztl-meta">${unlocked?`<span class="ztl-count">${count} foe${count===1?'':'s'}</span>`:`<span class="ztl-lock">Lv ${z.unlockLvl}</span>`}</span>
+      <span class="ztl-meta">${meta}</span>
       <div class="cmb-zone-tip">${zoneTipHTML(z)}</div>
     </button>`;
   }).join('');
@@ -23931,8 +24014,8 @@ function renderCombat(){
     <div class="cmb-zones-block">
       <div class="cmb-zone-modes">
         <button class="cmb-zmode ${state.zoneMode==='dungeons'?'on':''}" data-zmode="dungeons">Dungeons</button>
-        <button class="cmb-zmode ${state.zoneMode==='hunt'?'on':''}" data-zmode="hunt">Hunt</button>
-        <button class="cmb-zmode ${state.zoneMode==='raids'?'on':''}" data-zmode="raids">Raids</button>
+        <button class="cmb-zmode ${state.zoneMode==='hunt'?'on':''} ${IS_DEMO?'demo-lk':''}" data-zmode="hunt">Hunt</button>
+        <button class="cmb-zmode ${state.zoneMode==='raids'?'on':''} ${IS_DEMO?'demo-lk':''}" data-zmode="raids">Raids</button>
       </div>
       ${(state.zoneMode==='dungeons'||state.zoneMode==='hunt')?`
         <div class="cmb-zmsplit">
@@ -24117,6 +24200,7 @@ function renderCombat(){
   panel.querySelectorAll('[data-zmode]').forEach(b=>{
     b.addEventListener('click',()=>{
       const m=b.getAttribute('data-zmode');
+      if(IS_DEMO && (m==='hunt'||m==='raids')){ demoCapHit('zone'); return; }
       if(state.zoneMode===m) return;
       if(combat.active) return;   // don't swap the roster mid-fight
       state.zoneMode=m;
@@ -25455,7 +25539,7 @@ window.addEventListener('keydown', function(e){
 // Scoped to the read-only dialogs — input flows (name/import/export) keep their
 // own explicit buttons. Pairs with the scroll fix: even if a card overflows the
 // window, you can always dismiss it.
-var MM_DISMISSABLE = ['gameMenuModal','mmSettingsModal','mmCreditsModal','mmReportModal'];
+var MM_DISMISSABLE = ['gameMenuModal','mmSettingsModal','mmCreditsModal','mmReportModal','demoBuyModal'];
 window.addEventListener('keydown', function(e){
   if(e.key !== 'Escape') return;
   for(var i=0;i<MM_DISMISSABLE.length;i++){
@@ -25473,6 +25557,15 @@ $('mmCreditsClose').addEventListener('click', function(){ $('mmCreditsModal').cl
 $('mmBackToMenu').addEventListener('click',mmShowMenu);
 function gmClose(){ $('gameMenuModal').classList.add('mm-hidden'); }
 $('btnMenu').addEventListener('click',()=>$('gameMenuModal').classList.remove('mm-hidden'));
+
+/* ── Demo build: reveal demo-only chrome and wire the buy prompts ── */
+if(IS_DEMO) document.body.classList.add('is-demo');
+(function(){
+  var b1=$('mmBuy'); if(b1) b1.addEventListener('click',function(){ showDemoBuy('This is the free demo of Cindervale Idle.'); });
+  var b2=$('gmBuy'); if(b2) b2.addEventListener('click',function(){ if(typeof gmClose==='function') gmClose(); showDemoBuy('This is the free demo of Cindervale Idle.'); });
+  var bs=$('demoBuySite'); if(bs) bs.addEventListener('click',openFullGame);
+  var bc=$('demoBuyClose'); if(bc) bc.addEventListener('click',function(){ $('demoBuyModal').classList.add('mm-hidden'); });
+})();
 
 /* ════ [JS-EGG] HEARTH EMBERS & SMOKEY BONES ════════════════════════════════
    Embers drift up from the bottom of the viewport. Panels sit above them, so they
