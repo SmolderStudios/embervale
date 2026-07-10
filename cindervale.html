@@ -2973,7 +2973,7 @@ select option:checked{background-color:#2a1d10;color:#f0c772}
       <button class="mm-btn" id="mmCredits">Credits</button>
     </div>
   </div>
-  <div class="mm-ver">v0.9.19</div>
+  <div class="mm-ver">v0.9.20</div>
   <div class="mm-copy">© Smolder Studios</div>
 </div>
 
@@ -20840,6 +20840,12 @@ const ACHIEVEMENTS=[
   // measured the same axis as 'Butcher' (1,000 kills) and taught nothing new.
   {id:'ember_whisperer',cat:'collection', icon:'ui_paw', hidden:true, name:'Ember Whisperer',
     desc:'Coax something out of the hearth.', check:()=>_achCats()>=1},
+  /* The second half of the hunt. Finding one cat is an accident; nine of them and
+     the cat that follows is a decision. Its icon is Smokey himself, so the card
+     flips from a padlock to his face — the reveal is the reward.
+     hasSecretPet() is a hoisted declaration, so referencing it here is safe. */
+  {id:'hearth_cat',   cat:'collection', icon:'pet_smokey_bones', hidden:true, name:'Hearth Cat',
+    desc:'Smokey Bones came home.', check:()=>hasSecretPet()},
 
   // ── Endgame ──
   {id:'rich',         cat:'endgame', icon:'ui_coin',   name:'Dragon’s Hoard', desc:'Hold 1,000,000 gold at once.',           check:()=>_achGold()>=1e6},
