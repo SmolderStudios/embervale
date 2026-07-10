@@ -3100,7 +3100,7 @@ select.dev-input{padding-right:26px}
       <button class="mm-btn" id="mmCredits">Credits</button>
     </div>
   </div>
-  <div class="mm-ver">v0.9.26</div>
+  <div class="mm-ver">v0.9.27</div>
   <div class="mm-copy">© Smolder Studios</div>
 </div>
 
@@ -3143,7 +3143,7 @@ select.dev-input{padding-right:26px}
         <small>Drifting sparks in the empty ground</small>
       </div>
       <div class="set-ctl">
-        <button class="mm-mini" id="mmEmbers" aria-pressed="true">On</button>
+        <button class="mm-mini" id="mmEmbersBtn" aria-pressed="true">On</button>
       </div>
     </div>
 
@@ -25126,7 +25126,7 @@ $('mmPlay').addEventListener('click',mmShowChars);
    Only controls that mean something from the menu, where no character is loaded.
    Tutorial replay / export / delete are per-character and live elsewhere. */
 function mmSyncEmbersBtn(){
-  const b = $('mmEmbers'); if(!b) return;
+  const b = $('mmEmbersBtn'); if(!b) return;
   const on = embersEnabled();
   b.textContent = on ? 'On' : 'Off';
   b.setAttribute('aria-pressed', on ? 'true' : 'false');
@@ -25170,7 +25170,7 @@ $('mmScale').addEventListener('input', function(e){
   setUiScale(pct/100);
 });
 $('mmFullscreen').addEventListener('click', mmToggleFullscreen);
-$('mmEmbers').addEventListener('click', function(){
+$('mmEmbersBtn').addEventListener('click', function(){
   setEmbersEnabled(!embersEnabled());
   mmSyncEmbersBtn();
 });
