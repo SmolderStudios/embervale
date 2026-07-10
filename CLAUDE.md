@@ -1,6 +1,6 @@
 # Cindervale Idle
 
-A dark-fantasy idle/incremental RPG. Solo developer (Jordan). Distributed via Electron, Steam port planned, hosted live via GitHub Pages at `https://smolderstudios.github.io/embervale/embervale.html`.
+A dark-fantasy idle/incremental RPG. Solo developer (Jordan). Distributed via Electron, Steam port planned, hosted live via GitHub Pages at `https://smolderstudios.github.io/embervale/cindervale.html`.
 
 **Renamed from "Embervale Idle" in v0.9.12** — an unrelated idle RPG called Embervale already exists on Steam. The rename is **display-only**. These are identifiers, not branding, and renaming any of them orphans every player's save:
 - `SAVE_KEY = 'embervale_save_v2'` and `DEVICE_KEY = 'embervale_device_id'` (localStorage)
@@ -11,15 +11,15 @@ A dark-fantasy idle/incremental RPG. Solo developer (Jordan). Distributed via El
 
 ## Architecture
 
-**Single self-contained HTML file**: `embervale.html` contains all game logic, CSS, data, and rendering inline. Vanilla JS/HTML/CSS, no dependencies. ~12k+ lines. Save data in `localStorage` with multi-slot support (`_c1`, `_c2`, `_c3` keys).
+**Single self-contained HTML file**: `cindervale.html` contains all game logic, CSS, data, and rendering inline. Vanilla JS/HTML/CSS, no dependencies. ~12k+ lines. Save data in `localStorage` with multi-slot support (`_c1`, `_c2`, `_c3` keys).
 
-**Section navigation**: code is organized with `[CSS-NN]` and `[JS-NN]` banner tags. Use grep to navigate (`grep -n "JS-12" embervale.html`).
+**Section navigation**: code is organized with `[CSS-NN]` and `[JS-NN]` banner tags. Use grep to navigate (`grep -n "JS-12" cindervale.html`).
 
 **Save system**: `normalizeState` runs on every load to migrate existing saves non-destructively. Any new state field MUST be guarded in `normalizeState` with a sensible default. Never break existing saves.
 
 ## Working file conventions
 
-- Edit `embervale.html` in this directory directly.
+- Edit `cindervale.html` in this directory directly.
 - `version.json` mirrors the version string in the HTML banner — keep them in sync.
 - **Pre-release versioning (changed 2026-07):** work stays in **`0.9.x`** (beta). `1.0.0` is reserved for the full release — never ship `1.0.0` or higher until then. Increment the zero-padded patch every release: `0.9.01` → `0.9.02` → … The prior scheme was `1.0.x` (ended at `1.0.106`). The Electron wrapper updates on a plain string-inequality (`remoteVer !== localVer`), so the downgrade to `0.9.01` still triggers auto-update for existing installs.
 - Version lives in **one** spot inside the HTML: the UI `<div class="mm-ver">` banner. (The JS-ICONS header carries a `v1.0.28` stamp — that is a section-origin marker, not the live version, and has not tracked releases since.)
@@ -28,7 +28,7 @@ A dark-fantasy idle/incremental RPG. Solo developer (Jordan). Distributed via El
 
 Every change must pass this pipeline before being committed:
 
-1. **Edit** `embervale.html` via str_replace (no rewrites, surgical changes only).
+1. **Edit** `cindervale.html` via str_replace (no rewrites, surgical changes only).
 2. **Syntax check**: extract the `<script>` block with Python regex, run `node --check` on it.
 3. **Smoke test**: jsdom boot test with 2500ms boot delay, `dom.window.eval()` against the extracted script. Verify all affected render surfaces don't throw.
 4. **Version bump**: increment patch number in both the UI div and JS-ICONS header. Update `version.json` to match.
@@ -102,7 +102,7 @@ Cross-zone scaling is intentional — e.g. `beast_sinew` at 0.1% on basic rats, 
 
 ## Distribution
 
-- **GitHub Pages** hosts the live HTML at `https://smolderstudios.github.io/embervale/embervale.html`.
+- **GitHub Pages** hosts the live HTML at `https://smolderstudios.github.io/embervale/cindervale.html`.
 - **`version.json`** at the same origin is what the Electron wrapper checks each launch.
 - Electron wrapper fetches the latest HTML, caches to userData, loads cached copy. Falls back to last-good cache when offline.
 - Steam build: the wrapper's GitHub-fetch path is disabled — Steam owns updates via depot system.

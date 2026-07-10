@@ -2810,7 +2810,7 @@ header h1 .flame{color:var(--ember)}
       <button class="mm-btn" id="mmCredits">Credits</button>
     </div>
   </div>
-  <div class="mm-ver">v0.9.13</div>
+  <div class="mm-ver">v0.9.14</div>
   <div class="mm-copy">© Smolder Studios</div>
 </div>
 
@@ -3292,14 +3292,18 @@ const MAX_LEVEL = 99;
 const OFFLINE_CAP_MS   = 24 * 3600 * 1000; // 24h base offline cap (extendable via the Offline tree)
 const OFFLINE_RATE     = 0.30;              // 1.0.11 nerf: 40% -> 30% base offline efficiency
 const OFFLINE_XP_RATE  = 90;                // 1.0.11 nerf: 120 -> 90 offline-skill xp/min (base)
-const SAVE_KEY = 'embervale_save_v2';
+/* Renamed for the Cindervale reset (0.9.14). This is a hard save wipe by design:
+   nothing reads the old 'embervale_save_v2' keys any more, so every character from
+   the Embervale era is abandoned in localStorage rather than migrated. Authorised
+   before Steam launch, while the only players are beta testers. */
+const SAVE_KEY = 'cindervale_save_v1';
 
 /* Device-local save isolation
    Each browser gets a unique device ID stored under a separate key.
    The actual save is stored under SAVE_KEY + '_' + deviceId so two
    different people opening the same HTML file never share save data.
    Export/Import lets players move saves intentionally.              */
-const DEVICE_KEY = 'embervale_device_id';
+const DEVICE_KEY = 'cindervale_device_id';
 function getDeviceId(){
   let id = localStorage.getItem(DEVICE_KEY);
   if(!id){
@@ -3322,7 +3326,10 @@ function mmKey(n){ return DEVICE_SAVE_KEY + '_c' + n; }
    ever used, WITHOUT deleting the source (so nothing can be lost again).
      - DEVICE_SAVE_KEY            : original single-save (pre-menu)
      - DEVICE_SAVE_KEY + '_slot1' : my earlier broken menu build (v1.1.0)
-     - DEVICE_SAVE_KEY + '_c1'    : current build  */
+     - DEVICE_SAVE_KEY + '_c1'    : current build
+   NOTE (0.9.14): DEVICE_SAVE_KEY now derives from 'cindervale_save_v1', so none
+   of these reach an Embervale-era save. That is intentional — the rename is a
+   deliberate wipe. Recovery still covers the schemes within the new namespace. */
 function mmRecover(){
   try{
     // Slot 1: prefer existing _c1, else recover from older locations.
@@ -24260,10 +24267,8 @@ const UI_DESIGN_W = 1800;   // .layout max-width (1740) + padding + scrollbar al
 const UI_ZOOM_MIN = 0.55;   // floor puts the minimum usable window near 990px
 const UI_ZOOM_MAX = 1.80;   // stop 4K monitors from ballooning the chrome
 let _zoomRaf = 0;
-/* Player-set multiplier on top of the automatic fit (Settings > Interface scale).
-   Stored under the legacy 'embervale_' prefix on purpose: like the save keys, the
-   name is an identifier, not a brand. Renaming it would silently reset everyone. */
-const UI_SCALE_KEY = 'embervale_ui_scale';
+/* Player-set multiplier on top of the automatic fit (Settings > Interface scale). */
+const UI_SCALE_KEY = 'cindervale_ui_scale';
 function uiScale(){
   const v = parseFloat(localStorage.getItem(UI_SCALE_KEY));
   return (v >= 0.7 && v <= 1.3) ? v : 1;
