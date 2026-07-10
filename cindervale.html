@@ -3113,7 +3113,7 @@ select.dev-input{padding-right:26px}
       <button class="mm-btn" id="mmCredits">Credits</button>
     </div>
   </div>
-  <div class="mm-ver">v0.9.31</div>
+  <div class="mm-ver">v0.9.32</div>
   <div class="mm-copy">© Smolder Studios</div>
 </div>
 
@@ -3734,6 +3734,47 @@ window.addEventListener('error', function(e){
 window.addEventListener('unhandledrejection', function(e){
   _logBugError('promise: '+((e.reason&&e.reason.message)||e.reason||'?'));
 });
+
+/* ── Save-integrity audit (0.9.32) ───────────────────────────────────────────
+   VISIBILITY ONLY — never blocks or punishes. A tamper seal is embedded in each
+   save; if a loaded save fails it (localStorage hand-editing, or importing an
+   edited .evsave), we ping a webhook so the dev knows. It CANNOT catch live
+   DevTools/Cheat-Engine edits that then save normally (the game re-seals on
+   save), and a determined cheater can extract this salt and forge seals — this
+   is a tripwire for casual save-editing, not real prevention. Empty AUDIT_WEBHOOK
+   falls back to the bug webhook; set it to a dedicated channel if you prefer. */
+const AUDIT_WEBHOOK = '';
+const _CHEAT_SALT = 'cv_a9f31c7e_seal_v1';
+let _cheatPinged = false;
+function _cyrb53(str, seed){
+  let h1=0xdeadbeef^(seed||0), h2=0x41c6ce57^(seed||0);
+  for(let i=0,ch;i<str.length;i++){ ch=str.charCodeAt(i); h1=Math.imul(h1^ch,2654435761); h2=Math.imul(h2^ch,1597334677); }
+  h1=Math.imul(h1^(h1>>>16),2246822507); h1^=Math.imul(h2^(h2>>>13),3266489909);
+  h2=Math.imul(h2^(h2>>>16),2246822507); h2^=Math.imul(h1^(h1>>>13),3266489909);
+  return (4294967296*(2097151&h2)+(h1>>>0)).toString(36);
+}
+function _cheatSeal(obj){
+  let s=''; for(const k in obj){ if(k!=='_seal') s+=k+':'+JSON.stringify(obj[k])+';'; }
+  return _cyrb53(s+_CHEAT_SALT);
+}
+function _cheatAlert(reason, s){
+  if(_cheatPinged) return; _cheatPinged=true;   // once per session, fire-and-forget
+  const hook = AUDIT_WEBHOOK || (typeof BUG_WEBHOOK!=='undefined' ? BUG_WEBHOOK : '');
+  if(!hook) return;
+  let dev='?'; try{ dev=localStorage.getItem(DEVICE_KEY)||'?'; }catch(e){}
+  const gold = Math.floor((((s&&s.coins)||0))/(typeof SILVER_PER_GOLD!=='undefined'?SILVER_PER_GOLD:100));
+  const payload={username:'Cindervale Audit',embeds:[{title:'Save integrity flag',color:0xc4543a,
+    description:'A loaded save failed its tamper seal — likely edited outside the game.',
+    fields:[
+      {name:'Reason',value:String(reason).slice(0,64),inline:true},
+      {name:'Device',value:String(dev).slice(0,40),inline:true},
+      {name:'Character',value:String((s&&s.charName)||'?').slice(0,64),inline:true},
+      {name:'Gold',value:gold.toLocaleString(),inline:true},
+      {name:'Slot',value:String(mmSlot),inline:true},
+      {name:'Version',value:(document.querySelector('.mm-ver')?document.querySelector('.mm-ver').textContent.trim():'?'),inline:true}
+    ]}]};
+  try{ fetch(hook,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}); }catch(e){}
+}
 function mmKey(n){ return DEVICE_SAVE_KEY + '_c' + n; }
 
 /* Non-destructive recovery: pull saves from every key scheme this game has
@@ -12032,10 +12073,18 @@ function offlineMods(){
    No host-provided storage API is used for saves, so that sharing
    the HTML file never shares save data.
    ================================================================= */
+// Re-seals the state and returns its JSON. Use everywhere state is written to
+// disk or exported, so the tamper seal is always fresh (a stale seal would
+// wrongly flag an honest player).
+function _serializeState(){
+  delete state._seal;
+  state._seal = _cheatSeal(state);
+  return JSON.stringify(state);
+}
 function saveGame(){
   if(mmAtMenu || !mmSlot) return;
   state.lastSeen=Date.now();
-  try{ localStorage.setItem(mmKey(mmSlot), JSON.stringify(state)); }catch(e){ console.warn('Save failed:',e); }
+  try{ localStorage.setItem(mmKey(mmSlot), _serializeState()); }catch(e){ console.warn('Save failed:',e); }
 }
 function loadGame(){
   if(!mmSlot) return;
@@ -12044,6 +12093,9 @@ function loadGame(){
 }
 function applySave(s){
   if(!s||typeof s!=='object') return;
+  // Tamper check before we touch anything. Only flags saves that HAVE a seal and
+  // fail it — older/unsealed saves are ignored, so nobody is falsely flagged.
+  try{ if(s._seal!==undefined && s._seal!==_cheatSeal(s)) _cheatAlert('save-seal-mismatch', s); }catch(e){}
   Object.assign(state,s);
   normalizeState();
 }
@@ -12079,7 +12131,7 @@ function showSaveModal(mode){
   _smMode=mode;
   if(mode==='export'){
     state.lastSeen=Date.now();
-    const code=btoa(unescape(encodeURIComponent(JSON.stringify(state))));
+    const code=btoa(unescape(encodeURIComponent(_serializeState())));
     $('smTitle').textContent='Export Save';
     $('smBody').textContent='Copy this code and keep it somewhere safe. Use Import Save to restore it.';
     $('smArea').value=code;
@@ -24781,7 +24833,7 @@ function mmConfirmDestiny(){
     state.charType=mmSelType; state.charClass=mmSelClass;
     state.lastSeen=Date.now();
     normalizeState();
-    try{ localStorage.setItem(mmKey(n), JSON.stringify(state)); }catch(e){}
+    try{ localStorage.setItem(mmKey(n), _serializeState()); }catch(e){}
     mmStart(n,true);   // reloads the freshly-saved char and enters the world
   }else{
     // Legacy save — stamp the destiny onto the already-loaded state, then enter.
