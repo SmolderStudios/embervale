@@ -94,12 +94,16 @@ header h1 .flame{color:var(--ember)}
 
 /* ════════ [CSS-03] LAYOUT & PANELS ══════════════════════════════════════════════ */
 /* layout */
-/* max-width sits just under UI_DESIGN_W (1620) minus padding and a scrollbar
+/* max-width sits just under UI_DESIGN_W (1440) minus padding and a scrollbar
    allowance, so at the design width the layout runs nearly edge to edge instead
-   of floating in a wide empty margin. The side columns widen a little; the rest
-   of the extra space goes to the centre column, where the content actually is. */
+   of floating in a wide empty margin.
+
+   Shrinking this cap does NOT shrink the game: zoom is window/UI_DESIGN_W, so
+   lowering both together scales the whole UI up while the rendered layout stays
+   the same fraction of the window. That is the readability lever — a tighter
+   cap plus a matching design width means bigger text at the same edge coverage. */
 .layout{display:grid;grid-template-columns:320px 1fr 300px;gap:14px;padding:14px;
-  max-width:1560px;margin:0 auto;
+  max-width:1380px;margin:0 auto;
   align-items:start;
   overflow:visible;
 }
@@ -2718,7 +2722,7 @@ header h1 .flame{color:var(--ember)}
   <div class="mm-btns">
     <button class="mm-btn mm-primary" id="mmPlay">▶ Play</button>
   </div>
-  <div class="mm-ver">v0.9.04</div>
+  <div class="mm-ver">v0.9.05</div>
 </div>
 
 <!-- ===== CHARACTER SELECT (added) ===== -->
@@ -23988,9 +23992,9 @@ function _rootZoom(){ var z=parseFloat(getComputedStyle(document.documentElement
 
    _rootZoom() reads this back off the computed style, so every rect-based
    position (tooltips, tutorial spotlight, popovers) follows with no extra work. */
-const UI_DESIGN_W = 1620;   // .layout max-width (1560) + padding + scrollbar allowance
-const UI_ZOOM_MIN = 0.55;   // floor puts the minimum usable window near 890px
-const UI_ZOOM_MAX = 1.60;   // stop 4K monitors from ballooning the chrome
+const UI_DESIGN_W = 1440;   // .layout max-width (1380) + padding + scrollbar allowance
+const UI_ZOOM_MIN = 0.55;   // floor puts the minimum usable window near 790px
+const UI_ZOOM_MAX = 1.80;   // stop 4K monitors from ballooning the chrome
 let _zoomRaf = 0;
 function applyRootZoom(){
   const w = window.innerWidth || UI_DESIGN_W;
