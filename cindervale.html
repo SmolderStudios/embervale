@@ -1769,6 +1769,8 @@ select option:checked{background-color:#2a1d10;color:#f0c772}
 .ach-nm{font-size:15px;color:#ead9b5;font-variant:small-caps;letter-spacing:.6px}
 .ach-card.got .ach-nm{color:#f0c772}
 .ach-ds{font-size:12.5px;color:#a08a64;line-height:1.35;margin-top:1px}
+.ach-card.ach-secret .ach-nm{color:#6e552c;letter-spacing:3px}
+.ach-card.ach-secret .ach-ds{font-style:italic}
 .ach-when{font-family:'Courier New',monospace;font-size:10.5px;color:#6e552c;margin-top:3px}
 #emberMenu .mm-ver{position:absolute;bottom:14px;left:18px;color:#6e552c;
   font-family:'Courier New',monospace;font-size:13px;letter-spacing:1px}
@@ -1791,6 +1793,15 @@ select option:checked{background-color:#2a1d10;color:#f0c772}
 .gm-row.gm-danger{border-color:#5a2a20}
 .gm-row.gm-danger:hover{border-color:#c4543a;color:#e0836a;background:#2a1410}
 .set-row.gm-hide{display:none}
+.pets-secret{margin-top:14px;padding-top:12px;border-top:1px solid #33261680;
+  display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.pets-secret .pet-card.secret{border-color:#8a6a2e;box-shadow:inset 0 0 26px rgba(240,199,114,.07)}
+.pets-secret-note{font-size:13.5px;color:#7a6048;font-style:italic;max-width:44ch}
+/* Hearth embers (0.9.19). z-index:-1 puts the canvas above the root background
+   but beneath every in-flow element, so panels occlude it naturally and it only
+   shows in the empty ground below and beside the layout. pointer-events:none
+   guarantees it can never intercept a click meant for the UI. */
+#bgEmbers{position:fixed;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none}
 /* Settings rows + credits list (0.9.12) */
 .set-row{display:flex;justify-content:space-between;align-items:center;gap:16px;
   padding:12px 0;border-bottom:1px solid #33261680}
@@ -2962,7 +2973,7 @@ select option:checked{background-color:#2a1d10;color:#f0c772}
       <button class="mm-btn" id="mmCredits">Credits</button>
     </div>
   </div>
-  <div class="mm-ver">v0.9.18</div>
+  <div class="mm-ver">v0.9.19</div>
   <div class="mm-copy">© Smolder Studios</div>
 </div>
 
@@ -2997,6 +3008,15 @@ select option:checked{background-color:#2a1d10;color:#f0c772}
       </div>
       <div class="set-ctl">
         <button class="mm-mini" id="mmCursor" aria-pressed="true">On</button>
+      </div>
+    </div>
+
+    <div class="set-row">
+      <div class="set-lbl">Background embers
+        <small>Drifting sparks in the empty ground</small>
+      </div>
+      <div class="set-ctl">
+        <button class="mm-mini" id="mmEmbers" aria-pressed="true">On</button>
       </div>
     </div>
 
@@ -3168,6 +3188,7 @@ select option:checked{background-color:#2a1d10;color:#f0c772}
     <button class="hdr-btn" id="btnMenu"><svg class="nav-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16"/><path d="M4 12h16"/><path d="M4 17h16"/></svg>Menu</button>
   </div>
 </header>
+<canvas id="bgEmbers" aria-hidden="true"></canvas>
 <div id="xpPopups" class="xp-popups"></div>
 
 <!-- ══════ [HTML-03] GAME LAYOUT — left / center / right panels ══════ -->
@@ -6939,6 +6960,7 @@ const ICONS = {
   pet_troll_pebble: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><radialGradient id="tp_stone" cx="0.5" cy="0.4" r="0.6"><stop offset="0" stop-color="#a89878"/><stop offset="0.6" stop-color="#685848"/><stop offset="1" stop-color="#2a2018"/></radialGradient></defs><ellipse cx="32" cy="56" rx="16" ry="3" fill="#000" opacity="0.4"/><path d="M14,40 L18,22 L34,16 L48,22 L52,38 L46,50 L32,54 L16,48 Z" fill="url(#tp_stone)" stroke="#3a2818" stroke-width="0.8" stroke-linejoin="round"/><path d="M14,40 L18,22 L34,16 L32,30 Z" fill="#9a8878" opacity="0.6"/><ellipse cx="26" cy="32" rx="2.8" ry="2.4" fill="#fbd24e"/><ellipse cx="40" cy="32" rx="2.8" ry="2.4" fill="#fbd24e"/><circle cx="26" cy="32" r="1.3" fill="#1a0e04"/><circle cx="40" cy="32" r="1.3" fill="#1a0e04"/><path d="M24 42 L32 44 L40 42 L38 46 L26 46 Z" fill="#1a0e04"/><path d="M27 44 L27 46 M30 44 L30 46 M33 44 L33 46 M36 44 L36 46" stroke="#e8d8c0" stroke-width="0.7"/><circle cx="22" cy="20" r="1.4" fill="#9a8878"/><circle cx="42" cy="18" r="1" fill="#9a8878"/><circle cx="48" cy="36" r="1.2" fill="#9a8878"/></svg>',
   pet_wyvern_hatchling: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><radialGradient id="wh_scale" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#5fb8e0"/><stop offset="0.6" stop-color="#2f78a0"/><stop offset="1" stop-color="#0a283a"/></radialGradient></defs><ellipse cx="32" cy="56" rx="16" ry="3" fill="#000" opacity="0.4"/><path d="M14 28 L8 18 L18 24 Z" fill="url(#wh_scale)" stroke="#0a283a" stroke-width="0.6"/><path d="M50 28 L56 18 L46 24 Z" fill="url(#wh_scale)" stroke="#0a283a" stroke-width="0.6"/><ellipse cx="32" cy="42" rx="16" ry="12" fill="url(#wh_scale)" stroke="#0a283a" stroke-width="0.8"/><ellipse cx="32" cy="26" rx="12" ry="11" fill="url(#wh_scale)" stroke="#0a283a" stroke-width="0.8"/><path d="M18 24 Q22 14 28 12" stroke="#5fb8e0" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M46 24 Q42 14 36 12" stroke="#5fb8e0" stroke-width="2" fill="none" stroke-linecap="round"/><ellipse cx="26" cy="26" rx="2.6" ry="2.4" fill="#fbd24e"/><ellipse cx="38" cy="26" rx="2.6" ry="2.4" fill="#fbd24e"/><circle cx="26" cy="26" r="1.1" fill="#1a0e04"/><circle cx="38" cy="26" r="1.1" fill="#1a0e04"/><path d="M28 32 Q32 36 36 32" stroke="#1a0e04" stroke-width="1" fill="none"/><path d="M28 30 L30 32 L28 34 M36 30 L34 32 L36 34" stroke="#fff8dc" stroke-width="0.7" fill="none"/><path d="M48 48 Q58 46 60 38" stroke="#2f78a0" stroke-width="3" fill="none" stroke-linecap="round"/></svg>',
   pet_imp: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><radialGradient id="im_skin" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#e0762f"/><stop offset="0.6" stop-color="#a02818"/><stop offset="1" stop-color="#3a0808"/></radialGradient><radialGradient id="im_flame" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#fbd24e"/><stop offset="0.5" stop-color="#e0762f"/><stop offset="1" stop-color="#a02818" stop-opacity="0"/></radialGradient></defs><ellipse cx="32" cy="56" rx="14" ry="3" fill="#000" opacity="0.4"/><path d="M28 14 L22 4 L26 12 Z" fill="url(#im_skin)" stroke="#3a0808" stroke-width="0.6"/><path d="M36 14 L42 4 L38 12 Z" fill="url(#im_skin)" stroke="#3a0808" stroke-width="0.6"/><ellipse cx="32" cy="40" rx="16" ry="14" fill="url(#im_skin)" stroke="#3a0808" stroke-width="0.8"/><circle cx="32" cy="26" r="13" fill="url(#im_skin)" stroke="#3a0808" stroke-width="0.8"/><path d="M14 36 L4 30 L10 38 L4 42 L16 42 Z" fill="url(#im_skin)" stroke="#3a0808" stroke-width="0.6"/><path d="M50 36 L60 30 L54 38 L60 42 L48 42 Z" fill="url(#im_skin)" stroke="#3a0808" stroke-width="0.6"/><ellipse cx="26" cy="26" rx="2.8" ry="2.4" fill="#fbd24e"/><ellipse cx="38" cy="26" rx="2.8" ry="2.4" fill="#fbd24e"/><circle cx="26" cy="26" r="1.2" fill="#3a0808"/><circle cx="38" cy="26" r="1.2" fill="#3a0808"/><path d="M27 32 L29 30 L31 32 L33 30 L35 32 L37 30" stroke="#3a0808" stroke-width="1" fill="none"/><ellipse cx="32" cy="6" rx="6" ry="8" fill="url(#im_flame)" opacity="0.7"/><path d="M48 54 Q56 50 56 42" stroke="#a02818" stroke-width="2" fill="none" stroke-linecap="round"/></svg>',
+  pet_smokey_bones: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><linearGradient id="sb_fur" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6b6660"/><stop offset="0.55" stop-color="#3d3a36"/><stop offset="1" stop-color="#1c1a18"/></linearGradient><radialGradient id="sb_eye" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#ffe9bf"/><stop offset="0.5" stop-color="#f5c451"/><stop offset="1" stop-color="#e0762f"/></radialGradient><radialGradient id="sb_smoke" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#8a8078" stop-opacity="0.35"/><stop offset="1" stop-color="#8a8078" stop-opacity="0"/></radialGradient></defs><ellipse cx="32" cy="34" rx="26" ry="22" fill="url(#sb_smoke)"/><path d="M14 24 L18 8 L28 18 Z" fill="url(#sb_fur)"/><path d="M50 24 L46 8 L36 18 Z" fill="url(#sb_fur)"/><path d="M16.5 21 L18.6 12.5 L24 18 Z" fill="#5a3020" opacity="0.55"/><path d="M47.5 21 L45.4 12.5 L40 18 Z" fill="#5a3020" opacity="0.55"/><ellipse cx="32" cy="33" rx="20" ry="18" fill="url(#sb_fur)"/><ellipse cx="24" cy="30" rx="4.6" ry="5.4" fill="url(#sb_eye)"/><ellipse cx="40" cy="30" rx="4.6" ry="5.4" fill="url(#sb_eye)"/><ellipse cx="24" cy="30" rx="1.1" ry="4.4" fill="#1a1108"/><ellipse cx="40" cy="30" rx="1.1" ry="4.4" fill="#1a1108"/><path d="M32 38 L29.4 41.6 L34.6 41.6 Z" fill="#c4543a"/><path d="M32 42 L32 44.6 M32 44.6 Q28.6 46.6 26.6 43.6 M32 44.6 Q35.4 46.6 37.4 43.6" stroke="#1a1108" stroke-width="1.3" fill="none" stroke-linecap="round"/><path d="M6 34 L18 32 M6 40 L18 37 M58 34 L46 32 M58 40 L46 37" stroke="#b8b0a6" stroke-width="1" opacity="0.6" stroke-linecap="round"/><circle cx="20" cy="14" r="1.4" fill="#e0762f" opacity="0.7"/><circle cx="45" cy="12" r="1.1" fill="#e0762f" opacity="0.5"/></svg>',
   pet_unknown: '<svg class="ev-icon" viewBox="0 0 64 64"><circle cx="32" cy="32" r="28" fill="#1a1410" stroke="#3a2818" stroke-width="1.5"/><circle cx="32" cy="32" r="22" fill="#0f0a08"/><text x="32" y="44" text-anchor="middle" fill="#5a4838" font-size="32" font-family="serif" font-weight="700">?</text></svg>',
   // ── [JS-ICONS-UI] chrome icons (1.0.96) — small inline SVGs replacing decorative
   // UI emoji (tabs, stat rows, currency, headers). Reused via iconHTML('ui_*'). ──
@@ -11271,6 +11293,9 @@ function normalizeState(){
   // on the next checkAchievements() pass, so a veteran character immediately earns
   // everything it has already qualified for rather than starting from zero.
   if(!state.achievements||typeof state.achievements!=='object'||Array.isArray(state.achievements)) state.achievements={};
+  // Hearth easter egg: cats coaxed from the embers. Smokey appears at nine.
+  if(!state.egg||typeof state.egg!=='object'||Array.isArray(state.egg)) state.egg={};
+  if(typeof state.egg.cats!=='number') state.egg.cats=0;
   // Combat Mastery — ensure all fields are present and well-typed.
   //   First-load retroactive grant: if cmastGranted is still 0 but the player
   //   already has combat levels, credit them with (combatLevel-1) points so they
@@ -16129,6 +16154,20 @@ function buildPetsViewHTML(){
     </div>`;
   }
   html+='</div>';
+  // Secret pets appear only once earned. A locked "???" card would advertise that
+  // something exists, which is the one thing an easter egg must not do.
+  if(hasSecretPet()){
+    const sp = SECRET_PETS.smokey_bones;
+    const at = (state.pets[sp.id]&&state.pets[sp.id].obtainedAt)||0;
+    html+=`<div class="pets-secret">
+      <div class="pet-card have secret" data-tip="${sp.blurb}">
+        <div class="pet-face">${iconHTML(sp.id)}</div>
+        <div class="pet-name">${sp.name}</div>
+        <div class="pet-zone">The Hearth</div>
+      </div>
+      <div class="pets-secret-note">${sp.blurb}${at?' &middot; found '+new Date(at).toLocaleDateString():''}</div>
+    </div>`;
+  }
   return html;
 }
 /* Thin compatibility wrapper — re-renders the combat panel so the pets sub-tab
@@ -18197,6 +18236,20 @@ const PETS={
   wyvern_roost:    {id:'pet_wyvern_hatchling', name:'Wyvern Hatchling',  zone:'wyvern_roost'},
   demon_sanctum:   {id:'pet_imp',              name:'Imp',               zone:'demon_sanctum'},
 };
+
+/* ── Secret pets (0.9.19) ──────────────────────────────────────────────────
+   Not part of PETS: that object is keyed by zone and every consumer assumes a
+   zone. Smokey Bones is earned from the hearth embers, not from a monster, so he
+   is tracked separately and rendered as his own card. He must never count toward
+   Beastfriend — see _achPets(), which now counts zone pets only. */
+const SECRET_PETS = {
+  smokey_bones: {
+    id:'pet_smokey_bones',
+    name:'Smokey Bones',
+    blurb:'Nine cats coaxed from the coals, and the tenth came willingly.',
+  },
+};
+function hasSecretPet(){ return !!(state && state.pets && state.pets.pet_smokey_bones); }
 function getPetForZone(zoneId){ return PETS[zoneId]||null; }
 function hasPet(petId){ return !!(state && state.pets && state.pets[petId]); }
 
@@ -20725,7 +20778,15 @@ function _achTotalXp(){ let t=0; for(const k in SKILLS) t+=(state.xp[k]||0); ret
 function _achKills(){ let t=0; const mk=state.monKills||{}; for(const k in mk) t+=(mk[k]||0); return t; }
 function _achBossIds(){ return MONSTERS.filter(m=>m.boss).map(m=>m.id); }
 function _achBossesKilled(){ const mk=state.monKills||{}; return _achBossIds().filter(id=>(mk[id]||0)>0).length; }
-function _achPets(){ return Object.keys(state.pets||{}).length; }
+/* Zone pets only. state.pets also holds secret pets (Smokey), and counting those
+   would let Beastfriend fire on eight zone pets plus one easter egg. */
+function _achPets(){
+  const owned = state.pets || {};
+  let n = 0;
+  for(const zid in PETS) if(owned[PETS[zid].id]) n++;
+  return n;
+}
+function _achCats(){ return (state.egg && state.egg.cats) || 0; }
 function _achGold(){ return (state.coins||0)/SILVER_PER_GOLD; }
 function _achTreeSpentMax(){ let m=0; const t=state.tree||{}; for(const s in t){ let v=0; for(const n in t[s]) v+=t[s][n]; m=Math.max(m,v); } return m; }
 function _achTreeSpentAny(){ let t=0; const tr=state.tree||{}; for(const s in tr) for(const n in tr[s]) t+=tr[s][n]; return t; }
@@ -20762,7 +20823,6 @@ const ACHIEVEMENTS=[
   {id:'blooded',      cat:'combat', icon:'ui_swords', name:'Blooded',        desc:'Reach combat level 25.',                       check:()=>combatLevel()>=25},
   {id:'veteran',      cat:'combat', icon:'ui_swords', name:'Veteran',        desc:'Reach combat level 75.',                       check:()=>combatLevel()>=75},
   {id:'first_boss',   cat:'combat', icon:'ui_skull',  name:'Giant Slayer',   desc:'Defeat your first boss.',                      check:()=>_achBossesKilled()>=1},
-  {id:'hundred_kills',cat:'combat', icon:'ui_sword',  name:'Culling',        desc:'Slay 100 monsters.',                           check:()=>_achKills()>=100},
   {id:'thousand_kills',cat:'combat',icon:'ui_sword',  name:'Butcher',        desc:'Slay 1,000 monsters.',                         check:()=>_achKills()>=1000},
   {id:'zone_three',   cat:'combat', icon:'ui_shield', name:'Trailblazer',    desc:'Clear three combat zones.',                    check:()=>_achZoneClears()>=3},
   {id:'slayer_ten',   cat:'combat', icon:'ui_skull',  name:'Contract Killer',desc:'Complete 10 Slayer tasks.',                    check:()=>((state.slayer&&state.slayer.tasksDone)||0)>=10},
@@ -20776,6 +20836,10 @@ const ACHIEVEMENTS=[
   {id:'enchanter',    cat:'collection', icon:'ui_moon', name:'Enchanter',    desc:'Enchant a piece of gear.',                      check:()=>Object.keys(state.enchantments||{}).length>=1},
   {id:'archivist',    cat:'collection', icon:'ui_book', name:'Archivist',    desc:'Discover 100 different items.',                 check:()=>_achDiscovered()>=100},
   {id:'voidtouched',  cat:'collection', icon:'ui_gem',  name:'Voidtouched',  desc:'Obtain a Voidheart.',                          check:()=>((state.items||{}).voidheart||0)>=1||!!(state.discovered||{}).voidheart},
+  // Hidden: shown as "???" until earned. Replaced 'Culling' (100 kills), which
+  // measured the same axis as 'Butcher' (1,000 kills) and taught nothing new.
+  {id:'ember_whisperer',cat:'collection', icon:'ui_paw', hidden:true, name:'Ember Whisperer',
+    desc:'Coax something out of the hearth.', check:()=>_achCats()>=1},
 
   // ── Endgame ──
   {id:'rich',         cat:'endgame', icon:'ui_coin',   name:'Dragon’s Hoard', desc:'Hold 1,000,000 gold at once.',           check:()=>_achGold()>=1e6},
@@ -20786,7 +20850,14 @@ const ACHIEVEMENTS=[
 const ACH_BY_ID={}; ACHIEVEMENTS.forEach(a=>{ ACH_BY_ID[a.id]=a; });
 
 function achUnlocked(id){ return !!(state.achievements&&state.achievements[id]); }
-function achCount(){ return state.achievements?Object.keys(state.achievements).length:0; }
+/* Count only ids that still exist. A save that earned a since-removed achievement
+   (Culling) would otherwise report 34/33 forever. */
+function achCount(){
+  if(!state.achievements) return 0;
+  let n = 0;
+  for(const id in state.achievements) if(ACH_BY_ID[id]) n++;
+  return n;
+}
 
 /* `silent` suppresses only the toast — the Steam mirror still fires, so a veteran
    who qualifies retroactively gets their Steam unlocks on first launch. */
@@ -20862,11 +20933,14 @@ function renderAchievements(){
   for(const a of shown){
     const has=achUnlocked(a.id);
     const when=has?new Date(state.achievements[a.id]).toLocaleDateString():'';
-    html+='<div class="ach-card'+(has?' got':'')+'">'
+    // A hidden achievement gives nothing away until it is earned. Telling the
+    // player "click an ember" would not be an easter egg, it would be a chore.
+    const secret = a.hidden && !has;
+    html+='<div class="ach-card'+(has?' got':'')+(secret?' ach-secret':'')+'">'
       +'<div class="ach-ic">'+iconHTML(has?a.icon:'ui_lock')+'</div>'
       +'<div class="ach-body">'
-        +'<div class="ach-nm">'+a.name+'</div>'
-        +'<div class="ach-ds">'+a.desc+'</div>'
+        +'<div class="ach-nm">'+(secret?'???':a.name)+'</div>'
+        +'<div class="ach-ds">'+(secret?'A secret, waiting to be found.':a.desc)+'</div>'
         +(has?'<div class="ach-when">Unlocked '+when+'</div>':'')
       +'</div></div>';
   }
@@ -24854,6 +24928,12 @@ $('mmPlay').addEventListener('click',mmShowChars);
 /* ── Settings ──────────────────────────────────────────────────────────────
    Only controls that mean something from the menu, where no character is loaded.
    Tutorial replay / export / delete are per-character and live elsewhere. */
+function mmSyncEmbersBtn(){
+  const b = $('mmEmbers'); if(!b) return;
+  const on = embersEnabled();
+  b.textContent = on ? 'On' : 'Off';
+  b.setAttribute('aria-pressed', on ? 'true' : 'false');
+}
 function mmSyncCursorBtn(){
   const b = $('mmCursor'); if(!b) return;
   const on = cursorEnabled();
@@ -24872,6 +24952,7 @@ function mmOpenSettings(){
   $('mmScale').value = String(pct);
   $('mmScaleVal').textContent = pct + '%';
   mmSyncCursorBtn();
+  mmSyncEmbersBtn();
   // Importing loads into an *empty slot*, which is meaningless with a character
   // already loaded. Hide the row rather than offer a control that misleads.
   const impRow = $('mmSetImportRow');
@@ -24892,6 +24973,10 @@ $('mmScale').addEventListener('input', function(e){
   setUiScale(pct/100);
 });
 $('mmFullscreen').addEventListener('click', mmToggleFullscreen);
+$('mmEmbers').addEventListener('click', function(){
+  setEmbersEnabled(!embersEnabled());
+  mmSyncEmbersBtn();
+});
 $('mmCursor').addEventListener('click', function(){
   setCursorEnabled(!cursorEnabled());
   mmSyncCursorBtn();
@@ -24919,6 +25004,234 @@ $('mmCreditsClose').addEventListener('click', function(){ $('mmCreditsModal').cl
 $('mmBackToMenu').addEventListener('click',mmShowMenu);
 function gmClose(){ $('gameMenuModal').classList.add('mm-hidden'); }
 $('btnMenu').addEventListener('click',()=>$('gameMenuModal').classList.remove('mm-hidden'));
+
+/* ════ [JS-EGG] HEARTH EMBERS & SMOKEY BONES ════════════════════════════════
+   Embers drift up from the bottom of the viewport. Panels sit above them, so they
+   are only visible in the empty ground — which is exactly where the complaint was.
+
+   Click one and it bursts into a dotted cat. Nine cats coaxed from the coals and
+   Smokey Bones himself comes to sit by the hearth; click him and he stays.
+
+   The canvas is pointer-events:none and z-index:-1, so it can never eat a click.
+   Hit-testing runs off a single window listener that only fires when the click
+   landed on the background — never on a card, a button, or a tooltip.               */
+const EMBERS_KEY = 'cindervale_embers';
+function embersEnabled(){ return localStorage.getItem(EMBERS_KEY) !== '0'; }
+function setEmbersEnabled(on){
+  try{ localStorage.setItem(EMBERS_KEY, on ? '1' : '0'); }catch(e){}
+  const cv = $('bgEmbers');
+  if(cv) cv.style.display = on ? '' : 'none';
+}
+
+const SMOKEY_AT = 9;   // nine lives
+
+/* The cat, as a dot grid: legible in source, which is the whole point. */
+const _CAT_ROWS = [
+  '.#...........#.',
+  '.##.........##.',
+  '.#.#.......#.#.',
+  '.#..#######..#.',
+  '.#...........#.',
+  '#.............#',
+  '#..##.....##..#',
+  '#..##.....##..#',
+  '#.............#',
+  '#......#......#',
+  '#.....###.....#',
+  '.#...#...#...#.',
+  '.#...........#.',
+  '..#.........#..',
+  '...#########...'
+];
+const _CAT_PTS = (function(){
+  const pts=[], h=_CAT_ROWS.length, w=_CAT_ROWS[0].length;
+  for(let y=0;y<h;y++) for(let x=0;x<w;x++)
+    if(_CAT_ROWS[y][x]==='#') pts.push([x-(w-1)/2, y-(h-1)/2]);
+  return pts;
+})();
+
+const _EGG_LINES = [
+  'Something stirs in the coals.',
+  'The embers hold a shape for a moment.',
+  'You could swear it looked back.',
+  'A tail flicks, and is gone.',
+  'Warmth, where no fire burns.',
+  'It waits, patient as ash.',
+  'Nearly. Almost. Not yet.',
+  'Two eyes. Then none.',
+  'The hearth remembers a name.'
+];
+
+(function hearthEmbers(){
+  const cv = $('bgEmbers'); if(!cv) return;
+  let ctx = null;
+  try{ ctx = cv.getContext && cv.getContext('2d'); }catch(e){ ctx = null; }
+  if(!ctx) return;   // decoration must never abort the script — see 0.9.12
+
+  const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const COUNT = 12, FIELD = 0.55, HIT = 16;
+  let W=0, H=0, embers=[], bursts=[], smokey=null;
+
+  function sized(){
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = cv.clientWidth || window.innerWidth;
+    H = cv.clientHeight || window.innerHeight;
+    cv.width = Math.max(1, Math.round(W*dpr));
+    cv.height = Math.max(1, Math.round(H*dpr));
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+  }
+  function spawn(seeded){
+    return { x:Math.random()*W,
+             y: seeded ? H - Math.random()*H*FIELD : H + Math.random()*30,
+             r: 1.4*(0.55+Math.random()*0.9),
+             v: 0.6*(0.5+Math.random()*0.9),
+             drift:(Math.random()-0.5)*0.28, t:Math.random()*6.28,
+             a: 0.45+Math.random()*0.55 };
+  }
+  function reset(){ sized(); embers=[]; for(let i=0;i<COUNT;i++) embers.push(spawn(true)); }
+
+  function ember(e){
+    const a = e.a*0.38;
+    const g = ctx.createRadialGradient(e.x,e.y,0,e.x,e.y,e.r*4);
+    g.addColorStop(0,'rgba(255,220,150,'+Math.min(1,a)+')');
+    g.addColorStop(0.35,'rgba(224,118,47,'+Math.min(1,a*0.55)+')');
+    g.addColorStop(1,'rgba(224,118,47,0)');
+    ctx.fillStyle=g; ctx.beginPath(); ctx.arc(e.x,e.y,e.r*4,0,6.283); ctx.fill();
+    ctx.fillStyle='rgba(255,235,190,'+Math.min(1,a*1.15)+')';
+    ctx.beginPath(); ctx.arc(e.x,e.y,e.r*0.8,0,6.283); ctx.fill();
+  }
+  function dot(x,y,r,alpha){
+    ctx.fillStyle='rgba(255,206,122,'+(alpha*0.95)+')';
+    ctx.beginPath(); ctx.arc(x,y,r,0,6.283); ctx.fill();
+    ctx.fillStyle='rgba(224,118,47,'+(alpha*0.3)+')';
+    ctx.beginPath(); ctx.arc(x,y,r*2.6,0,6.283); ctx.fill();
+  }
+
+  function burstAt(x,y){
+    const scale = 5.4 + Math.random()*0.6;
+    bursts.push({ t:0, parts:_CAT_PTS.map(pt=>{
+      const ang=Math.random()*6.283, sp=1.6+Math.random()*3.2;
+      return { x, y, vx:Math.cos(ang)*sp, vy:Math.sin(ang)*sp,
+               tx:x+pt[0]*scale, ty:y+pt[1]*scale, r:1.05+Math.random()*0.5 };
+    })});
+  }
+
+  function maybeSummonSmokey(){
+    if(smokey || hasSecretPet()) return;
+    if(((state.egg&&state.egg.cats)||0) < SMOKEY_AT) return;
+    smokey = { x: W*(0.2+Math.random()*0.6), y: H-70, t:0, scale:9 };
+    if(typeof toast==='function') toast('🐾 Something comes to sit by the hearth.');
+  }
+
+  function drawSmokey(){
+    if(!smokey) return;
+    smokey.t += 1/60;
+    const bob = Math.sin(smokey.t*1.6)*1.6;
+    const pulse = 0.72 + Math.sin(smokey.t*2.2)*0.14;
+    for(const pt of _CAT_PTS)
+      dot(smokey.x + pt[0]*smokey.scale, smokey.y + pt[1]*smokey.scale + bob, 1.5, pulse);
+  }
+
+  function step(){
+    if(document.hidden || mmAtMenu || !embersEnabled()){ requestAnimationFrame(step); return; }
+    if(cv.clientWidth!==W || cv.clientHeight!==H) reset();
+    ctx.clearRect(0,0,W,H);
+
+    for(let i=0;i<embers.length;i++){
+      const e = embers[i];
+      if(!reduce){
+        e.y-=e.v; e.t+=0.02; e.x+=e.drift+Math.sin(e.t)*0.14;
+        if(e.y < H*(1-FIELD) || e.x<-10 || e.x>W+10) embers[i]=spawn(false);
+      }
+      ember(e);
+    }
+
+    for(let b=bursts.length-1;b>=0;b--){
+      const B=bursts[b]; B.t+=1/60;
+      let alpha;
+      if(B.t<0.45){
+        const k=B.t/0.45, ease=1-Math.pow(1-k,3);
+        for(const q of B.parts){
+          const fx=q.x+q.vx*(1-ease)*6, fy=q.y+q.vy*(1-ease)*6;
+          q.cx=fx+(q.tx-fx)*ease; q.cy=fy+(q.ty-fy)*ease;
+        }
+        alpha=Math.min(1,B.t/0.18);
+      } else if(B.t<1.15){
+        const bob=Math.sin((B.t-0.45)*5)*0.8;
+        for(const q of B.parts){ q.cx=q.tx; q.cy=q.ty+bob; }
+        alpha=1;
+      } else {
+        alpha=Math.max(0,1-(B.t-1.15)/0.6);
+        for(const q of B.parts) q.cy-=0.25;
+      }
+      if(B.t>1.8){ bursts.splice(b,1); continue; }
+      for(const q of B.parts) dot(q.cx||q.x, q.cy||q.y, q.r, alpha);
+    }
+
+    drawSmokey();
+    requestAnimationFrame(step);
+  }
+
+  /* Only the empty ground is clickable. Anything with real UI on it wins. */
+  function isBackground(t){
+    return t === document.body || t === document.documentElement ||
+           t === cv || (t && t.id === 'mainLayout');
+  }
+  window.addEventListener('click', e=>{
+    if(mmAtMenu || !embersEnabled() || !isBackground(e.target)) return;
+    // getBoundingClientRect and clientX share the zoomed visual space; the canvas
+    // draws in unzoomed CSS px. Divide by the ratio or every hit lands short.
+    const r = cv.getBoundingClientRect();
+    const k = r.width / (cv.clientWidth || 1);
+    const mx = (e.clientX - r.left)/k, my = (e.clientY - r.top)/k;
+
+    if(smokey){
+      const dx=smokey.x-mx, dy=smokey.y-my;
+      if(dx*dx+dy*dy < 3600){ claimSmokey(); return; }
+    }
+    for(let i=0;i<embers.length;i++){
+      const dx=embers[i].x-mx, dy=embers[i].y-my;
+      if(dx*dx+dy*dy < HIT*HIT){
+        burstAt(embers[i].x, embers[i].y);
+        embers[i]=spawn(false);
+        onCatFound();
+        return;
+      }
+    }
+  });
+
+  function onCatFound(){
+    if(!state.egg) state.egg={cats:0};
+    const before = state.egg.cats||0;
+    if(hasSecretPet()) return;               // the hunt is over; the cats are just cats
+    state.egg.cats = before + 1;
+    const n = state.egg.cats;
+    if(typeof toast==='function' && n<=_EGG_LINES.length) toast('🐈 '+_EGG_LINES[n-1]);
+    if(typeof checkAchievements==='function') checkAchievements();
+    maybeSummonSmokey();
+    saveGame();
+  }
+
+  function claimSmokey(){
+    if(hasSecretPet()) return;
+    if(!state.pets) state.pets={};
+    state.pets.pet_smokey_bones = {obtainedAt:Date.now(), secret:true};
+    smokey=null;
+    if(typeof toast==='function') toast('🐈‍⬛ Smokey Bones curls up beside you.');
+    if(typeof logNotification==='function') logNotification('pet','🐾','Smokey Bones found you.');
+    if(typeof checkAchievements==='function') checkAchievements();
+    saveGame();
+    if(typeof renderAll==='function') renderAll();
+  }
+
+  reset();
+  setEmbersEnabled(embersEnabled());
+  // Smokey persists across sessions: the 4s poll below re-summons him if the
+  // player earned him and closed the game without claiming.
+  window.addEventListener('resize', ()=>{ if(!mmAtMenu) reset(); });
+  setInterval(()=>{ if(!mmAtMenu) maybeSummonSmokey(); }, 4000);
+  requestAnimationFrame(step);
+})();
 $('gmClose').addEventListener('click',gmClose);
 $('gmSettings').addEventListener('click',()=>{ gmClose(); mmOpenSettings(); });
 $('gmCredits').addEventListener('click',()=>{ gmClose(); $('mmCreditsModal').classList.remove('mm-hidden'); });
