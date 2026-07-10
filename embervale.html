@@ -94,8 +94,12 @@ header h1 .flame{color:var(--ember)}
 
 /* ════════ [CSS-03] LAYOUT & PANELS ══════════════════════════════════════════════ */
 /* layout */
-.layout{display:grid;grid-template-columns:300px 1fr 280px;gap:14px;padding:14px;
-  max-width:1340px;margin:0 auto;
+/* max-width sits just under UI_DESIGN_W (1620) minus padding and a scrollbar
+   allowance, so at the design width the layout runs nearly edge to edge instead
+   of floating in a wide empty margin. The side columns widen a little; the rest
+   of the extra space goes to the centre column, where the content actually is. */
+.layout{display:grid;grid-template-columns:320px 1fr 300px;gap:14px;padding:14px;
+  max-width:1560px;margin:0 auto;
   align-items:start;
   overflow:visible;
 }
@@ -1774,6 +1778,16 @@ header h1 .flame{color:var(--ember)}
 .mlog-skbtn{display:flex;flex-direction:column;align-items:center;gap:2px;background:var(--raised);border:1px solid var(--trim-d);border-radius:7px;padding:8px 4px 6px;cursor:pointer;transition:border-color .12s,background .12s}
 .mlog-skbtn:hover{border-color:var(--trim);background:#231811}
 .mlog-skbtn.on{border-color:var(--ember);background:#2a1d10}
+/* Category sub-tabs — only rendered for skills with many activities (Crafting, Jeweler). */
+.mlog-catbar{display:flex;flex-wrap:wrap;gap:5px;margin:10px 0 8px}
+.mlog-catbtn{display:inline-flex;align-items:center;gap:6px;background:var(--raised);
+  border:1px solid var(--trim-d);border-radius:6px;padding:5px 10px;cursor:pointer;
+  color:#a08a64;font-family:inherit;font-size:13px;font-variant:small-caps;letter-spacing:.6px;
+  transition:border-color .12s,background .12s,color .12s}
+.mlog-catbtn:hover{border-color:var(--trim);color:#ead9b5}
+.mlog-catbtn.on{border-color:var(--ember);background:#2a1d10;color:#f0c772}
+.mcat-cnt{font-family:'Courier New',monospace;font-size:11px;color:#6e552c;letter-spacing:0}
+.mlog-catbtn.on .mcat-cnt{color:#a08a64}
 .mlog-skbtn .msk-ic{font-size:22px;line-height:1;display:flex}
 .mlog-skbtn .msk-ic svg{width:22px;height:22px}
 .mlog-skbtn .msk-nm{font-size:11px;color:var(--trim);text-align:center;line-height:1.1}
@@ -2704,7 +2718,7 @@ header h1 .flame{color:var(--ember)}
   <div class="mm-btns">
     <button class="mm-btn mm-primary" id="mmPlay">▶ Play</button>
   </div>
-  <div class="mm-ver">v0.9.03</div>
+  <div class="mm-ver">v0.9.04</div>
 </div>
 
 <!-- ===== CHARACTER SELECT (added) ===== -->
@@ -12956,10 +12970,26 @@ function renderEffectsBar(){
   });
 }
 
+/* Mastery XP rate per skill. Base is 1 mastery XP per action, which is fair when
+   a skill has ~10 activities. Crafting has 222 and Jeweler 32, so ranking their
+   boards at the base rate is a wildly longer road for the same reward. A modest
+   bump keeps the curve shape (and every existing rank) while shortening the
+   grind proportionally to how much board there is to fill. */
+const MASTERY_XP_RATE={crafting:1.5, jeweler:1.25};
+let _actSkillMap=null;
+function actSkillOf(actId){
+  if(!_actSkillMap){
+    _actSkillMap={};
+    for(const k in SKILLS) for(const a of (SKILLS[k].acts||[])) _actSkillMap[a.id]=k;
+  }
+  return _actSkillMap[actId];
+}
+function masteryXpRate(actId){ return MASTERY_XP_RATE[actSkillOf(actId)]||1; }
+
 function recordMastery(actId, times){
   const prevXp=state.mastery[actId]||0;
   const prevLvl=masteryLevel(actId); // level BEFORE adding
-  state.mastery[actId]=prevXp+times;
+  state.mastery[actId]=prevXp+times*masteryXpRate(actId);
   const newLvl=masteryLevel(actId); // level AFTER adding
   if(newLvl>prevLvl){
     // Only notify at tier-threshold crossings, not every level
@@ -19214,6 +19244,52 @@ function buildSourceMap(){
       }
     }
   }
+
+  /* ── Combat sources ────────────────────────────────────────────────────────
+     This function only ever walked SKILLS / DROPS / CROPS, so anything dropping
+     from a monster, a boss, or a raid had no entry at all and the tooltip fell
+     through to "Source unknown". That covered ~160 items — every unique weapon,
+     every cape, and the tier mats (beast_sinew, shade_ember, voidheart).
+
+     `combat:true` matters: monster drops roll through their own table and never
+     see Lucky Stride, so the displayed rate must not apply it. See
+     effDropChance(c, combat). */
+  if(typeof MONSTER_DROPS!=='undefined' && typeof MONSTERS!=='undefined'){
+    const monById={}; MONSTERS.forEach(m=>{ monById[m.id]=m; });
+    const zoneName={}; if(typeof ZONES!=='undefined') ZONES.forEach(z=>{ zoneName[z.id]=z.name; });
+    for(const monId in MONSTER_DROPS){
+      const mon=monById[monId]; if(!mon) continue;
+      let ic=''; try{ ic=iconHTML(mon.id); }catch(e){}
+      const where=zoneName[mon.zone]||'';
+      for(const d of MONSTER_DROPS[monId]){
+        addSource(d.id,{actName:mon.name+(mon.boss?' (boss)':''), skIcon:ic, skName:where||'Combat',
+                        skKey:'combat', chance:d.chance, reqLvl:mon.lvl, rare:true, combat:true});
+      }
+    }
+  }
+  if(typeof RAIDS!=='undefined'){
+    for(const raid of RAIDS){
+      let ic=''; try{ ic=iconHTML(raid.icon); }catch(e){}
+      const tag={actName:raid.name, skIcon:ic, skName:'Raid', skKey:'raid', reqLvl:raid.unlockLvl, rare:true, combat:true};
+      for(const g of (raid.gearDrops||[])) addSource(g.id, Object.assign({},tag,{chance:g.chance}));
+      for(const m of (raid.matPool||[])){
+        const mid=(m&&m.id)||m;
+        if(typeof mid==='string') addSource(mid, Object.assign({},tag,{chance:(m&&m.chance)||0.5}));
+      }
+    }
+  }
+  // Socket gems roll procedurally off any kill (rollSocketGemDrop), so they have
+  // no single act or monster to point at — say so rather than showing nothing.
+  if(typeof SOCKET_GEMS!=='undefined'){
+    let gic=''; try{ gic=iconHTML('ui_gem'); }catch(e){}
+    for(const gid in SOCKET_GEMS){
+      if(map[gid]&&map[gid].length) continue;
+      addSource(gid,{actName:'Any monster — tier scales with level', skIcon:gic, skName:'Combat',
+                     skKey:'combat', chance:0.012, reqLvl:1, rare:true, combat:true});
+    }
+  }
+  // Best rate first, so the five-source cap shows the drop you'd actually farm.
+  for(const id in map) map[id].sort((a,b)=>(b.chance||0)-(a.chance||0));
   return map;
 }
 let _sourceMap=null;
@@ -19345,7 +19421,7 @@ function showItemTooltip(itemId, x, y){
       // Rare sources reflect the character-type drop dial so the shown rate
       // equals the real one; guaranteed outputs / seed returns are left as-is.
       // Same "1/N" fraction formatter as the Monster Log for consistency.
-      const ch=s.rare?effDropChance(s.chance):s.chance;
+      const ch=s.rare?effDropChance(s.chance,s.combat):s.chance;
       const pctStr=ch>=1?'100%':_fmtMonChance(ch);
       const color=ch>=1?'#7da33f':ch>=0.01?'#c79b4e':'#e0762f';
       html+=`<div class="tt-source">${s.skIcon} ${s.actName}<span class="tt-chance" style="color:${color}">${pctStr}</span></div>`;
@@ -19873,6 +19949,11 @@ function renderCompendium(){
 
 var _masteryOpen={}; // skillKey -> bool (legacy; replaced by _masterySel)
 var _masterySel=null; // 1.0.19 — currently-selected skill in the Mastery Log picker
+// Per-skill category sub-tab selection (UI-only, not persisted). '__all' shows everything.
+var _masteryCat={};
+const MASTERY_CAT_LABEL={helm:'Helms',chest:'Chests',legs:'Legs',gloves:'Gloves',boots:'Boots',
+  weapon:'Weapons',shield:'Shields',cape:'Capes',tool:'Tools',tannery:'Tannery',
+  refine:'Refining',ring:'Rings',amulet:'Amulets',pendant:'Pendants'};
 /* ════ [JS-24b] mastery view ═════════════════════════════════════════════════════ */
 function renderMastery(){
   const box=$('masteryView'); box.innerHTML='';
@@ -19924,13 +20005,45 @@ function renderMastery(){
 
   // Selected skill's activities
   const selSk=SKILLS[_masterySel];
+
+  /* Category sub-tabs. Crafting has 222 activities across 10 categories; dumping
+     them into one grid made the panel enormous. Skills with a single (or no)
+     category are unaffected and render exactly as before. Defaults to the first
+     category rather than "All", because "All" is the length problem. */
+  const cats=[]; const _seenCat={};
+  for(const act of selSk.acts){ const c=act.cat; if(c&&!_seenCat[c]){ _seenCat[c]=1; cats.push(c); } }
+  const useCats = cats.length>1 && selSk.acts.length>=24;
+  let actList=selSk.acts;
+  if(useCats){
+    if(!_masteryCat[_masterySel] || (_masteryCat[_masterySel]!=='__all' && cats.indexOf(_masteryCat[_masterySel])<0))
+      _masteryCat[_masterySel]=cats[0];
+    const sel=_masteryCat[_masterySel];
+    const bar=document.createElement('div');
+    bar.className='mlog-catbar';
+    const mkBtn=(key,label,count)=>{
+      const b=document.createElement('button');
+      b.className='mlog-catbtn'+(sel===key?' on':'');
+      let done=0;
+      const pool=key==='__all'?selSk.acts:selSk.acts.filter(a=>a.cat===key);
+      for(const a of pool) if(masteryTier(masteryLevel(a.id))!=='none') done++;
+      b.innerHTML=label+'<span class="mcat-cnt">'+done+'/'+pool.length+'</span>';
+      b.addEventListener('click',()=>{ _masteryCat[_masterySel]=key; renderMastery(); });
+      bar.appendChild(b);
+    };
+    for(const c of cats) mkBtn(c, MASTERY_CAT_LABEL[c]||(c.charAt(0).toUpperCase()+c.slice(1)));
+    mkBtn('__all','All');
+    box.appendChild(bar);
+    if(sel!=='__all') actList=selSk.acts.filter(a=>a.cat===sel);
+  }
+
   const grid=document.createElement('div');
   grid.className='mlog-grid standalone';
-  for(const act of selSk.acts){
+  for(const act of actList){
     const mb=masteryBadgeHtml(act.id);
     const tier=mb.tier;
-    const actions=state.mastery[act.id]||0;
-    const toNext=mb.lvl<MAX_MASTERY?mb.nextXp-actions:0;
+    // Rates above 1x store fractional mastery XP; never show the player "12.5 actions".
+    const actions=Math.floor(state.mastery[act.id]||0);
+    const toNext=mb.lvl<MAX_MASTERY?Math.max(0,Math.ceil(mb.nextXp-actions)):0;
     const outIc=Object.keys(act.out||{})[0];
     const xpBonus=masteryXpBonus(act.id)*100;
     const rankLabel = tier==='plat'?'★ Platinum (MAX)':tier==='gold'?`★ Gold ${mb.lvl}`:tier==='silver'?`★ Silver ${mb.lvl}`:tier==='bronze'?`★ Bronze ${mb.lvl}`:(actions>0?`Mastery ${mb.lvl}`:'Not started');
@@ -23869,14 +23982,14 @@ function _rootZoom(){ var z=parseFloat(getComputedStyle(document.documentElement
 
    Width-driven on purpose: this game already scrolls vertically (skill lists,
    trees), so constraining on height would shrink everything on a short window
-   for no benefit. UI_DESIGN_W is 1920/1.1 — the CSS-space width the layout was
-   built for — so a 1920-wide window resolves to exactly the old zoom:1.1 and
-   the pre-scaling look is reproduced pixel for pixel.
+   for no benefit. UI_DESIGN_W must stay >= .layout's max-width plus its padding
+   plus a scrollbar allowance, or the layout overflows horizontally at the floor.
+   Lowering UI_DESIGN_W scales the whole UI up; raising it scales down.
 
    _rootZoom() reads this back off the computed style, so every rect-based
    position (tooltips, tutorial spotlight, popovers) follows with no extra work. */
-const UI_DESIGN_W = 1745;
-const UI_ZOOM_MIN = 0.55;   // Steam Deck (1280 wide) lands at ~0.73
+const UI_DESIGN_W = 1620;   // .layout max-width (1560) + padding + scrollbar allowance
+const UI_ZOOM_MIN = 0.55;   // floor puts the minimum usable window near 890px
 const UI_ZOOM_MAX = 1.60;   // stop 4K monitors from ballooning the chrome
 let _zoomRaf = 0;
 function applyRootZoom(){
