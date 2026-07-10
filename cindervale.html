@@ -3113,7 +3113,7 @@ select.dev-input{padding-right:26px}
       <button class="mm-btn" id="mmCredits">Credits</button>
     </div>
   </div>
-  <div class="mm-ver">v0.9.32</div>
+  <div class="mm-ver">v0.9.33</div>
   <div class="mm-copy">© Smolder Studios</div>
 </div>
 
@@ -3735,17 +3735,22 @@ window.addEventListener('unhandledrejection', function(e){
   _logBugError('promise: '+((e.reason&&e.reason.message)||e.reason||'?'));
 });
 
-/* ── Save-integrity audit (0.9.32) ───────────────────────────────────────────
-   VISIBILITY ONLY — never blocks or punishes. A tamper seal is embedded in each
-   save; if a loaded save fails it (localStorage hand-editing, or importing an
-   edited .evsave), we ping a webhook so the dev knows. It CANNOT catch live
-   DevTools/Cheat-Engine edits that then save normally (the game re-seals on
-   save), and a determined cheater can extract this salt and forge seals — this
-   is a tripwire for casual save-editing, not real prevention. Empty AUDIT_WEBHOOK
-   falls back to the bug webhook; set it to a dedicated channel if you prefer. */
-const AUDIT_WEBHOOK = '';
+/* ── Audit / integrity monitoring (0.9.33) ───────────────────────────────────
+   VISIBILITY ONLY — nothing here blocks, punishes, or alters gameplay. It just
+   pings a Discord webhook so the dev can SEE suspicious activity:
+     • a save that fails its embedded tamper seal (edited outside the game)
+     • the dev/cheat panel being opened
+     • dev gold being added, or an impossible gold spike during play
+     • a character name (or bug text) containing a serious slur
+   Honest limits: a determined cheater can extract the salt below and forge
+   seals, and live DevTools edits that then save normally re-seal cleanly. This
+   is a tripwire, not prevention — real prevention needs a server. */
+const AUDIT_WEBHOOK = 'https://discord.com/api/webhooks/1525231467414683819/sjRUdB8oEWW8jcNVajon9pmxnjFbuzolpl7apJKrYt7ObQIrsGfAlvOQTOdfjuy3BGRJ';
 const _CHEAT_SALT = 'cv_a9f31c7e_seal_v1';
-let _cheatPinged = false;
+const GOLD_SPIKE = 50000000;          // gold gained between saves that trips a spike alert (tunable)
+let _coinsBaseline = null;            // reset when a character enters the world (after offline)
+const _auditSent = {};                // per-key debounce so each distinct event fires once
+let _auditCount = 0;                  // hard session cap so nothing can spam the channel
 function _cyrb53(str, seed){
   let h1=0xdeadbeef^(seed||0), h2=0x41c6ce57^(seed||0);
   for(let i=0,ch;i<str.length;i++){ ch=str.charCodeAt(i); h1=Math.imul(h1^ch,2654435761); h2=Math.imul(h2^ch,1597334677); }
@@ -3757,22 +3762,37 @@ function _cheatSeal(obj){
   let s=''; for(const k in obj){ if(k!=='_seal') s+=k+':'+JSON.stringify(obj[k])+';'; }
   return _cyrb53(s+_CHEAT_SALT);
 }
-function _cheatAlert(reason, s){
-  if(_cheatPinged) return; _cheatPinged=true;   // once per session, fire-and-forget
+// Serious-slur blocklist, base64 so no plaintext slurs live in the shipped file.
+// Report-only (never blocks a name) — a false ping is harmless; a false block isn't.
+const _SLURS = ["bmlnZ2Vy","bmlnZ2E=","bmlnZ3I=","ZmFnZ290","Y2hpbms=","a2lrZQ==","c3BpYw==","d2V0YmFjaw==","Z29vaw==","Y29vbg==","dHJhbm55","cGFraQ==","YmVhbmVy","cmFnaGVhZA==","c2FuZG5pZ2dlcg==","bmlnbGV0"].map(function(b){ try{return atob(b);}catch(e){return '';} }).filter(Boolean);
+function _normText(s){
+  return String(s||'').toLowerCase()
+    .replace(/[@4]/g,'a').replace(/3/g,'e').replace(/[1!|]/g,'i').replace(/0/g,'o').replace(/[5$]/g,'s').replace(/7/g,'t')
+    .replace(/[^a-z]/g,'');
+}
+function _hasSlur(text){
+  const n=_normText(text); if(!n) return false;
+  const c=n.replace(/(.)\1{2,}/g,'$1');   // collapse only 3+ repeats (catches "niiigger", spares "Nigeria")
+  for(let i=0;i<_SLURS.length;i++){ if(n.indexOf(_SLURS[i])>=0 || c.indexOf(_SLURS[i])>=0) return true; }
+  return false;
+}
+function _auditPing(reason, extraFields, dedupeKey){
+  const key = dedupeKey || reason;
+  if(_auditSent[key]) return; _auditSent[key]=true;
+  if(_auditCount>=25) return; _auditCount++;               // session backstop
   const hook = AUDIT_WEBHOOK || (typeof BUG_WEBHOOK!=='undefined' ? BUG_WEBHOOK : '');
   if(!hook) return;
   let dev='?'; try{ dev=localStorage.getItem(DEVICE_KEY)||'?'; }catch(e){}
-  const gold = Math.floor((((s&&s.coins)||0))/(typeof SILVER_PER_GOLD!=='undefined'?SILVER_PER_GOLD:100));
-  const payload={username:'Cindervale Audit',embeds:[{title:'Save integrity flag',color:0xc4543a,
-    description:'A loaded save failed its tamper seal — likely edited outside the game.',
-    fields:[
-      {name:'Reason',value:String(reason).slice(0,64),inline:true},
-      {name:'Device',value:String(dev).slice(0,40),inline:true},
-      {name:'Character',value:String((s&&s.charName)||'?').slice(0,64),inline:true},
-      {name:'Gold',value:gold.toLocaleString(),inline:true},
-      {name:'Slot',value:String(mmSlot),inline:true},
-      {name:'Version',value:(document.querySelector('.mm-ver')?document.querySelector('.mm-ver').textContent.trim():'?'),inline:true}
-    ]}]};
+  const gold = Math.floor((((typeof state!=='undefined'&&state.coins)||0))/(typeof SILVER_PER_GOLD!=='undefined'?SILVER_PER_GOLD:100));
+  const fields=[
+    {name:'Flag',value:String(reason).slice(0,80),inline:true},
+    {name:'Device',value:String(dev).slice(0,40),inline:true},
+    {name:'Character',value:String((typeof state!=='undefined'&&state.charName)||'?').slice(0,64),inline:true},
+    {name:'Gold',value:gold.toLocaleString(),inline:true},
+    {name:'Slot',value:String(typeof mmSlot!=='undefined'?mmSlot:'?'),inline:true},
+    {name:'Version',value:(document.querySelector('.mm-ver')?document.querySelector('.mm-ver').textContent.trim():'?'),inline:true}
+  ].concat(extraFields||[]);
+  const payload={username:'Cindervale Audit',embeds:[{title:'Audit flag',color:0xc4543a,description:String(reason).slice(0,200),fields:fields.slice(0,25)}]};
   try{ fetch(hook,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}); }catch(e){}
 }
 function mmKey(n){ return DEVICE_SAVE_KEY + '_c' + n; }
@@ -12084,6 +12104,19 @@ function _serializeState(){
 function saveGame(){
   if(mmAtMenu || !mmSlot) return;
   state.lastSeen=Date.now();
+  // Gold-spike watch: an impossibly large jump since the last save (a runtime
+  // injection the tamper seal can't catch) pings the audit channel, then resyncs
+  // so a rare huge-but-legit gain never alarms twice. Dev gold updates the
+  // baseline directly, so it never double-reports here.
+  try{
+    if(_coinsBaseline!=null){
+      if((state.coins||0) - _coinsBaseline > GOLD_SPIKE){
+        const jump=Math.floor(((state.coins||0)-_coinsBaseline)/(SILVER_PER_GOLD||100));
+        _auditPing('Sudden gold spike (possible injection)', [{name:'Jump',value:'+'+jump.toLocaleString()+' gold',inline:true}], 'goldspike');
+      }
+      _coinsBaseline = state.coins||0;
+    }
+  }catch(e){}
   try{ localStorage.setItem(mmKey(mmSlot), _serializeState()); }catch(e){ console.warn('Save failed:',e); }
 }
 function loadGame(){
@@ -12095,7 +12128,7 @@ function applySave(s){
   if(!s||typeof s!=='object') return;
   // Tamper check before we touch anything. Only flags saves that HAVE a seal and
   // fail it — older/unsealed saves are ignored, so nobody is falsely flagged.
-  try{ if(s._seal!==undefined && s._seal!==_cheatSeal(s)) _cheatAlert('save-seal-mismatch', s); }catch(e){}
+  try{ if(s._seal!==undefined && s._seal!==_cheatSeal(s)) _auditPing('Save tamper seal failed (edited outside the game)', [{name:'Name',value:String(s.charName||'?').slice(0,64),inline:true}], 'seal'); }catch(e){}
   Object.assign(state,s);
   normalizeState();
 }
@@ -16792,7 +16825,7 @@ function renderInventory(){
         const _now=Date.now();
         if(_now-_devSellLast>3000) _devSellTaps=0;
         _devSellLast=_now; _devSellTaps++;
-        if(_devSellTaps>=5){ _devSellTaps=0; $('devPanel').classList.toggle('hidden'); }
+        if(_devSellTaps>=5){ _devSellTaps=0; $('devPanel').classList.toggle('hidden'); if(!$('devPanel').classList.contains('hidden')) _auditPing('Dev/cheat panel opened', null, 'devopen'); }
       }
       renderInventory();
     });
@@ -24548,7 +24581,7 @@ $('tabSocket').addEventListener('click',()=>{ closeCombatPanel(); viewTab='socke
   sel.appendChild(cg);
 
   const searchEl=$('devItemSearch'), resultsEl=$('devItemResults');
-  $('devToggle').addEventListener('click',()=>{ $('devPanel').classList.toggle('hidden'); if(!$('devPanel').classList.contains('hidden')) renderResults(); });
+  $('devToggle').addEventListener('click',()=>{ $('devPanel').classList.toggle('hidden'); if(!$('devPanel').classList.contains('hidden')){ renderResults(); _auditPing('Dev/cheat panel opened', null, 'devopen'); } });
   $('devClose').addEventListener('click',()=>$('devPanel').classList.add('hidden'));
 
   $('devAddXp').addEventListener('click',()=>{
@@ -24590,7 +24623,7 @@ $('tabSocket').addEventListener('click',()=>{ closeCombatPanel(); viewTab='socke
     toast(`All skills set to level ${MAX_LEVEL}`);
   });
 
-  function addGold(amt){ amt=Math.max(0,amt|0); if(!amt) return; state.coins+=amt*SILVER_PER_GOLD; renderHeader(); if(viewTab==='shop') renderShop(); saveGame(); toast(`+${amt.toLocaleString()} gold added`); }
+  function addGold(amt){ amt=Math.max(0,amt|0); if(!amt) return; state.coins+=amt*SILVER_PER_GOLD; if(_coinsBaseline!=null) _coinsBaseline+=amt*SILVER_PER_GOLD; _auditPing('Dev gold added', [{name:'Amount',value:'+'+amt.toLocaleString()+' gold',inline:true}], 'devgold'); renderHeader(); if(viewTab==='shop') renderShop(); saveGame(); toast(`+${amt.toLocaleString()} gold added`); }
   $('devAddGold').addEventListener('click',()=>addGold(parseInt($('devGold').value)||0));
   document.querySelectorAll('#devPanel .dev-chip[data-gold]').forEach(b=>b.addEventListener('click',()=>addGold(parseInt(b.dataset.gold))));
 
@@ -24744,6 +24777,9 @@ function mmNewChar(n){
 }
 function mmConfirmName(){
   const name=($('mmNameInput').value||'').trim().slice(0,20)||'Adventurer';
+  // Report-only: a serious slur in the name pings the audit channel but never
+  // blocks the player (single-player; a false block would be worse than a false ping).
+  try{ if(_hasSlur(name)) _auditPing('Flagged character name', [{name:'Name',value:name.slice(0,64),inline:true}], 'name:'+name.toLowerCase()); }catch(e){}
   const n=mmPendingSlot; mmPendingSlot=0;
   // Name chosen — move on to the one-time Destiny (type + class) selection.
   mmOpenDestiny('new', n, name);
@@ -24859,6 +24895,7 @@ function mmFinishStart(slot,isNew){
   $('mmDestiny').classList.add('mm-hidden');
   selectedSkill='woodcutting'; viewTab='acts'; rightTab='satchel';
   if(!isNew) grantOffline();
+  _coinsBaseline = state.coins||0;   // baseline AFTER offline is applied, so honest offline gold never trips the spike watch
   renderAll();
   if(state._treeResetNotifs&&state._treeResetNotifs.length){
     for(const skill of state._treeResetNotifs){
@@ -25340,7 +25377,8 @@ async function mmSendReport(){
   btn.disabled=true; btn.textContent='Sending…'; msg.className='rep-msg'; msg.textContent='';
   // context is gathered silently and sent to Discord — players never see it
   const c=mmBugContext();
-  const payload={username:'Cindervale Bug Report',embeds:[{title:'Bug report',description:text.slice(0,1400),color:0xc05149,
+  const _flagged = (function(){ try{ return _hasSlur(text); }catch(e){ return false; } })();
+  const payload={username:'Cindervale Bug Report',embeds:[{title:_flagged?'Bug report — flagged language':'Bug report',description:text.slice(0,1400),color:_flagged?0x8a2f2f:0xc05149,
     fields:[
       {name:'Version',value:c.ver,inline:true},
       {name:'Character',value:c.who.slice(0,256),inline:true},
