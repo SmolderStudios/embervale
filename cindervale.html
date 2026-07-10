@@ -50,6 +50,7 @@
   --bg:#181109;--panel:#251a10;--raised:#32241566;--raised-s:#322415;
   --trim:#c79b4e;--trim-d:#6e552c;--text:#ead9b5;--muted:#a08a64;
   --ember:#e0762f;--green:#7da33f;--red:#c4543a;--blue:#5a8fcb;--shadow:rgba(0,0,0,.45);
+  color-scheme:dark;
   /* One shadow system (0.9.17). There were 21 distinct black drop shadows across
      24 declarations — written one at a time, never compared. Three roles is all an
      interface needs. Coloured inset glows are semantic and untouched. */
@@ -62,14 +63,14 @@
      so the whole set swaps from one place. Disabling the feature just
      redefines the two tokens back to the system keywords — no !important,
      no per-selector overrides, nothing to keep in sync. */
-  --cur-default:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath d='M3 2 L3 23 L8.6 17.8 L12.4 26.5 L16.6 24.6 L12.9 16.2 L20.5 15.6 Z' fill='%231a1108' stroke='%23c79b4e' stroke-width='1.6' stroke-linejoin='round'/%3E%3Cpath d='M5 5.5 L5 18.4 L8.9 14.8 Z' fill='%234a3820'/%3E%3C/svg%3E") 2 2, default;
-  --cur-pointer:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Ccircle cx='4' cy='3' r='3.6' fill='%23e0762f' opacity='0.35'/%3E%3Cpath d='M3 2 L3 23 L8.6 17.8 L12.4 26.5 L16.6 24.6 L12.9 16.2 L20.5 15.6 Z' fill='%23f0c772' stroke='%232a1408' stroke-width='1.5' stroke-linejoin='round'/%3E%3Cpath d='M5 5.5 L5 18.4 L8.9 14.8 Z' fill='%23fff7e0'/%3E%3Ccircle cx='3.4' cy='2.6' r='1.5' fill='%23ffe9bf'/%3E%3C/svg%3E") 2 2, pointer;
+  --cur-default:default;
+  --cur-pointer:pointer;
   /* Blocked / help / text were still falling through to the Windows cursors:
      the grey stop disc over disabled buttons, the OS I-beam in every search
      field. Same arrow silhouette, game palette, so they read as one family. */
-  --cur-na:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath d='M3 2 L3 23 L8.6 17.8 L12.4 26.5 L16.6 24.6 L12.9 16.2 L20.5 15.6 Z' fill='%231a1108' stroke='%23c79b4e' stroke-width='1.6' stroke-linejoin='round'/%3E%3Cpath d='M5 5.5 L5 18.4 L8.9 14.8 Z' fill='%234a3820'/%3E%3Ccircle cx='22' cy='22' r='8.4' fill='%232a1008' stroke='%23c4543a' stroke-width='2.2'/%3E%3Cpath d='M16.6 16.6 L27.4 27.4' stroke='%23c4543a' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E") 2 2, not-allowed;
-  --cur-help:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath d='M3 2 L3 23 L8.6 17.8 L12.4 26.5 L16.6 24.6 L12.9 16.2 L20.5 15.6 Z' fill='%231a1108' stroke='%23c79b4e' stroke-width='1.6' stroke-linejoin='round'/%3E%3Cpath d='M5 5.5 L5 18.4 L8.9 14.8 Z' fill='%234a3820'/%3E%3Ccircle cx='22' cy='22' r='8.4' fill='%231a1108' stroke='%23c79b4e' stroke-width='1.8'/%3E%3Cpath d='M19.4 19.2 Q19.4 16.4 22.2 16.4 Q25 16.4 25 18.8 Q25 20.6 22.6 21.4 L22.6 23' stroke='%23f0c772' stroke-width='1.9' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='22.6' cy='26' r='1.3' fill='%23f0c772'/%3E%3C/svg%3E") 2 2, help;
-  --cur-text:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath d='M16 5 L16 27' stroke='%230d0905' stroke-width='5' stroke-linecap='round'/%3E%3Cpath d='M11 5 L21 5 M11 27 L21 27' stroke='%230d0905' stroke-width='5' stroke-linecap='round'/%3E%3Cpath d='M16 6 L16 26' stroke='%23f0c772' stroke-width='2' stroke-linecap='round'/%3E%3Cpath d='M12 6 L20 6 M12 26 L20 26' stroke='%23f0c772' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E") 16 16, text;
+  --cur-na:not-allowed;
+  --cur-help:help;
+  --cur-text:text;
 }
 
 /* Opting out restores the OS cursors everywhere at once. */
@@ -1310,12 +1311,35 @@ header h1 .flame{color:var(--ember)}
 /* Alchemy family tier-select (1.0.89) — sits between head and meta inside the
    card body. Click events stop at the select so the parent .act button doesn't
    fire setAction when the player is just switching tiers. */
-.alch-tier-select{background:#1a0e08;color:var(--text);border:1px solid var(--trim-d);
-  border-radius:3px;padding:2px 6px;font-family:'Courier New',monospace;font-size:12px;
-  margin:2px 0 1px;align-self:flex-start;cursor:var(--cur-pointer);max-width:100%}
+/* Themed selects (0.9.18). appearance:none removes the OS-drawn button so the
+   control is ours; the chevron is an inline SVG in the game's gold. Applies to
+   every <select> — farming seeds, offline config, auto-heal — not just alchemy. */
+select{
+  -webkit-appearance:none;-moz-appearance:none;appearance:none;
+  background-color:#1a0e08;
+  background-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2210%22%20height%3D%227%22%20viewBox%3D%220%200%2010%207%22%3E%3Cpath%20d%3D%22M1%201.4%20L5%205.4%20L9%201.4%22%20fill%3D%22none%22%20stroke%3D%22%23c79b4e%22%20stroke-width%3D%221.6%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E");
+  background-repeat:no-repeat;background-position:right 8px center;
+  color:var(--text);border:1px solid var(--trim-d);border-radius:4px;
+  padding:5px 26px 5px 9px;font-family:'Courier New',monospace;font-size:12.5px;
+  cursor:var(--cur-pointer);max-width:100%;transition:border-color .15s;
+}
+select:hover{border-color:var(--trim)}
+select:focus{outline:none;border-color:var(--ember);box-shadow:0 0 0 2px rgba(224,118,47,.18)}
+select:disabled{opacity:.5;cursor:var(--cur-na)}
+/* Literal hex, not var(): custom properties do not reliably resolve inside the
+   browser-painted popup list. */
+select option{background-color:#1a0e08;color:#ead9b5}
+select option:disabled{color:#a08a64}
+select option:checked{background-color:#2a1d10;color:#f0c772}
+
+.alch-tier-select{
+  background-position:right 6px center;
+  border-radius:3px;padding:3px 20px 3px 7px;font-size:12px;
+  margin:2px 0 1px;align-self:flex-start;
+}
 .alch-tier-select:hover{border-color:var(--trim)}
 .alch-tier-select:focus{outline:none;border-color:var(--ember)}
-.alch-tier-select option{background:#1a0e08;color:var(--text)}
+/* option colours come from the global select rule above. */
 .alch-tier-select option:disabled{color:var(--muted)}
 /* Standalone progress bar — same look as .act .prog */
 .prog{height:8px;background:#0d0905;border-radius:4px;overflow:hidden;margin-top:2px}
@@ -1749,6 +1773,12 @@ header h1 .flame{color:var(--ember)}
 #emberMenu .mm-ver{position:absolute;bottom:14px;left:18px;color:#6e552c;
   font-family:'Courier New',monospace;font-size:13px;letter-spacing:1px}
 #gameMenuModal p{color:#a08a64;font-size:14px;margin:0 0 12px}
+.mm-seg{background:transparent;border:1px solid #4a3820;color:#7a6048;
+  border-radius:3px;padding:4px 9px;font-family:'Courier New',monospace;font-size:11px;
+  letter-spacing:1px;cursor:var(--cur-pointer);transition:border-color .12s,color .12s,background .12s}
+.mm-seg:hover:not(:disabled){border-color:#c79b4e;color:#ead9b5}
+.mm-seg.on{border-color:#c79b4e;color:#f0c772;background:#241708}
+.mm-seg:disabled{opacity:.4;cursor:var(--cur-na)}
 .gm-rows{display:grid;gap:7px}
 .gm-row{display:flex;flex-direction:column;align-items:flex-start;gap:1px;width:100%;
   background:linear-gradient(180deg,#20150c,#150e07);border:1px solid #4a3820;border-radius:5px;
@@ -2932,7 +2962,7 @@ header h1 .flame{color:var(--ember)}
       <button class="mm-btn" id="mmCredits">Credits</button>
     </div>
   </div>
-  <div class="mm-ver">v0.9.17</div>
+  <div class="mm-ver">v0.9.18</div>
   <div class="mm-copy">© Smolder Studios</div>
 </div>
 
@@ -2967,6 +2997,18 @@ header h1 .flame{color:var(--ember)}
       </div>
       <div class="set-ctl">
         <button class="mm-mini" id="mmCursor" aria-pressed="true">On</button>
+      </div>
+    </div>
+
+    <div class="set-row" id="mmCursorSizeRow">
+      <div class="set-lbl">Cursor size
+        <small>Larger sizes may be ignored by some systems</small>
+      </div>
+      <div class="set-ctl" id="mmCursorSize">
+        <button class="mm-seg" data-cs="24">S</button>
+        <button class="mm-seg" data-cs="32">M</button>
+        <button class="mm-seg" data-cs="44">L</button>
+        <button class="mm-seg" data-cs="56">XL</button>
       </div>
     </div>
 
@@ -24490,15 +24532,80 @@ const UI_ZOOM_MAX = 1.80;   // stop 4K monitors from ballooning the chrome
 let _zoomRaf = 0;
 /* Player-set multiplier on top of the automatic fit (Settings > Interface scale). */
 const UI_SCALE_KEY = 'cindervale_ui_scale';
-/* Custom cursor preference. Default ON; some players genuinely dislike them,
-   and a forced cursor with a wrong hotspot is worse than no cursor at all. */
+/* ── Custom cursors ─────────────────────────────────────────────────────────
+   The artwork lives here rather than in CSS so that size is a parameter. All five
+   are authored in a 32-unit box and scaled by setting width/height; the hotspot
+   scales with them, which is the part that goes wrong if you eyeball it.
+
+   Default ON, with a Settings toggle: a forced cursor with a wrong hotspot is
+   worse than no custom cursor at all. When disabled we remove the inline custom
+   properties entirely, so the keyword fallbacks in :root take over. */
 const CURSOR_KEY = 'cindervale_cursor';
+const CURSOR_SIZE_KEY = 'cindervale_cursor_size';
+const CURSOR_SIZES = [24, 32, 44, 56];
+
+const _CUR_ARROW =
+  '<path d="M3 2 L3 23 L8.6 17.8 L12.4 26.5 L16.6 24.6 L12.9 16.2 L20.5 15.6 Z" ' +
+    'fill="#1a1108" stroke="#c79b4e" stroke-width="1.6" stroke-linejoin="round"/>' +
+  '<path d="M5 5.5 L5 18.4 L8.9 14.8 Z" fill="#4a3820"/>';
+
+/* Each entry: [inner svg, hotspotX in 32-space, hotspotY in 32-space, keyword] */
+const _CUR_ART = {
+  '--cur-default': [_CUR_ARROW, 2, 2, 'default'],
+  '--cur-pointer': [
+    '<circle cx="4" cy="3" r="3.6" fill="#e0762f" opacity="0.35"/>' +
+    '<path d="M3 2 L3 23 L8.6 17.8 L12.4 26.5 L16.6 24.6 L12.9 16.2 L20.5 15.6 Z" ' +
+      'fill="#f0c772" stroke="#2a1408" stroke-width="1.5" stroke-linejoin="round"/>' +
+    '<path d="M5 5.5 L5 18.4 L8.9 14.8 Z" fill="#fff7e0"/>' +
+    '<circle cx="3.4" cy="2.6" r="1.5" fill="#ffe9bf"/>', 2, 2, 'pointer'],
+  '--cur-na': [
+    _CUR_ARROW +
+    '<circle cx="22" cy="22" r="8.4" fill="#2a1008" stroke="#c4543a" stroke-width="2.2"/>' +
+    '<path d="M16.6 16.6 L27.4 27.4" stroke="#c4543a" stroke-width="2.4" stroke-linecap="round"/>', 2, 2, 'not-allowed'],
+  '--cur-help': [
+    _CUR_ARROW +
+    '<circle cx="22" cy="22" r="8.4" fill="#1a1108" stroke="#c79b4e" stroke-width="1.8"/>' +
+    '<path d="M19.4 19.2 Q19.4 16.4 22.2 16.4 Q25 16.4 25 18.8 Q25 20.6 22.6 21.4 L22.6 23" ' +
+      'stroke="#f0c772" stroke-width="1.9" fill="none" stroke-linecap="round"/>' +
+    '<circle cx="22.6" cy="26" r="1.3" fill="#f0c772"/>', 2, 2, 'help'],
+  // The I-beam grabs from its centre, not its corner. Hotspot is 16,16 in 32-space.
+  '--cur-text': [
+    '<path d="M16 5 L16 27" stroke="#0d0905" stroke-width="5" stroke-linecap="round"/>' +
+    '<path d="M11 5 L21 5 M11 27 L21 27" stroke="#0d0905" stroke-width="5" stroke-linecap="round"/>' +
+    '<path d="M16 6 L16 26" stroke="#f0c772" stroke-width="2" stroke-linecap="round"/>' +
+    '<path d="M12 6 L20 6 M12 26 L20 26" stroke="#f0c772" stroke-width="2" stroke-linecap="round"/>', 16, 16, 'text'],
+};
+
 function cursorEnabled(){ return localStorage.getItem(CURSOR_KEY) !== '0'; }
+function cursorSize(){
+  const v = parseInt(localStorage.getItem(CURSOR_SIZE_KEY), 10);
+  return CURSOR_SIZES.indexOf(v) >= 0 ? v : 32;
+}
+function _curValue(inner, hx, hy, keyword, size){
+  const svg = '<svg xmlns="http://www.w3.org/2000/svg" width="' + size + '" height="' + size +
+              '" viewBox="0 0 32 32">' + inner + '</svg>';
+  const k = size / 32;
+  return 'url("data:image/svg+xml,' + encodeURIComponent(svg) + '") ' +
+         Math.round(hx * k) + ' ' + Math.round(hy * k) + ', ' + keyword;
+}
 function applyCursorPref(){
-  document.documentElement.classList.toggle('no-custom-cursor', !cursorEnabled());
+  const root = document.documentElement;
+  const on = cursorEnabled();
+  root.classList.toggle('no-custom-cursor', !on);
+  const size = cursorSize();
+  for(const tok in _CUR_ART){
+    if(!on){ root.style.removeProperty(tok); continue; }   // let :root keywords win
+    const a = _CUR_ART[tok];
+    root.style.setProperty(tok, _curValue(a[0], a[1], a[2], a[3], size));
+  }
 }
 function setCursorEnabled(on){
   try{ localStorage.setItem(CURSOR_KEY, on ? '1' : '0'); }catch(e){}
+  applyCursorPref();
+}
+function setCursorSize(px){
+  if(CURSOR_SIZES.indexOf(px) < 0) return;
+  try{ localStorage.setItem(CURSOR_SIZE_KEY, String(px)); }catch(e){}
   applyCursorPref();
 }
 applyCursorPref();
@@ -24752,6 +24859,13 @@ function mmSyncCursorBtn(){
   const on = cursorEnabled();
   b.textContent = on ? 'On' : 'Off';
   b.setAttribute('aria-pressed', on ? 'true' : 'false');
+  // Size is meaningless with the system cursor; grey it out rather than hide it,
+  // so the option does not appear and disappear as you toggle.
+  const size = cursorSize();
+  document.querySelectorAll('#mmCursorSize .mm-seg').forEach(function(seg){
+    seg.classList.toggle('on', on && parseInt(seg.dataset.cs,10) === size);
+    seg.disabled = !on;
+  });
 }
 function mmOpenSettings(){
   const pct = Math.round(uiScale()*100);
@@ -24780,6 +24894,12 @@ $('mmScale').addEventListener('input', function(e){
 $('mmFullscreen').addEventListener('click', mmToggleFullscreen);
 $('mmCursor').addEventListener('click', function(){
   setCursorEnabled(!cursorEnabled());
+  mmSyncCursorBtn();
+});
+$('mmCursorSize').addEventListener('click', function(e){
+  const seg = e.target.closest('.mm-seg');
+  if(!seg || seg.disabled) return;
+  setCursorSize(parseInt(seg.dataset.cs, 10));
   mmSyncCursorBtn();
 });
 $('mmSetImport').addEventListener('click', function(){
