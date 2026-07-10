@@ -4,29 +4,34 @@ A dark-fantasy idle/incremental RPG.
 
 **Status:** In active development
 **Studio:** SmolderStudios
+**Play:** <https://smolderstudios.github.io/cindervale/>
 
 ## Playing the game
 
 Cindervale Idle is distributed as a packaged Electron application. See [our discord](https://discord.gg/Z8kZjzgxWt) for download.
 
-## Why the repo is still called `embervale`
+## The rename
 
-The repo, the Pages URL, and the save keys all still say `embervale`. That is deliberate.
+The game was called *Embervale Idle* until v0.9.14, when an unrelated
+[Embervale](https://store.steampowered.com/app/2364430/Embervale/) — also an idle RPG —
+turned up on Steam. The rename went all the way down: repo, Pages URL, game filename,
+localStorage keys, Electron userData folder, and installer `appId`.
 
-The game was renamed from *Embervale Idle* to *Cindervale Idle* in v0.9.12, after an
-unrelated [Embervale](https://store.steampowered.com/app/2364430/Embervale/) — also an
-idle RPG — turned up on Steam. The rename is display-only:
+That was a deliberate save wipe, taken while the only players were beta testers.
 
-- `https://smolderstudios.github.io/embervale/` is the update endpoint every installed
-  copy polls on launch. Renaming the repo would 404 it and permanently freeze
-  auto-update for everyone already installed — they have no way to learn a new URL.
-- `embervale_save_v2` and `embervale_device_id` are the localStorage keys holding every
-  player's save.
-- `app.setName('embervale-idle')` decides `%APPDATA%/embervale-idle`, where the Electron
-  build keeps its saves.
+**Anyone still running an Embervale-era build must reinstall.** GitHub does not redirect
+Pages when a repository is renamed, so `smolderstudios.github.io/embervale/` now returns
+404. Old wrappers poll that URL on launch, fail silently, and fall back to their cached
+copy forever — they have no way to discover the new address.
 
-These are identifiers, not branding. Nobody sees them, and renaming any of them destroys
-save data.
+These identifiers are now frozen. Changing any of them again either wipes saves or
+strands installed copies:
+
+- `https://smolderstudios.github.io/cindervale/` — the update endpoint every wrapper polls
+- `cindervale_save_v1`, `cindervale_device_id` — localStorage keys holding every save
+- `app.setName('cindervale-idle')` — decides `%APPDATA%/cindervale-idle`
+- `appId: com.smolderstudios.cindervaleidle` — change it and NSIS installs a second app
+  rather than upgrading in place
 
 ## License
 

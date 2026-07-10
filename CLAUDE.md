@@ -1,13 +1,18 @@
 # Cindervale Idle
 
-A dark-fantasy idle/incremental RPG. Solo developer (Jordan). Distributed via Electron, Steam port planned, hosted live via GitHub Pages at `https://smolderstudios.github.io/embervale/cindervale.html`.
+A dark-fantasy idle/incremental RPG. Solo developer (Jordan). Distributed via Electron, Steam port planned, hosted live via GitHub Pages at `https://smolderstudios.github.io/cindervale/cindervale.html`.
 
-**Renamed from "Embervale Idle" in v0.9.12** — an unrelated idle RPG called Embervale already exists on Steam. The rename is **display-only**. These are identifiers, not branding, and renaming any of them orphans every player's save:
-- `SAVE_KEY = 'embervale_save_v2'` and `DEVICE_KEY = 'embervale_device_id'` (localStorage)
-- `UI_SCALE_KEY = 'embervale_ui_scale'`
-- `app.setName('embervale-idle')` in the wrapper — owns `%APPDATA%/embervale-idle`
-- the repo name / Pages URL — every installed wrapper polls it on launch
-- `appId` in the wrapper's `package.json` — changing it makes NSIS install a *second* app rather than upgrading in place
+**Renamed from "Embervale Idle"** (v0.9.12 display strings, v0.9.14 hard rename) — an unrelated idle RPG called Embervale already exists on Steam. The rename went all the way down, deliberately wiping every Embervale-era save while the only players were beta testers:
+
+| | now |
+|---|---|
+| Repo / Pages | `SmolderStudios/cindervale` → `https://smolderstudios.github.io/cindervale/cindervale.html` |
+| Game file | `cindervale.html` |
+| localStorage | `cindervale_save_v1`, `cindervale_device_id`, `cindervale_ui_scale` |
+| Electron userData | `app.setName('cindervale-idle')` → `%APPDATA%/cindervale-idle` |
+| Installer | `appId: com.smolderstudios.cindervaleidle` |
+
+**These are now frozen.** GitHub does *not* redirect Pages on a repo rename (verified — the old `/embervale/` URL 404s), so changing the URL again strands every installed wrapper on its cache with no way to discover the new one. Changing the localStorage keys or `app.setName` wipes saves. Changing `appId` makes NSIS install a second app instead of upgrading. Only ever change these alongside a fresh installer push, and only if a save wipe is intended.
 
 ## Architecture
 
@@ -102,7 +107,7 @@ Cross-zone scaling is intentional — e.g. `beast_sinew` at 0.1% on basic rats, 
 
 ## Distribution
 
-- **GitHub Pages** hosts the live HTML at `https://smolderstudios.github.io/embervale/cindervale.html`.
+- **GitHub Pages** hosts the live HTML at `https://smolderstudios.github.io/cindervale/cindervale.html`.
 - **`version.json`** at the same origin is what the Electron wrapper checks each launch.
 - Electron wrapper fetches the latest HTML, caches to userData, loads cached copy. Falls back to last-good cache when offline.
 - Steam build: the wrapper's GitHub-fetch path is disabled — Steam owns updates via depot system.
