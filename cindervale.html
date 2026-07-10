@@ -1830,6 +1830,10 @@ select.dev-input{padding-right:26px}
   text-transform:uppercase;color:#7a6048;white-space:nowrap}
 .cr-list dd{margin:0;color:#ead9b5;font-size:15px}
 .cr-list dd span{display:block;font-family:'Courier New',monospace;font-size:11px;color:#7a6048;margin-top:1px}
+/* body sets user-select:none; the invite is the one thing here worth copying. */
+.cr-list .cr-copy{-webkit-user-select:text;user-select:text;cursor:var(--cur-text);
+  color:#c79b4e;font-size:12.5px;letter-spacing:.4px}
+.cr-list .cr-ver{color:#6e552c}
 #mmNameModal,#mmImportModal,#mmExportModal,#mmSettingsModal,#mmCreditsModal,#gameMenuModal{position:fixed;inset:0;z-index:10000;display:flex;align-items:center;
   justify-content:center;padding:18px;background:#000a;font-family:'Crimson Pro',serif}
 #mmNameModal.mm-hidden,#mmImportModal.mm-hidden,#mmExportModal.mm-hidden,#mmSettingsModal.mm-hidden,#mmCreditsModal.mm-hidden,#gameMenuModal.mm-hidden{display:none}
@@ -2985,7 +2989,7 @@ select.dev-input{padding-right:26px}
       <button class="mm-btn" id="mmCredits">Credits</button>
     </div>
   </div>
-  <div class="mm-ver">v0.9.21</div>
+  <div class="mm-ver">v0.9.22</div>
   <div class="mm-copy">© Smolder Studios</div>
 </div>
 
@@ -3083,12 +3087,19 @@ select.dev-input{padding-right:26px}
 <div id="mmCreditsModal" class="mm-hidden">
   <div class="mm-card" style="max-width:440px">
     <h3>Credits</h3>
-    <p>Cindervale Idle</p>
+    <p>Cindervale Idle &mdash; a dark-fantasy idle RPG</p>
     <dl class="cr-list">
       <dt>Design &amp; Code</dt><dd>Smolder Studios</dd>
-      <dt>Built with</dt><dd>Vanilla JavaScript, HTML and CSS<span>no engine, no dependencies</span></dd>
-      <dt>Typeface</dt><dd>Crimson Pro<span>Sebastian Kosch · SIL Open Font License</span></dd>
+      <dt>Art</dt><dd>Every icon hand-drawn as inline SVG<span>~600 of them, no sprite sheets</span></dd>
+      <dt>Built with</dt><dd>Vanilla JavaScript, HTML and CSS<span>one file, no engine, no dependencies</span></dd>
+      <dt>Typeface</dt><dd>Crimson Pro<span>Sebastian Kosch &middot; SIL Open Font License</span></dd>
+      <dt>Hearth Cat</dt><dd>Smokey Bones<span>the real one</span></dd>
       <dt>Thanks</dt><dd>Everyone who played the beta and reported a bug</dd>
+      <!-- Deliberately NOT an <a>: the Electron wrapper has no setWindowOpenHandler,
+           so a click would navigate the game window to Discord with no way back.
+           Selectable text lets the player copy it instead. -->
+      <dt>Community</dt><dd><span class="cr-copy">discord.gg/Z8kZjzgxWt</span></dd>
+      <dt>Version</dt><dd><span class="cr-ver">v0.9.22 &middot; July 2026</span></dd>
     </dl>
     <div class="mm-row" style="margin-top:16px">
       <button class="mm-mini mm-primary" id="mmCreditsClose">Close</button>
@@ -8843,7 +8854,7 @@ const TREES = {
     {id:'ag_coins', name:'Lap Reward',     icon:AG_TREE_ICONS.ag_coins,max:15,req:0,  desc:r=>`+${r*3}% coin reward per lap`,    next:r=>`+3% coins → ${r*3}%`},
     {id:'ag_xp',    name:'Endurance',      icon:AG_TREE_ICONS.ag_xp,max:10,req:0,  desc:r=>`+${r*3}% Agility XP`,             next:r=>`+3% XP → ${r*3}%`},
     {id:'ag_drop',  name:'Lucky Stride',   icon:AG_TREE_ICONS.ag_drop,max:15,req:15, desc:r=>`+${r*4}% rare drop chance from all skilling activities`, next:r=>`+4% drop rate → ${r*4}%`},
-    {id:'ag_shortcut',name:'Shortcutter',  icon:AG_TREE_ICONS.ag_shortcut,max:12,req:25, desc:r=>`${r*4}% chance to cut 10% off the current lap time`,next:r=>`+4% skip chance`},
+    {id:'ag_shortcut',name:'Shortcutter',  icon:AG_TREE_ICONS.ag_shortcut,max:12,req:25, desc:r=>`${r*4}% chance to cut 25% off the current lap time`,next:r=>`+4% skip chance`},
     {id:'ag_master1',name:'Marathon',      icon:AG_TREE_ICONS.ag_master1,max:1, req:20, desc:r=>r?'Coin rewards +25%':'Lap coin rewards +25%',next:()=>'+25% all lap coin rewards'},
     {id:'ag_master2',name:'Windrunner',    icon:AG_TREE_ICONS.ag_master2,max:1, req:40, desc:r=>r?'Run 15% faster at all times (passive)':'Permanent +15% run speed on top of all bonuses',next:()=>'+15% run speed permanently'},
     {id:'ag_master3',name:'Iron Will',     icon:AG_TREE_ICONS.ag_master3,max:1, req:60, desc:r=>r?'Agility XP +25% permanently':'Permanent +25% Agility XP',next:()=>'+25% Agility XP permanently'},
@@ -9091,7 +9102,7 @@ const PASSIVE_TIPS={
   ag_coins:     'Increases coin reward for completing each lap.\nAt max (15): +45% coins per lap.',
   ag_xp:        'Multiplies all Agility XP. At max (10): +30%.',
   ag_drop:      'Proportional bonus to rare drop chances across all skills.\nAt max (15): +60%. Combat drops are unaffected.',
-  ag_shortcut:  'Each lap has a chance to shave 10% off its time.\nAt max (12): 48% chance per lap, ~4.8% faster overall.',
+  ag_shortcut:  'Each lap has a chance to shave 25% off its time.\nAt max (12): 48% chance per lap, ~12% faster overall.',
   ag_master1:   'All lap coin rewards permanently increased by +25%.\nStacks with the Lap Reward node.',
   ag_master2:   'Permanent +15% run speed on top of all other speed bonuses.\\nStacks with Fleet Foot, Void Runner, and gear.',
   ag_master3:   'Permanent +25% Agility XP from all laps.\nReplaces the old level-unlock perk with immediate ongoing value.',
@@ -14403,13 +14414,13 @@ function tick(){
   } else {
     state.actionStart+=cycles*ms;
     // Shortcutter (ag_shortcut) — each completed lap has a 4%/rank chance to cut a
-    // corner, saving 10% of that lap's time. Credited back to actionStart rather
+    // corner, saving 25% of that lap's time. Credited back to actionStart rather
     // than shrinking ms: the tick resolves whole batches of cycles against a single
     // ms, so ms must stay constant across a batch or the elapsed math drifts.
     if(skill==='agility'&&done>0){
       const scP=Math.min(1, treeRank('agility','ag_shortcut')*0.04);
       const hits=binom(done, scP);
-      if(hits>0) state.actionStart-=hits*ms*0.10;
+      if(hits>0) state.actionStart-=hits*ms*0.25;
     }
   }
   saveGame();
@@ -14447,7 +14458,7 @@ function grantOffline(){
       const ms=actMs(act,skill);
       // Shortcutter can't roll per-lap across an offline block, so it lands as its
       // expected value: chance × 10% off each lap. Same long-run rate as the live tick.
-      const scEV=skill==='agility'?(1-Math.min(1,treeRank('agility','ag_shortcut')*0.04)*0.10):1;
+      const scEV=skill==='agility'?(1-Math.min(1,treeRank('agility','ag_shortcut')*0.04)*0.25):1;
       const effectiveMs=ms*scEV/om.rate; // slower while offline
       const cycles=Math.floor(away/effectiveMs);
       if(cycles>0){
@@ -17732,7 +17743,7 @@ const LEATHER_TIERS=[
  {key:'demon', set:'Demonhide',  hide:'demonhide',  ctier:7, lv:82, def:[14,32,19,10,12],atk:[4,6,5,12,5],band:'hi'},
  {key:'wraith',set:'Wraithhide', hide:'wraithcloth',ctier:7, lv:75, def:[10,24,14,6,9], atk:[6,8,6,14,6],band:'wraith'},
  {key:'ember', set:'Emberhide',  hide:'emberweave', ctier:8, lv:84, def:[15,34,20,11,13],atk:[7,11,7,18,7],band:'ember', mat:{dragonheart:1}},  // (1.0.83) T8 raid leather from Emberforge
- {key:'void',  set:'Voidhide',   hide:'voidweave',  ctier:9, lv:90, def:[18,40,24,13,16],atk:[8,13,8,21,8],band:'void', mat:{hellheart:1,dragonheart:1}},   // (1.0.86) T9 raid leather from Abyssal Throne
+ {key:'void',  set:'Voidhide',   hide:'voidweave',  ctier:9, lv:90, def:[18,40,24,13,16],atk:[8,13,8,21,8],band:'void', mat:{hellheart:1}},   // (1.0.86) T9 raid leather from Abyssal Throne
 ];
 LEATHER_TIERS.forEach(function(t,ti){
   const pal=LEATHER_PAL[t.key]||LEATHER_PAL.rough;
@@ -17764,9 +17775,10 @@ LEATHER_TIERS.forEach(function(t,ti){
     ICONS[id]=_LEATHER_GEN[slot](pal);
     const inp={}; inp[curedId]=_LHIDE_N[slot]; inp[craft[3]]=1;   // cured leather + log
     // Raid tiers additionally consume boss trophies (`mat`), which until now were
-    // pure vendor-trash. Emberhide takes a Dragonheart; Voidhide takes a Hellheart
-    // on top, so the top leather set is gated behind the Demon Lord rather than
-    // behind another stack of bars. Chest costs double, matching its hide count.
+    // pure vendor-trash. Each set is gated behind ITS OWN boss: Emberhide takes a
+    // Dragonheart (Emberwyrm), Voidhide a Hellheart (Demon Lord). Voidhide once
+    // demanded both, stacking Emberhide's 150-kill grind on top of its own 133 for
+    // a 283-kill armour set. Chest costs double, matching its hide count.
     if(t.mat){ for(const mk in t.mat) inp[mk]=t.mat[mk]*(slot==='chest'?2:1); }
     const out={}; out[id]=1;
     SKILLS.crafting.acts.push({id:'cr_l_'+id, name:nm, cat:slot, subcat:'leather', lvl:t.lv,
@@ -20828,7 +20840,6 @@ const ACHIEVEMENTS=[
   {id:'first_99',     cat:'skilling', icon:'ui_flame', name:'Mastery',       desc:'Reach level 99 in any skill.',                 check:()=>_achMaxSkillLevel()>=99},
   {id:'deep_tree',    cat:'skilling', icon:'ui_bolt',  name:'Deep Roots',    desc:'Spend 50 points in a single skill tree.',      check:()=>_achTreeSpentMax()>=50},
   {id:'full_tree',    cat:'skilling', icon:'ui_bolt',  name:'Grandmaster',   desc:'Fill a 98-point skill tree.',                  check:()=>_achTreeSpentMax()>=98},
-  {id:'xp_10m',       cat:'skilling', icon:'ui_scroll',name:'Ten Million',   desc:'Earn 10,000,000 total skilling XP.',           check:()=>_achTotalXp()>=1e7},
   {id:'ashen_ascend', cat:'skilling', icon:'ui_flame', name:'Ashen Ascendant',desc:'Reach level 99 in all twelve skills.',        check:()=>_achSkillsAtLeast(99)>=12},
 
   // ── Combat ──
