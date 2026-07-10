@@ -1834,11 +1834,16 @@ select.dev-input{padding-right:26px}
 .cr-list .cr-copy{-webkit-user-select:text;user-select:text;cursor:var(--cur-text);
   color:#c79b4e;font-size:12.5px;letter-spacing:.4px}
 .cr-list .cr-ver{color:#6e552c}
-#mmNameModal,#mmImportModal,#mmExportModal,#mmSettingsModal,#mmCreditsModal,#gameMenuModal{position:fixed;inset:0;z-index:10000;display:flex;align-items:center;
+/* align-items:normal + overflow-y:auto + card margin:auto (not align-items:center)
+   so that when root zoom makes a card taller than the window, the modal SCROLLS
+   instead of clipping the title and the Done button off-screen. align-items:center
+   would pin an over-tall card centred, hiding its top with no way to scroll up —
+   that stranded users on "a brown screen that just says On" (0.9.25). */
+#mmNameModal,#mmImportModal,#mmExportModal,#mmSettingsModal,#mmCreditsModal,#gameMenuModal{position:fixed;inset:0;z-index:10000;display:flex;align-items:normal;overflow-y:auto;
   justify-content:center;padding:18px;background:#000a;font-family:'Crimson Pro',serif}
 #mmNameModal.mm-hidden,#mmImportModal.mm-hidden,#mmExportModal.mm-hidden,#mmSettingsModal.mm-hidden,#mmCreditsModal.mm-hidden,#gameMenuModal.mm-hidden{display:none}
 #mmNameModal .mm-card,#mmImportModal .mm-card,#mmExportModal .mm-card,#mmSettingsModal .mm-card,#mmCreditsModal .mm-card,#gameMenuModal .mm-card{background:#251a10;border:1px solid #c79b4e;border-radius:8px;
-  padding:20px;max-width:360px;width:100%;box-shadow:var(--sh-3)}
+  padding:20px;max-width:360px;width:100%;margin:auto;box-shadow:var(--sh-3)}
 #mmNameModal h3,#mmImportModal h3,#mmExportModal h3,#mmSettingsModal h3,#mmCreditsModal h3,#gameMenuModal h3{color:#c79b4e;font-variant:small-caps;letter-spacing:1px;font-size:19px;margin:0 0 6px}
 #mmNameModal p,#mmImportModal p,#mmExportModal p,#mmSettingsModal p,#mmCreditsModal p{color:#a08a64;font-size:14px;margin:0 0 12px}
 #mmNameModal input{width:100%;background:#0d0905;color:#ead9b5;border:1px solid #6e552c;
@@ -3095,7 +3100,7 @@ select.dev-input{padding-right:26px}
       <button class="mm-btn" id="mmCredits">Credits</button>
     </div>
   </div>
-  <div class="mm-ver">v0.9.24</div>
+  <div class="mm-ver">v0.9.25</div>
   <div class="mm-copy">© Smolder Studios</div>
 </div>
 
