@@ -1608,6 +1608,28 @@ header h1 .flame{color:var(--ember)}
 #mmExportModal textarea{width:100%;height:96px;background:#0d0905;color:#ead9b5;
   border:1px solid #6e552c;border-radius:4px;padding:8px;font-family:'Courier New',monospace;
   font-size:12px;margin-bottom:10px;resize:vertical;word-break:break-all}
+/* ── Achievements view (chunky cards, matching the material-card language) ── */
+.ach-head{margin-bottom:14px}
+.ach-head-t{font-variant:small-caps;letter-spacing:1.5px;font-size:21px;color:#c79b4e}
+.ach-head-c{font-family:'Courier New',monospace;font-size:13px;color:#a08a64;margin:2px 0 7px}
+.ach-bar{height:8px;background:#150c05;border:1px solid #4a3820;border-radius:4px;overflow:hidden}
+.ach-bar-fill{height:100%;background:linear-gradient(90deg,#8a5a20,#f0c772);transition:width .35s ease}
+.ach-cat{display:flex;justify-content:space-between;align-items:baseline;margin:18px 0 8px;
+  font-variant:small-caps;letter-spacing:1.3px;font-size:16px;color:#c79b4e;
+  border-bottom:1px solid #3a2c18;padding-bottom:4px}
+.ach-cat-c{font-family:'Courier New',monospace;font-size:12px;color:#7a6048;letter-spacing:0}
+.ach-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}
+.ach-card{display:flex;gap:11px;align-items:center;background:var(--raised,#1c1309);
+  border:1px solid #3a2c18;border-radius:7px;padding:11px 12px;opacity:.62}
+.ach-card.got{opacity:1;border-color:#8a6a2e;background:#221708;
+  box-shadow:inset 0 0 22px rgba(240,199,114,.07)}
+.ach-ic{font-size:27px;flex:none;line-height:1;filter:grayscale(1)}
+.ach-card.got .ach-ic{filter:none}
+.ach-body{min-width:0}
+.ach-nm{font-size:15px;color:#ead9b5;font-variant:small-caps;letter-spacing:.6px}
+.ach-card.got .ach-nm{color:#f0c772}
+.ach-ds{font-size:12.5px;color:#a08a64;line-height:1.35;margin-top:1px}
+.ach-when{font-family:'Courier New',monospace;font-size:10.5px;color:#6e552c;margin-top:3px}
 #emberMenu .mm-ver{position:absolute;bottom:14px;right:18px;color:#a08a64;
   font-family:'Courier New',monospace;font-size:13px;letter-spacing:1px}
 #mmNameModal,#mmImportModal,#mmExportModal{position:fixed;inset:0;z-index:10000;display:flex;align-items:center;
@@ -2682,7 +2704,7 @@ header h1 .flame{color:var(--ember)}
   <div class="mm-btns">
     <button class="mm-btn mm-primary" id="mmPlay">▶ Play</button>
   </div>
-  <div class="mm-ver">v0.9.02</div>
+  <div class="mm-ver">v0.9.03</div>
 </div>
 
 <!-- ===== CHARACTER SELECT (added) ===== -->
@@ -2777,6 +2799,7 @@ header h1 .flame{color:var(--ember)}
     <button class="hdr-menu-btn" id="tabShop"><svg class="nav-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M3 7v1a3 3 0 0 0 6 0a3 3 0 0 0 6 0a3 3 0 0 0 6 0v-1l-2-4H5z"/><path d="M5 21v-10"/><path d="M19 21v-10"/><path d="M9 21v-4a2 2 0 0 1 4 0v4"/></svg>Shop</button>
     <button class="hdr-menu-btn" id="tabMastery"><svg class="nav-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6"/><path d="M10 3v6l-4 8a1 1 0 0 0 1 1.4h10a1 1 0 0 0 1-1.4l-4-8V3"/><path d="M6.5 14h11"/></svg>Mastery</button>
     <button class="hdr-menu-btn" id="tabComp"><svg class="nav-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 19a9 9 0 0 1 9 0a9 9 0 0 1 9 0"/><path d="M3 6a9 9 0 0 1 9 0a9 9 0 0 1 9 0"/><path d="M3 6v13"/><path d="M12 6v13"/><path d="M21 6v13"/></svg>Collection Log</button>
+    <button class="hdr-menu-btn" id="tabAch"><svg class="nav-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M7 6H5a2 2 0 0 0 0 4h2"/><path d="M17 6h2a2 2 0 0 1 0 4h-2"/></svg>Achievements</button>
   </div>
   <div class="stat-pill">
     <span class="coins-wrap"><svg class="ev-icon" viewBox="0 0 64 64"><defs><radialGradient id="uic_hdr" cx="0.4" cy="0.34" r="0.72"><stop offset="0" stop-color="#ffe9a0"/><stop offset="0.5" stop-color="#e6b23e"/><stop offset="1" stop-color="#8a5e18"/></radialGradient></defs><ellipse cx="32" cy="55" rx="17" ry="2.8" fill="#000" opacity="0.32"/><circle cx="32" cy="32" r="22" fill="url(#uic_hdr)" stroke="#5a3c10" stroke-width="1.6"/><circle cx="32" cy="32" r="16" fill="none" stroke="#7a5418" stroke-width="1.1" opacity="0.7"/><path d="M32 21 L35 29.5 L44 29.5 L37 35 L39.5 44 L32 38.5 L24.5 44 L27 35 L20 29.5 L29 29.5 Z" fill="#fff6d0" opacity="0.85"/></svg> <b id="coins">0</b></span>
@@ -2818,6 +2841,7 @@ header h1 .flame{color:var(--ember)}
     <div id="shopView"    style="display:none"></div>
     <div id="masteryView" style="display:none"></div>
     <div id="compView"    style="display:none"></div>
+    <div id="achView"     style="display:none"></div>
     <div id="offlineView" style="display:none"></div>
     <div id="enchantView" style="display:none"></div>
     <div id="socketView"  style="display:none"></div>
@@ -10827,6 +10851,10 @@ function normalizeState(){
   // Combat zone: ensure a valid current zone, default to Rat Warrens for older saves.
   if(typeof state.zone!=='string'||!ZONES.find(z=>z.id===state.zone)) state.zone='rat_warrens';
   if(!state.bossUnlocked||typeof state.bossUnlocked!=='object'||Array.isArray(state.bossUnlocked)) state.bossUnlocked={};
+  // Achievements — {id: unlockTimestamp}. Existing saves start empty and back-fill
+  // on the next checkAchievements() pass, so a veteran character immediately earns
+  // everything it has already qualified for rather than starting from zero.
+  if(!state.achievements||typeof state.achievements!=='object'||Array.isArray(state.achievements)) state.achievements={};
   // Combat Mastery — ensure all fields are present and well-typed.
   //   First-load retroactive grant: if cmastGranted is still 0 but the player
   //   already has combat levels, credit them with (combatLevel-1) points so they
@@ -17177,8 +17205,8 @@ const LEATHER_TIERS=[
  {key:'drake', set:'Drakehide',  hide:'drake_hide', ctier:6, lv:68, def:[11,25,15,7,9], atk:[3,5,4,10,4], band:'hi'},
  {key:'demon', set:'Demonhide',  hide:'demonhide',  ctier:7, lv:82, def:[14,32,19,10,12],atk:[4,6,5,12,5],band:'hi'},
  {key:'wraith',set:'Wraithhide', hide:'wraithcloth',ctier:7, lv:75, def:[10,24,14,6,9], atk:[6,8,6,14,6],band:'wraith'},
- {key:'ember', set:'Emberhide',  hide:'emberweave', ctier:8, lv:84, def:[15,34,20,11,13],atk:[7,11,7,18,7],band:'ember'},  // (1.0.83) T8 raid leather from Emberforge
- {key:'void',  set:'Voidhide',   hide:'voidweave',  ctier:9, lv:90, def:[18,40,24,13,16],atk:[8,13,8,21,8],band:'void'},   // (1.0.86) T9 raid leather from Abyssal Throne
+ {key:'ember', set:'Emberhide',  hide:'emberweave', ctier:8, lv:84, def:[15,34,20,11,13],atk:[7,11,7,18,7],band:'ember', mat:{dragonheart:1}},  // (1.0.83) T8 raid leather from Emberforge
+ {key:'void',  set:'Voidhide',   hide:'voidweave',  ctier:9, lv:90, def:[18,40,24,13,16],atk:[8,13,8,21,8],band:'void', mat:{hellheart:1,dragonheart:1}},   // (1.0.86) T9 raid leather from Abyssal Throne
 ];
 LEATHER_TIERS.forEach(function(t,ti){
   const pal=LEATHER_PAL[t.key]||LEATHER_PAL.rough;
@@ -17209,6 +17237,11 @@ LEATHER_TIERS.forEach(function(t,ti){
     COMBAT_GEAR_STATS[id]=cs;
     ICONS[id]=_LEATHER_GEN[slot](pal);
     const inp={}; inp[curedId]=_LHIDE_N[slot]; inp[craft[3]]=1;   // cured leather + log
+    // Raid tiers additionally consume boss trophies (`mat`), which until now were
+    // pure vendor-trash. Emberhide takes a Dragonheart; Voidhide takes a Hellheart
+    // on top, so the top leather set is gated behind the Demon Lord rather than
+    // behind another stack of bars. Chest costs double, matching its hide count.
+    if(t.mat){ for(const mk in t.mat) inp[mk]=t.mat[mk]*(slot==='chest'?2:1); }
     const out={}; out[id]=1;
     SKILLS.crafting.acts.push({id:'cr_l_'+id, name:nm, cat:slot, subcat:'leather', lvl:t.lv,
       ms:craft[0], xp:Math.round((30+def*4+atk*5)*(0.8+(ti+1)*0.35)), spdMult:craft[1], minMs:craft[2],
@@ -20056,6 +20089,7 @@ function renderCenter(){
   $('tabShop').classList.toggle('on',viewTab==='shop');
   $('tabMastery').classList.toggle('on',viewTab==='mastery');
   $('tabComp').classList.toggle('on',viewTab==='comp');
+  $('tabAch').classList.toggle('on',viewTab==='ach');
   $('tabEnchant').classList.toggle('on',viewTab==='enchant');
   $('tabSocket').classList.toggle('on',viewTab==='socket');
 
@@ -20081,6 +20115,7 @@ function renderCenter(){
   $('shopView').style.display=viewTab==='shop'?'':'none';
   $('masteryView').style.display=viewTab==='mastery'?'':'none';
   $('compView').style.display=viewTab==='comp'?'':'none';
+  $('achView').style.display=viewTab==='ach'?'':'none';
   $('enchantView').style.display=viewTab==='enchant'?'':'none';
   $('socketView').style.display=viewTab==='socket'?'':'none';
   // Skip rebuilding the active center panel if the user is interacting with a <select>.
@@ -20089,7 +20124,7 @@ function renderCenter(){
   // skipping a rebuild has no visible cost — the next tick (after the dropdown closes) refreshes.
   var _focused=document.activeElement;
   if(_focused && _focused.tagName==='SELECT'){
-    var _activeId=({acts:'activityGrid',tree:'treeView',shop:'shopView',mastery:'masteryView',comp:'compView',enchant:'enchantView',socket:'socketView'})[viewTab];
+    var _activeId=({acts:'activityGrid',tree:'treeView',shop:'shopView',mastery:'masteryView',comp:'compView',ach:'achView',enchant:'enchantView',socket:'socketView'})[viewTab];
     var _activePanel=_activeId?$(_activeId):null;
     if(_activePanel && _activePanel.contains(_focused)) return;
   }
@@ -20098,8 +20133,162 @@ function renderCenter(){
   else if(viewTab==='shop') renderShop();
   else if(viewTab==='mastery') renderMastery();
   else if(viewTab==='comp') renderCompendium();
+  else if(viewTab==='ach') renderAchievements();
   else if(viewTab==='enchant') renderEnchanting();
   else if(viewTab==='socket') renderSockets();
+}
+
+/* ════ [JS-ACH] ACHIEVEMENTS ═════════════════════════════════════════════════
+   Deliberately engine-agnostic. Unlocks are pure game state (`state.achievements`
+   = {id: unlockTimestamp}), so the browser build gets achievements too and the
+   Steam build is a thin mirror: the Electron wrapper injects
+   `window.steamAchievement(id)` and unlockAch() calls it if present. Nothing here
+   imports or depends on steamworks.js.
+
+   Every `check()` reads only fields that already exist in state — no new counters
+   to maintain and no migration beyond the empty-object guard in normalizeState.
+   Checks run once a second off the existing 1s interval; each is O(small).
+
+   The first six ("early" tier) are tuned to fire inside the first ~15 minutes:
+   Valve's own guidance is that an early unlock correlates with players staying. */
+function _achLvl(sk){ return levelFromXp(state.xp[sk]||0); }
+function _achTotalLevel(){ let t=0; for(const k in SKILLS) t+=_achLvl(k); return t; }
+function _achMaxSkillLevel(){ let m=0; for(const k in SKILLS) m=Math.max(m,_achLvl(k)); return m; }
+function _achSkillsAtLeast(lv){ let c=0; for(const k in SKILLS) if(_achLvl(k)>=lv) c++; return c; }
+function _achTotalXp(){ let t=0; for(const k in SKILLS) t+=(state.xp[k]||0); return t; }
+function _achKills(){ let t=0; const mk=state.monKills||{}; for(const k in mk) t+=(mk[k]||0); return t; }
+function _achBossIds(){ return MONSTERS.filter(m=>m.boss).map(m=>m.id); }
+function _achBossesKilled(){ const mk=state.monKills||{}; return _achBossIds().filter(id=>(mk[id]||0)>0).length; }
+function _achPets(){ return Object.keys(state.pets||{}).length; }
+function _achGold(){ return (state.coins||0)/SILVER_PER_GOLD; }
+function _achTreeSpentMax(){ let m=0; const t=state.tree||{}; for(const s in t){ let v=0; for(const n in t[s]) v+=t[s][n]; m=Math.max(m,v); } return m; }
+function _achTreeSpentAny(){ let t=0; const tr=state.tree||{}; for(const s in tr) for(const n in tr[s]) t+=tr[s][n]; return t; }
+function _achDiscovered(){ const d=state.discovered||{}; let c=0; for(const k in d) if(d[k]) c++; return c; }
+function _achZoneClears(){ return Object.keys(state.cmastZoneClears||{}).length; }
+
+const ACH_CATS=[
+  ['early',     'First Steps'],
+  ['skilling',  'Skilling'],
+  ['combat',    'Combat'],
+  ['collection','Collection'],
+  ['endgame',   'Endgame'],
+];
+const ACHIEVEMENTS=[
+  // ── Early: all reachable in the first session ──
+  {id:'first_swing',  cat:'early', icon:'ui_sword',  name:'First Swing',     desc:'Slay your first monster.',                     check:()=>_achKills()>=1},
+  {id:'apprentice',   cat:'early', icon:'ui_spark',  name:'Apprentice',      desc:'Reach level 5 in any skill.',                  check:()=>_achMaxSkillLevel()>=5},
+  {id:'talent_scout', cat:'early', icon:'ui_scroll', name:'Talent Scout',    desc:'Spend your first passive point.',              check:()=>_achTreeSpentAny()>=1},
+  {id:'pocket_change',cat:'early', icon:'ui_coin',   name:'Pocket Change',   desc:'Hold 1,000 gold at once.',                     check:()=>_achGold()>=1000},
+  {id:'curious',      cat:'early', icon:'ui_book',   name:'Curious',         desc:'Discover 10 different items.',                 check:()=>_achDiscovered()>=10},
+  {id:'finding_feet', cat:'early', icon:'ui_wind',   name:'Finding Your Feet',desc:'Reach total level 25.',                       check:()=>_achTotalLevel()>=25},
+
+  // ── Skilling ──
+  {id:'journeyman',   cat:'skilling', icon:'ui_scroll',name:'Journeyman',    desc:'Reach total level 100.',                       check:()=>_achTotalLevel()>=100},
+  {id:'adept',        cat:'skilling', icon:'ui_spark', name:'Adept',         desc:'Reach level 50 in any skill.',                 check:()=>_achMaxSkillLevel()>=50},
+  {id:'polymath',     cat:'skilling', icon:'ui_book',  name:'Polymath',      desc:'Reach level 50 in five skills.',               check:()=>_achSkillsAtLeast(50)>=5},
+  {id:'first_99',     cat:'skilling', icon:'ui_flame', name:'Mastery',       desc:'Reach level 99 in any skill.',                 check:()=>_achMaxSkillLevel()>=99},
+  {id:'deep_tree',    cat:'skilling', icon:'ui_bolt',  name:'Deep Roots',    desc:'Spend 50 points in a single skill tree.',      check:()=>_achTreeSpentMax()>=50},
+  {id:'full_tree',    cat:'skilling', icon:'ui_bolt',  name:'Grandmaster',   desc:'Fill a 98-point skill tree.',                  check:()=>_achTreeSpentMax()>=98},
+  {id:'xp_10m',       cat:'skilling', icon:'ui_scroll',name:'Ten Million',   desc:'Earn 10,000,000 total skilling XP.',           check:()=>_achTotalXp()>=1e7},
+  {id:'ashen_ascend', cat:'skilling', icon:'ui_flame', name:'Ashen Ascendant',desc:'Reach level 99 in all twelve skills.',        check:()=>_achSkillsAtLeast(99)>=12},
+
+  // ── Combat ──
+  {id:'blooded',      cat:'combat', icon:'ui_swords', name:'Blooded',        desc:'Reach combat level 25.',                       check:()=>combatLevel()>=25},
+  {id:'veteran',      cat:'combat', icon:'ui_swords', name:'Veteran',        desc:'Reach combat level 75.',                       check:()=>combatLevel()>=75},
+  {id:'first_boss',   cat:'combat', icon:'ui_skull',  name:'Giant Slayer',   desc:'Defeat your first boss.',                      check:()=>_achBossesKilled()>=1},
+  {id:'hundred_kills',cat:'combat', icon:'ui_sword',  name:'Culling',        desc:'Slay 100 monsters.',                           check:()=>_achKills()>=100},
+  {id:'thousand_kills',cat:'combat',icon:'ui_sword',  name:'Butcher',        desc:'Slay 1,000 monsters.',                         check:()=>_achKills()>=1000},
+  {id:'zone_three',   cat:'combat', icon:'ui_shield', name:'Trailblazer',    desc:'Clear three combat zones.',                    check:()=>_achZoneClears()>=3},
+  {id:'slayer_ten',   cat:'combat', icon:'ui_skull',  name:'Contract Killer',desc:'Complete 10 Slayer tasks.',                    check:()=>((state.slayer&&state.slayer.tasksDone)||0)>=10},
+  {id:'all_bosses',   cat:'combat', icon:'ui_skull',  name:'Throneless',     desc:'Defeat every boss in Embervale.',              check:()=>_achBossesKilled()>=_achBossIds().length},
+  {id:'demon_lord',   cat:'combat', icon:'ui_flame',  name:'Sanctum Broken', desc:'Defeat the Demon Lord.',                        check:()=>((state.monKills||{}).demon_lord||0)>=1},
+
+  // ── Collection ──
+  {id:'first_pet',    cat:'collection', icon:'ui_paw',  name:'Companion',    desc:'Find your first familiar.',                    check:()=>_achPets()>=1},
+  {id:'beastfriend',  cat:'collection', icon:'ui_paw',  name:'Beastfriend',  desc:'Find all nine familiars.',                     check:()=>_achPets()>=9},
+  {id:'first_socket', cat:'collection', icon:'ui_gem',  name:'Jeweller',     desc:'Socket a gem into a piece of gear.',            check:()=>Object.keys(state.sockets||{}).length>=1},
+  {id:'enchanter',    cat:'collection', icon:'ui_moon', name:'Enchanter',    desc:'Enchant a piece of gear.',                      check:()=>Object.keys(state.enchantments||{}).length>=1},
+  {id:'archivist',    cat:'collection', icon:'ui_book', name:'Archivist',    desc:'Discover 100 different items.',                 check:()=>_achDiscovered()>=100},
+  {id:'voidtouched',  cat:'collection', icon:'ui_gem',  name:'Voidtouched',  desc:'Obtain a Voidheart.',                          check:()=>((state.items||{}).voidheart||0)>=1||!!(state.discovered||{}).voidheart},
+
+  // ── Endgame ──
+  {id:'rich',         cat:'endgame', icon:'ui_coin',   name:'Dragon’s Hoard', desc:'Hold 1,000,000 gold at once.',           check:()=>_achGold()>=1e6},
+  {id:'shard_bearer', cat:'endgame', icon:'ui_bolt',   name:'Shard Bearer',  desc:'Bank a Combat Mastery shard.',                 check:()=>(state.cmastShards||0)>=1},
+  {id:'xp_100m',      cat:'endgame', icon:'ui_flame',  name:'Hundred Million',desc:'Earn 100,000,000 total skilling XP.',         check:()=>_achTotalXp()>=1e8},
+  {id:'all_zones',    cat:'endgame', icon:'ui_shield', name:'Realm Walker',  desc:'Clear every combat zone.',                     check:()=>_achZoneClears()>=ZONES.filter(z=>z.type!=='hunt').length},
+];
+const ACH_BY_ID={}; ACHIEVEMENTS.forEach(a=>{ ACH_BY_ID[a.id]=a; });
+
+function achUnlocked(id){ return !!(state.achievements&&state.achievements[id]); }
+function achCount(){ return state.achievements?Object.keys(state.achievements).length:0; }
+
+/* `silent` suppresses only the toast — the Steam mirror still fires, so a veteran
+   who qualifies retroactively gets their Steam unlocks on first launch. */
+function unlockAch(id,silent){
+  const a=ACH_BY_ID[id];
+  if(!a) return false;
+  if(!state.achievements||typeof state.achievements!=='object') state.achievements={};
+  if(state.achievements[id]) return false;
+  state.achievements[id]=Date.now();
+  if(!silent) toast('🏆 Achievement unlocked — '+a.name);
+  // Steam seam. The wrapper defines this only when running under Steamworks;
+  // in the browser it is undefined and this is a no-op. Never let a failure
+  // here roll back the in-game unlock.
+  try{ if(typeof window.steamAchievement==='function') window.steamAchievement(id); }catch(e){}
+  if(typeof viewTab!=='undefined' && viewTab==='ach') renderAchievements();
+  return true;
+}
+
+/* Cheap enough to run every second. Each check is a handful of property reads;
+   a throwing check must never stall the others (a bad check should cost its own
+   achievement, not every achievement after it).
+
+   The first pass on any save is a silent back-fill: an existing character can
+   qualify for twenty achievements at once, and twenty stacked toasts is worse
+   than none. After that, unlocks are earned live and announced. */
+function checkAchievements(){
+  if(!state||!state.xp) return;
+  if(!state.achievements||typeof state.achievements!=='object') state.achievements={};
+  const backfill=!state.achBackfilled;
+  for(const a of ACHIEVEMENTS){
+    if(state.achievements[a.id]) continue;
+    let ok=false;
+    try{ ok=!!a.check(); }catch(e){}
+    if(ok) unlockAch(a.id,backfill);
+  }
+  if(backfill) state.achBackfilled=1;
+}
+
+function renderAchievements(){
+  const box=$('achView');
+  if(!box) return;
+  const total=ACHIEVEMENTS.length, got=achCount();
+  const pct=total?Math.round(got/total*100):0;
+  let html='<div class="ach-head">'
+    +'<div class="ach-head-t">Achievements</div>'
+    +'<div class="ach-head-c">'+got+' / '+total+' unlocked</div>'
+    +'<div class="ach-bar"><div class="ach-bar-fill" style="width:'+pct+'%"></div></div>'
+    +'</div>';
+  for(const [key,label] of ACH_CATS){
+    const list=ACHIEVEMENTS.filter(a=>a.cat===key);
+    if(!list.length) continue;
+    const done=list.filter(a=>achUnlocked(a.id)).length;
+    html+='<div class="ach-cat"><span>'+label+'</span><span class="ach-cat-c">'+done+'/'+list.length+'</span></div>';
+    html+='<div class="ach-grid">';
+    for(const a of list){
+      const has=achUnlocked(a.id);
+      const when=has?new Date(state.achievements[a.id]).toLocaleDateString():'';
+      html+='<div class="ach-card'+(has?' got':'')+'">'
+        +'<div class="ach-ic">'+iconHTML(has?a.icon:'ui_lock')+'</div>'
+        +'<div class="ach-body">'
+          +'<div class="ach-nm">'+a.name+'</div>'
+          +'<div class="ach-ds">'+a.desc+'</div>'
+          +(has?'<div class="ach-when">Unlocked '+when+'</div>':'')
+        +'</div></div>';
+    }
+    html+='</div>';
+  }
+  box.innerHTML=html;
 }
 
 /* ════ [JS-24d] offline overlay ══════════════════════════════════════════════════ */
@@ -23351,6 +23540,7 @@ $('tabTree').addEventListener('click',()=>{ closeCombatPanel(); viewTab='tree'; 
 $('tabShop').addEventListener('click',()=>{ closeCombatPanel(); viewTab='shop'; renderCenter(); });
 $('tabMastery').addEventListener('click',()=>{ closeCombatPanel(); viewTab='mastery'; renderCenter(); });
 $('tabComp').addEventListener('click',()=>{ closeCombatPanel(); viewTab='comp'; renderCenter(); });
+$('tabAch').addEventListener('click',()=>{ closeCombatPanel(); viewTab='ach'; checkAchievements(); renderCenter(); });
 /* tabOffline removed — Offline is now accessed from the skill list */
 $('tabEnchant').addEventListener('click',()=>{ closeCombatPanel(); viewTab='enchant'; renderCenter(); });
 $('tabSocket').addEventListener('click',()=>{ closeCombatPanel(); viewTab='socket'; renderCenter(); });
@@ -23669,6 +23859,37 @@ let _tutStep=0;
 // post-zoom VISUAL px, but px we set on elements inside the zoomed root get re-scaled by
 // that zoom — so we divide our computed positions by it to land on the real element.
 function _rootZoom(){ var z=parseFloat(getComputedStyle(document.documentElement).zoom||'1'); return (z&&z>0)?z:1; }
+
+/* ════ ROOT UI SCALING ═══════════════════════════════════════════════════════
+   The layout is authored against a fixed design width. Letting the browser
+   reflow it at arbitrary window sizes collapses the card grids and rewraps the
+   panels — the "resizing changes the UI too much" problem. Instead the whole
+   document is scaled as one uniform unit, so proportions are identical at every
+   window size and nothing ever reflows.
+
+   Width-driven on purpose: this game already scrolls vertically (skill lists,
+   trees), so constraining on height would shrink everything on a short window
+   for no benefit. UI_DESIGN_W is 1920/1.1 — the CSS-space width the layout was
+   built for — so a 1920-wide window resolves to exactly the old zoom:1.1 and
+   the pre-scaling look is reproduced pixel for pixel.
+
+   _rootZoom() reads this back off the computed style, so every rect-based
+   position (tooltips, tutorial spotlight, popovers) follows with no extra work. */
+const UI_DESIGN_W = 1745;
+const UI_ZOOM_MIN = 0.55;   // Steam Deck (1280 wide) lands at ~0.73
+const UI_ZOOM_MAX = 1.60;   // stop 4K monitors from ballooning the chrome
+let _zoomRaf = 0;
+function applyRootZoom(){
+  const w = window.innerWidth || UI_DESIGN_W;
+  const z = Math.max(UI_ZOOM_MIN, Math.min(UI_ZOOM_MAX, w / UI_DESIGN_W));
+  document.documentElement.style.zoom = String(Math.round(z*1000)/1000);
+}
+function _onZoomResize(){
+  if(_zoomRaf) return;
+  _zoomRaf = requestAnimationFrame(()=>{ _zoomRaf=0; applyRootZoom(); _tutReposition&&_tutReposition(); });
+}
+window.addEventListener('resize', _onZoomResize);
+applyRootZoom();
 function _tutReposition(){ if(document.getElementById('tutOverlay')) renderTutStep(); }
 function _tutKey(e){ if(e.key==='Escape') endTutorial(); else if(e.key==='Enter'||e.key===' '){ e.preventDefault(); _tutAdvance(); } }
 function startTutorial(){
@@ -23815,7 +24036,7 @@ function mmStartEngine(){
   if(mmStarted) return;
   mmStarted=true;
   setInterval(tick,250);
-  setInterval(()=>{ if(mmAtMenu) return; updateSmoothedXph(); tickEffects(); renderEffectsBar(); renderSkillList(); },1000);
+  setInterval(()=>{ if(mmAtMenu) return; updateSmoothedXph(); tickEffects(); renderEffectsBar(); renderSkillList(); checkAchievements(); },1000);
   setInterval(()=>{
     if(mmAtMenu) return;
     tickFarmingNotifications();
