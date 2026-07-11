@@ -1,5 +1,6 @@
 ﻿node_modules/
 _validate.js
+_wikigen.js
 package-lock.json
 dist/
 *.log

@@ -3136,7 +3136,7 @@ body:not(.is-demo) .demo-only{display:none !important}
       <button class="mm-btn mm-buy demo-only" id="mmBuy">Get the Full Game</button>
     </div>
   </div>
-  <div class="mm-ver">v0.9.37</div>
+  <div class="mm-ver">v0.9.38</div>
   <div class="mm-copy">© Smolder Studios</div>
 </div>
 
@@ -3822,10 +3822,12 @@ function _auditPing(reason, extraFields, dedupeKey){
   const hook = AUDIT_WEBHOOK || (typeof BUG_WEBHOOK!=='undefined' ? BUG_WEBHOOK : '');
   if(!hook) return;
   let dev='?'; try{ dev=localStorage.getItem(DEVICE_KEY)||'?'; }catch(e){}
+  const flagN=(typeof _bumpCount==='function')?_bumpCount('cindervale_flag_seq'):0;
   const gold = Math.floor((((typeof state!=='undefined'&&state.coins)||0))/(typeof SILVER_PER_GOLD!=='undefined'?SILVER_PER_GOLD:100));
   const fields=[
     {name:'Flag',value:String(reason).slice(0,80),inline:true},
     {name:'Device',value:String(dev).slice(0,40),inline:true},
+    {name:'Flags from device',value:'#'+flagN,inline:true},
     {name:'Character',value:String((typeof state!=='undefined'&&state.charName)||'?').slice(0,64),inline:true},
     {name:'Gold',value:gold.toLocaleString(),inline:true},
     {name:'Slot',value:String(typeof mmSlot!=='undefined'?mmSlot:'?'),inline:true},
@@ -3833,6 +3835,41 @@ function _auditPing(reason, extraFields, dedupeKey){
   ].concat(extraFields||[]);
   const payload={username:'Cindervale Audit',embeds:[{title:'Audit flag',color:0xc4543a,description:String(reason).slice(0,200),fields:fields.slice(0,25)}]};
   try{ fetch(hook,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}); }catch(e){}
+}
+
+/* ── New-account notification + repeat-event counters (0.9.38) ───────────────
+   Pings a Discord webhook when a character is created, tagged with the device id
+   and a per-device account counter so alts from the same device read as #2, #3…
+   The same _bumpCount also feeds a "how many times" tally into the audit + bug
+   pings. Same honest limits as the audit hook: the webhook is public in the
+   client (regenerate it in Discord if it ever gets spammed) and a user who
+   clears localStorage resets their own counters. Visibility only — nothing here
+   blocks or alters gameplay. */
+const SIGNUP_WEBHOOK = 'https://discord.com/api/webhooks/1525421043458637875/EpMJrV60uW1VlQxO8iJhEWP3R1SVpefTUXr1wxacPuliuDyTBeqDyUqwsHem_UhAgEyF';   // <-- public in the client; regenerate in Discord if spammed
+function _bumpCount(key){
+  let n=1; try{ n=(parseInt(localStorage.getItem(key),10)||0)+1; localStorage.setItem(key,String(n)); }catch(e){ n=1; }
+  return n;
+}
+let _signupSent=0;
+function _signupPing(name, type, cls, slot){
+  if(!SIGNUP_WEBHOOK || _signupSent>=5) return; _signupSent++;   // session backstop
+  let dev='?'; try{ dev=localStorage.getItem(DEVICE_KEY)||'?'; }catch(e){}
+  const acct=_bumpCount('cindervale_acct_seq');                  // this device's Nth character
+  const alt=acct>1;
+  const ver=(document.querySelector('.mm-ver')?document.querySelector('.mm-ver').textContent.trim():'?');
+  const payload={username:'Cindervale Signups',embeds:[{
+    title:'New character created'+(alt?'  •  #'+acct+' from this device':''),
+    color:alt?0xe0762f:0x7da33f,
+    fields:[
+      {name:'Character',value:String(name||'?').slice(0,64),inline:true},
+      {name:'Account #',value:'#'+acct+(alt?' (alt — same device)':' (first here)'),inline:true},
+      {name:'Device',value:String(dev).slice(0,40),inline:true},
+      {name:'Path / Class',value:(String(type||'?')+' / '+String(cls||'?')).slice(0,64),inline:true},
+      {name:'Slot',value:String(slot||'?'),inline:true},
+      {name:'Version',value:ver,inline:true}
+    ]
+  }]};
+  try{ fetch(SIGNUP_WEBHOOK,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}); }catch(e){}
 }
 function mmKey(n){ return DEVICE_SAVE_KEY + '_c' + n; }
 
@@ -24954,6 +24991,7 @@ function mmConfirmDestiny(){
     state.lastSeen=Date.now();
     normalizeState();
     try{ localStorage.setItem(mmKey(n), _serializeState()); }catch(e){}
+    try{ _signupPing(state.charName, state.charType, state.charClass, n); }catch(e){}
     mmStart(n,true);   // reloads the freshly-saved char and enters the world
   }else{
     // Legacy save — stamp the destiny onto the already-loaded state, then enter.
@@ -25462,10 +25500,14 @@ async function mmSendReport(){
   // context is gathered silently and sent to Discord — players never see it
   const c=mmBugContext();
   const _flagged = (function(){ try{ return _hasSlur(text); }catch(e){ return false; } })();
+  let _dev='?'; try{ _dev=localStorage.getItem(DEVICE_KEY)||'?'; }catch(e){}
+  const _bugN=(typeof _bumpCount==='function')?_bumpCount('cindervale_bug_seq'):0;
   const payload={username:'Cindervale Bug Report',embeds:[{title:_flagged?'Bug report — flagged language':'Bug report',description:text.slice(0,1400),color:_flagged?0x8a2f2f:0xc05149,
     fields:[
       {name:'Version',value:c.ver,inline:true},
       {name:'Character',value:c.who.slice(0,256),inline:true},
+      {name:'Device',value:String(_dev).slice(0,40),inline:true},
+      {name:'Report # (this device)',value:'#'+_bugN,inline:true},
       {name:'Location',value:c.where.slice(0,256),inline:true},
       {name:'Platform',value:c.plat.slice(0,256),inline:false},
       {name:'Recent errors',value:('```'+c.errs+'```').slice(0,1024),inline:false}
