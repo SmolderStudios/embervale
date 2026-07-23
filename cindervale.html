@@ -3136,7 +3136,7 @@ body:not(.is-demo) .demo-only{display:none !important}
       <button class="mm-btn mm-buy demo-only" id="mmBuy">Get the Full Game</button>
     </div>
   </div>
-  <div class="mm-ver">v0.9.44</div>
+  <div class="mm-ver">v0.9.45</div>
   <div class="mm-copy">© Smolder Studios</div>
 </div>
 
@@ -5320,6 +5320,12 @@ const SKILLS={
   ]},
   smithing:{name:'Smithing',icon:'🔨',acts:[
     {id:'sm1',name:'Smelt bronze bar',    lvl:1, ms:5300, xp:48,  spdMult:0.500, minMs:900,  inp:{copper_ore:1,tin_ore:1},      out:{bronze_bar:1}},
+    /* Scrap reclamation. Goblin weapons drop constantly through the early zones
+       and had no use whatsoever — they were pure vendor fodder from the first
+       goblin to the last. Melting them is worse gold than selling, but it turns
+       a combat detour into smithing progress, which is the point. */
+    {id:'sm_scrap1',name:'Reclaim rusted blades', lvl:5, ms:5600, xp:62, spdMult:0.510, minMs:950, inp:{rusted_blade:2},  out:{iron_bar:1}},
+    {id:'sm_scrap2',name:'Reclaim crude cleavers',lvl:15,ms:6400, xp:110,spdMult:0.545, minMs:1050,inp:{crude_cleaver:2}, out:{steel_bar:1}},
     {id:'sm2',name:'Smelt iron bar',      lvl:15,ms:6800, xp:83,  spdMult:0.594, minMs:1050, inp:{iron_ore:1},                  out:{iron_bar:1}},
     {id:'sm3',name:'Smelt steel bar',     lvl:30,ms:8300, xp:133, spdMult:0.640, minMs:1230, inp:{iron_ore:1,coal:1},           out:{steel_bar:1}},
     {id:'sm4',name:'Smelt gold bar',      lvl:40,ms:9800, xp:204, spdMult:0.667, minMs:1380, inp:{gold_ore:1},                  out:{gold_bar:1}},
@@ -5336,6 +5342,14 @@ const SKILLS={
     {id:'al3', name:'Brew Wisdom I',         lvl:10,ms:11000,xp:83,  spdMult:0.640,minMs:1804, inp:{dewleaf:3},                            out:{wisdom_i:1}},
     // Transmutation — the enchanting-reagent source (was "coming soon" since the enchant system shipped)
     {id:'al_ad',name:'Transmute Arcane Dust', lvl:15,ms:12000,xp:95,  spdMult:0.650,minMs:1950, inp:{gem_dust:1,wildberries:2,ash:2},       out:{arcane_dust:1}},
+    /* The cultivated herbs had nowhere to go: Garden Root, Dawnbloom and
+       Nightbloom were produced by three crops between them and consumed by
+       nothing, and Riftmoss was a level-90 forage with no recipe at all. These
+       extend the existing transmutation line rather than inventing new potions,
+       so they need no new effect plumbing. */
+    {id:'al_tm_bloom',name:'Transmute Bloom Essence', lvl:42,ms:15000,xp:340, spdMult:0.680,minMs:2400, inp:{sunbloom:2,garden_root:2},        out:{mana_essence:1}},
+    {id:'al_tm_night',name:'Transmute Night Essence', lvl:58,ms:17500,xp:560, spdMult:0.715,minMs:2900, inp:{moonflower:2,arcane_dust:1},      out:{shadow_crystal:1}},
+    {id:'al_tm_rift', name:'Transmute Rift Essence',  lvl:88,ms:22000,xp:1250,spdMult:0.780,minMs:3600, inp:{voidmoss:3,void_cinder:1},        out:{void_essence:1}},
     {id:'al7', name:'Brew Swiftness III',    lvl:38,ms:15900,xp:264, spdMult:0.700,minMs:2560, inp:{thornvine:3,dewleaf:3},                out:{swiftness_iii:1}},
     {id:'al8', name:'Brew Bountiful III',    lvl:45,ms:17200,xp:351, spdMult:0.720,minMs:2730, inp:{sunroot:2,dewleaf:2},                  out:{bountiful_iii:1}},
     {id:'al9', name:'Brew Wisdom III',       lvl:55,ms:18400,xp:483, spdMult:0.735,minMs:2925, inp:{emberbloom:2,sunroot:2},               out:{wisdom_iii:1}},
@@ -5614,6 +5628,23 @@ const SKILLS={
     /* T5 tools — Lv 68 · cobalt_bar + frost_log + multi-drop endgame
        (Beast Sinew × 3 + Shade Ember × 2 + Voidheart × 1 — boss-gated) */
     {id:'cr_tl_eclipse_axe',     name:'Eclipse Axe',         cat:'tool', lvl:68,ms:15500,xp:1500,spdMult:0.745, minMs:2170, inp:{cobalt_bar:1,frost_log:1,beast_sinew:3,shade_ember:2,voidheart:1}, out:{eclipse_axe:1}},
+
+    /* ── T6 EVERFLAME (Lv95) ──────────────────────────────────────────────────
+       Built to be the sink the endgame was missing. Ember Dust piles up from
+       every high-tier burn and had no use at all; the boss trophies below were
+       pure vendor fodder for the same reason. Each tool takes 120 Ember Dust
+       plus one trophy, so the whole set costs five different boss farms.       */
+    {id:'cr_tl_everflame_axe',     name:'Everflame Axe',     cat:'tool', lvl:95,ms:26000,xp:4200,spdMult:0.790, minMs:3400, inp:{eclipse_axe:1,ember_dust:120,mountain_heart:1,voidheart:1},   out:{everflame_axe:1}},
+    {id:'cr_tl_everflame_pick',    name:'Everflame Pick',    cat:'tool', lvl:95,ms:26000,xp:4200,spdMult:0.790, minMs:3400, inp:{eclipse_pick:1,ember_dust:120,mountain_heart:1,voidheart:1},  out:{everflame_pick:1}},
+    {id:'cr_tl_everflame_rod',     name:'Everflame Rod',     cat:'tool', lvl:95,ms:26000,xp:4200,spdMult:0.790, minMs:3400, inp:{voidrod:1,ember_dust:120,moonstone_eye:1,voidheart:1},        out:{everflame_rod:1}},
+    {id:'cr_tl_everflame_satchel', name:'Everflame Satchel', cat:'tool', lvl:95,ms:26000,xp:4200,spdMult:0.790, minMs:3400, inp:{eclipse_satchel:1,ember_dust:120,pack_eye:2,voidheart:1},     out:{everflame_satchel:1}},
+    {id:'cr_tl_everflame_forge',   name:'Everflame Forge',   cat:'tool', lvl:95,ms:26000,xp:4200,spdMult:0.790, minMs:3400, inp:{eclipse_forge:1,ember_dust:120,tyrant_heart:1,voidheart:1},   out:{everflame_forge:1}},
+    {id:'cr_tl_everflame_hearth',  name:'Everflame Hearth',  cat:'tool', lvl:95,ms:26000,xp:4200,spdMult:0.790, minMs:3400, inp:{eclipse_hearth:1,ember_dust:120,tyrant_heart:1,voidheart:1},  out:{everflame_hearth:1}},
+    {id:'cr_tl_everflame_crucible',name:'Everflame Crucible',cat:'tool', lvl:95,ms:26000,xp:4200,spdMult:0.790, minMs:3400, inp:{eclipse_crucible:1,ember_dust:120,crown_jewel:1,voidheart:1}, out:{everflame_crucible:1}},
+    {id:'cr_tl_everflame_tinder',  name:'Everflame Tinder',  cat:'tool', lvl:95,ms:26000,xp:4200,spdMult:0.790, minMs:3400, inp:{eclipse_tinder:1,ember_dust:120,moonstone_eye:1,voidheart:1}, out:{everflame_tinder:1}},
+    {id:'cr_tl_everflame_lens',    name:'Everflame Lens',    cat:'tool', lvl:95,ms:26000,xp:4200,spdMult:0.790, minMs:3400, inp:{eclipse_lens:1,ember_dust:120,crown_jewel:1,voidheart:1},     out:{everflame_lens:1}},
+    {id:'cr_tl_everflame_trowel',  name:'Everflame Trowel',  cat:'tool', lvl:95,ms:26000,xp:4200,spdMult:0.790, minMs:3400, inp:{eclipse_trowel:1,ember_dust:120,pack_eye:2,voidheart:1},      out:{everflame_trowel:1}},
+    {id:'cr_tl_everflame_treads',  name:'Everflame Treads',  cat:'tool', lvl:95,ms:26000,xp:4200,spdMult:0.790, minMs:3400, inp:{eclipse_treads:1,ember_dust:120,moonstone_eye:1,voidheart:1}, out:{everflame_treads:1}},
     {id:'cr_tl_eclipse_pick',    name:'Eclipse Pick',        cat:'tool', lvl:68,ms:15500,xp:1500,spdMult:0.745, minMs:2170, inp:{cobalt_bar:1,frost_log:1,beast_sinew:3,shade_ember:2,voidheart:1}, out:{eclipse_pick:1}},
     {id:'cr_tl_voidrod',         name:'Void Rod',            cat:'tool', lvl:68,ms:15500,xp:1500,spdMult:0.745, minMs:2170, inp:{cobalt_bar:1,frost_log:1,beast_sinew:3,shade_ember:2,voidheart:1}, out:{voidrod:1}},
     {id:'cr_tl_eclipse_satchel', name:'Eclipse Satchel',     cat:'tool', lvl:68,ms:15500,xp:1500,spdMult:0.745, minMs:2170, inp:{cobalt_bar:1,frost_log:1,beast_sinew:3,shade_ember:2,voidheart:1}, out:{eclipse_satchel:1}},
@@ -5889,6 +5920,9 @@ const CR_PAL={
   starsteel:{light:'#e0e8fc', mid:'#909ac0', dark:'#4a527a', edge:'#0e1018', hl:'#ffffff', accent:'#303860', glow:'#a0a8d0', sparkles:true},
   // ── Tool-tier palettes (1.0.15) — for the skilling-tool icon generators ──
   eclipse:  {light:'#5ad0c0', mid:'#1e7a78', dark:'#0c3840', edge:'#04141a', hl:'#a0f0e8', accent:'#06202a', glow:'#30b0a8', sparkles:true},
+  // T6 (Lv95). Deliberately the only white-hot palette in the set, so an
+  // Everflame tool is unmistakable next to the teal Eclipse tier below it.
+  everflame:{light:'#ffd98a', mid:'#e07423', dark:'#7a2408', edge:'#2a0a02', hl:'#fff4d0', accent:'#3a1004', glow:'#ff9a30', sparkles:true},
   wood:     {light:'#b88a52', mid:'#7a5228', dark:'#3a2410', edge:'#1a1006', hl:'#e0b87a', accent:'#2a180a'},
   crystal:  {light:'#90e0e0', mid:'#3098a8', dark:'#104858', edge:'#06202a', hl:'#d0fafa', accent:'#082630', glow:'#40c0c8'},
   moon:     {light:'#dfe6f4', mid:'#9aa6c8', dark:'#4a5478', edge:'#161c2c', hl:'#ffffff', accent:'#2a3050', glow:'#a8b8e0'},
@@ -7066,6 +7100,12 @@ const ICONS = {
   wooden_trowel:_trowelSVG(CR_PAL.wood), iron_trowel:_trowelSVG(CR_PAL.iron), mithril_trowel:_trowelSVG(CR_PAL.mithril), ancient_trowel:_trowelSVG(CR_PAL.gold), eclipse_trowel:_trowelSVG(CR_PAL.eclipse),
   iron_tongs:_tongsSVG(CR_PAL.iron), steel_anvil:_anvilSVG(CR_PAL.steel), master_forge:_forgeSVG(CR_PAL.steel), master_bellows:_bellowsSVG(CR_PAL.bronze), eclipse_forge:_forgeSVG(CR_PAL.eclipse),
   copper_pan:_panSVG(CR_PAL.copper), iron_pan:_panSVG(CR_PAL.iron), ember_stove:_stoveSVG(CR_PAL.ember), void_stove:_stoveSVG(CR_PAL.voidp), eclipse_hearth:_hearthSVG(CR_PAL.eclipse),
+  // ── T6 Everflame tools (Lv95) — same generators, white-hot palette ──
+  everflame_axe:_axeSVG(CR_PAL.everflame), everflame_pick:_pickSVG(CR_PAL.everflame), everflame_rod:_rodSVG(CR_PAL.everflame),
+  everflame_satchel:_pouchSVG(CR_PAL.everflame), everflame_crucible:_mortarSVG(CR_PAL.everflame), everflame_tinder:_tinderSVG(CR_PAL.everflame),
+  everflame_treads:_bootSVG(CR_PAL.everflame), everflame_lens:_lensSVG(CR_PAL.everflame), everflame_trowel:_trowelSVG(CR_PAL.everflame),
+  everflame_hearth:_hearthSVG(CR_PAL.everflame), everflame_forge:_forgeSVG(CR_PAL.everflame),
+
   // ── Alchemy / misc reagents (1.0.17) — hand-drawn one-offs ──
   birds_nest: '<svg class="ev-icon" viewBox="0 0 64 64"><ellipse cx="32" cy="54" rx="18" ry="3" fill="#000" opacity="0.35"/><path d="M10 40 Q10 52 32 52 Q54 52 54 40 Q50 46 32 46 Q14 46 10 40 Z" fill="#5a3a1c" stroke="#2a1808" stroke-width="0.8"/><ellipse cx="32" cy="40" rx="22" ry="9" fill="#6a4824" stroke="#2a1808" stroke-width="0.9"/><ellipse cx="32" cy="40" rx="15" ry="5.5" fill="#3a2410"/><path d="M12 38 Q24 34 36 39 M28 36 Q40 34 52 39 M16 42 Q30 46 48 42" stroke="#7a5630" stroke-width="1" fill="none" opacity="0.7"/><ellipse cx="27" cy="39" rx="5" ry="6" fill="#e8e0d0" stroke="#a89878" stroke-width="0.6"/><ellipse cx="36" cy="40" rx="5" ry="6" fill="#dcd4c0" stroke="#a89878" stroke-width="0.6"/><ellipse cx="25" cy="37" rx="1.6" ry="2" fill="#fff" opacity="0.6"/></svg>',
   ember_resin: '<svg class="ev-icon" viewBox="0 0 64 64"><defs><radialGradient id="erz_a" cx="0.5" cy="0.5" r="0.6"><stop offset="0" stop-color="#ffae40" stop-opacity="0.45"/><stop offset="1" stop-color="#ffae40" stop-opacity="0"/></radialGradient><radialGradient id="erz1" cx="0.4" cy="0.35" r="0.7"><stop offset="0" stop-color="#ffd880"/><stop offset="0.5" stop-color="#e08020"/><stop offset="1" stop-color="#7a3808"/></radialGradient></defs><circle cx="32" cy="34" r="26" fill="url(#erz_a)"/><path d="M32 12 Q46 16 48 32 Q50 50 32 54 Q14 50 16 32 Q18 16 32 12 Z" fill="url(#erz1)" stroke="#5a2808" stroke-width="0.9" stroke-linejoin="round"/><ellipse cx="26" cy="26" rx="6" ry="8" fill="#fff4c0" opacity="0.5"/><circle cx="36" cy="40" r="2" fill="#ffe890" opacity="0.7"/><circle cx="30" cy="20" r="1.4" fill="#fff" opacity="0.8"/></svg>',
@@ -11349,6 +11389,26 @@ const SHOP=[
   // The skillXp key is read by gearSkillXp() in mods() — kept separate from jewelry xpBoost so we
   // don't double-count, and so skill=null gear can never accidentally trigger this bonus.
   // Owning the matching cape also unlocks that skill's reqCape capstone passive node.
+  /* ── T6 EVERFLAME (Lv95) ────────────────────────────────────────────────────
+     The first tools that do more than swing faster. Gathering skills read
+     bonus.doubleYield through mods().double; processing skills read
+     bonus.preserve through mods().preserve and doubleYield through extraBar.
+     Agility neither gathers nor processes, so its tool takes the speed instead.
+     Buyable, but the gold price is punishing — the crafted route (which eats
+     the boss trophies and the Ember Dust that firemaking piles up) is the
+     intended one. */
+  {id:'everflame_axe',     name:'Everflame Axe',     icon:'🪓',slot:'axe',   skill:'woodcutting',tier:6,cost:450000,bonus:{speed:0.24,doubleYield:0.08},desc:'+24% chop speed · +8% double logs',       reqLvl:95,req:'eclipse_axe'},
+  {id:'everflame_pick',    name:'Everflame Pick',    icon:'⛏️',slot:'pick',  skill:'mining',     tier:6,cost:450000,bonus:{speed:0.24,doubleYield:0.08},desc:'+24% mine speed · +8% double ore',        reqLvl:95,req:'eclipse_pick'},
+  {id:'everflame_rod',     name:'Everflame Rod',     icon:'🎣',slot:'rod',   skill:'fishing',    tier:6,cost:450000,bonus:{speed:0.24,doubleYield:0.08},desc:'+24% fish speed · +8% double catch',      reqLvl:95,req:'voidrod'},
+  {id:'everflame_satchel', name:'Everflame Satchel', icon:'🎒',slot:'pouch', skill:'foraging',   tier:6,cost:450000,bonus:{speed:0.24,doubleYield:0.08},desc:'+24% forage speed · +8% double herbs',    reqLvl:95,req:'eclipse_satchel'},
+  {id:'everflame_forge',   name:'Everflame Forge',   icon:'🌋',slot:'tongs', skill:'smithing',   tier:6,cost:450000,bonus:{speed:0.24,preserve:0.08},   desc:'+24% smelt speed · 8% to keep the ore',   reqLvl:95,req:'eclipse_forge'},
+  {id:'everflame_hearth',  name:'Everflame Hearth',  icon:'🌋',slot:'pan',   skill:'cooking',    tier:6,cost:450000,bonus:{speed:0.24,preserve:0.08},   desc:'+24% cook speed · 8% to keep the food',   reqLvl:95,req:'eclipse_hearth'},
+  {id:'everflame_crucible',name:'Everflame Crucible',icon:'⚗️',slot:'mortar',skill:'alchemy',    tier:6,cost:450000,bonus:{speed:0.24,preserve:0.08},   desc:'+24% brew speed · 8% to keep reagents',   reqLvl:95,req:'eclipse_crucible'},
+  {id:'everflame_tinder',  name:'Everflame Tinder',  icon:'🔥',slot:'tinder',skill:'firemaking', tier:6,cost:450000,bonus:{speed:0.24,preserve:0.08},   desc:'+24% burn speed · 8% to keep the log',    reqLvl:95,req:'eclipse_tinder'},
+  {id:'everflame_lens',    name:'Everflame Lens',    icon:'🔍',slot:'lens',  skill:'jeweler',    tier:6,cost:450000,bonus:{speed:0.24,preserve:0.08},   desc:'+24% cut speed · 8% to keep the gem',     reqLvl:95,req:'eclipse_lens'},
+  {id:'everflame_trowel',  name:'Everflame Trowel',  icon:'🪴',slot:'trowel',skill:'farming',    tier:6,cost:450000,bonus:{speed:0.24,preserve:0.08},   desc:'+24% tend speed · 8% to keep the seed',   reqLvl:95,req:'eclipse_trowel'},
+  {id:'everflame_treads',  name:'Everflame Treads',  icon:'👟',slot:'boots', skill:'agility',    tier:6,cost:450000,bonus:{speed:0.30},                 desc:'+30% run speed',                          reqLvl:95,req:'eclipse_treads'},
+
   {id:'cape_woodcutting',name:'Woodcutting Cape',icon:'🪓',slot:'cape',skill:'woodcutting',tier:5,cost:100000,bonus:{speed:0.05,skillXp:0.05},desc:'+5% chop speed · +5% Woodcutting XP', reqLvl:99},
   {id:'cape_mining',     name:'Mining Cape',     icon:'⛏️',slot:'cape',skill:'mining',     tier:5,cost:100000,bonus:{speed:0.05,skillXp:0.05},desc:'+5% mine speed · +5% Mining XP',     reqLvl:99},
   {id:'cape_fishing',    name:'Fishing Cape',    icon:'🎣',slot:'cape',skill:'fishing',    tier:5,cost:100000,bonus:{speed:0.05,skillXp:0.05},desc:'+5% fish speed · +5% Fishing XP',    reqLvl:99},
@@ -13301,14 +13361,20 @@ function mods(skill){
                   + eb.doubleYield                       // enchantments (Gatherer / Hoarder / sets)
                   + sb.doubleYield                       // socket gems
                   + classYieldBonus()                    // Artisan class — bonus gather yield
+                  + gearBonus(skill,'doubleYield')       // T6 tools — first gear source of yield
                   + activeEffectBonus('doubleChance')):0,
     xpMult:  (1 + xpAdditive) * xp2x * charTypeXpMult() * (1 + classSkillXpBonus()),
-    preserve:!IS_G?(r(p+'_thrift')||r(p+'_seed'))*(skill==='alchemy'?0.015:skill==='cooking'?0.005:skill==='firemaking'?0.015:0.02):0,
+    /* Gear term added for the T6 tools — until then no tool could affect anything
+       but speed, which is why the tier had nothing left to give. Gathering skills
+       consume nothing, so preserve stays 0 for them. */
+    preserve:!IS_G?((r(p+'_thrift')||r(p+'_seed'))*(skill==='alchemy'?0.015:skill==='cooking'?0.005:skill==='firemaking'?0.015:0.02)
+                 + gearBonus(skill,'preserve')):0,
     extraBar: !IS_G?((r(p+'_double')||r(p+'_yield'))*(skill==='alchemy'?0.015:skill==='cooking'?0.006:skill==='firemaking'?0.015:0.04)
                  + (skill==='cooking'&&r('co_gm_feast')>0?0.25:0)  // Feasting Table: 25% chance for a 2nd meal (no longer guaranteed double)
                  + eb.doubleYield                       // enchantments (Gatherer / Hoarder / sets)
                  + sb.doubleYield                       // socket gems
                  + classYieldBonus()                    // Artisan class — bonus craft yield
+                 + gearBonus(skill,'doubleYield')       // T6 tools — first gear source of yield
                  + activeEffectBonus('doubleChance')):0,
     extraSell: (skill==='mining'?(r('mi_gm_fortune')*0.07)
                :skill==='woodcutting'?(r('wc_gm_sell')*0.07)
