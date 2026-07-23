@@ -3136,7 +3136,7 @@ body:not(.is-demo) .demo-only{display:none !important}
       <button class="mm-btn mm-buy demo-only" id="mmBuy">Get the Full Game</button>
     </div>
   </div>
-  <div class="mm-ver">v0.9.41</div>
+  <div class="mm-ver">v0.9.42</div>
   <div class="mm-copy">© Smolder Studios</div>
 </div>
 
@@ -3475,6 +3475,19 @@ body:not(.is-demo) .demo-only{display:none !important}
     <button class="dev-x" id="devClose" title="Close">✕</button>
   </div>
   <div class="dev-body">
+
+    <!-- Steam diagnostics. The wrapper defines window.cvSteam only when the Steam
+         build is running, and window.steamAchievement only when Steamworks actually
+         connected — so these two lines separate "not the Steam build" from "Steam
+         build, but Steam refused the handshake". Without this the failure is silent:
+         achievements still unlock in-game and simply never reach Steam. -->
+    <div class="dev-sec">
+      <div class="dev-sec-lbl">Steam</div>
+      <div id="devSteamStat" style="font-size:11px;line-height:1.6;color:#b8a888"></div>
+      <div class="dev-row" style="margin-top:6px">
+        <button class="dev-btn ghost" id="devSteamTest" style="flex:1" title="Sends first_swing straight to Steam, bypassing the game's unlock logic">Fire test achievement</button>
+      </div>
+    </div>
 
     <div class="dev-sec">
       <div class="dev-sec-lbl">Experience</div>
@@ -3993,6 +4006,31 @@ function cvSteamAchSync(){
     const a = state.achievements||{};
     for(const id in a){ if(a[id] && ACH_BY_ID[id]) window.steamAchievement(id); }
   }catch(e){}
+}
+
+/* Dev-panel readout. Both globals are injected by the wrapper's preload script and
+   are absent in the browser build, so their presence/absence IS the diagnosis:
+     no cvSteam        -> running the browser build or a pre-0.9.41 wrapper
+     cvSteam, !ready   -> Steam build, but Steamworks refused (usually no license
+                          for the app on the signed-in account, or Steam not running)
+     ready, no seam    -> shouldn't happen; preload defines them together */
+function renderDevSteam(){
+  const el=$('devSteamStat'); if(!el) return;
+  const yes=t=>'<span style="color:#7fd07f">&#10004; '+t+'</span>';
+  const no =t=>'<span style="color:#e07a6a">&#10008; '+t+'</span>';
+  const dim=t=>'<span style="color:#9a8a6a">'+t+'</span>';
+  const hasWrap = !!window.cvSteam;
+  const ready   = !!(window.cvSteam && window.cvSteam.ready);
+  const hasAch  = typeof window.steamAchievement==='function';
+  const slots   = hasWrap ? Object.keys(window.cvSteam.cloudSnapshot||{}) : [];
+  const rows=[];
+  rows.push(hasWrap ? yes('Steam wrapper loaded') : no('Not the Steam build'));
+  rows.push(ready   ? yes('Steamworks connected')  : no('Steamworks NOT connected'));
+  rows.push(hasAch  ? yes('Achievement seam live') : no('Achievement seam missing'));
+  rows.push(dim('Cloud slots on disk: '+(slots.length?slots.join(', '):'none')));
+  rows.push(dim('Unlocked in-game: '+Object.keys(state.achievements||{}).length+' / '+ACHIEVEMENTS.length));
+  if(!hasAch) rows.push('<span style="color:#e0b070">Unlocks are saving locally only.</span>');
+  el.innerHTML=rows.join('<br>');
 }
 
 /* XP curve: snappy 1-20 (hooked in minutes), clear mid-game 20-60, substantial late 60-99
@@ -17037,7 +17075,7 @@ function renderInventory(){
         const _now=Date.now();
         if(_now-_devSellLast>3000) _devSellTaps=0;
         _devSellLast=_now; _devSellTaps++;
-        if(_devSellTaps>=5){ _devSellTaps=0; $('devPanel').classList.toggle('hidden'); if(!$('devPanel').classList.contains('hidden')) _auditPing('Dev/cheat panel opened', null, 'devopen'); }
+        if(_devSellTaps>=5){ _devSellTaps=0; $('devPanel').classList.toggle('hidden'); if(!$('devPanel').classList.contains('hidden')){ renderDevSteam(); _auditPing('Dev/cheat panel opened', null, 'devopen'); } }
       }
       renderInventory();
     });
@@ -24805,7 +24843,16 @@ $('tabSocket').addEventListener('click',()=>{ closeCombatPanel(); viewTab='socke
   sel.appendChild(cg);
 
   const searchEl=$('devItemSearch'), resultsEl=$('devItemResults');
-  $('devToggle').addEventListener('click',()=>{ $('devPanel').classList.toggle('hidden'); if(!$('devPanel').classList.contains('hidden')){ renderResults(); _auditPing('Dev/cheat panel opened', null, 'devopen'); } });
+  $('devToggle').addEventListener('click',()=>{ $('devPanel').classList.toggle('hidden'); if(!$('devPanel').classList.contains('hidden')){ renderResults(); renderDevSteam(); _auditPing('Dev/cheat panel opened', null, 'devopen'); } });
+  /* Bypasses unlockAch entirely and hits the Steam seam directly, so a pop here
+     means Steamworks is fine and the problem is elsewhere; silence means the seam
+     is dead. first_swing is safe to re-send — Steam ignores a repeat unlock. */
+  $('devSteamTest').addEventListener('click',()=>{
+    if(typeof window.steamAchievement!=='function'){ toast('❌ No Steam connection — see the Steam box above'); renderDevSteam(); return; }
+    try{ window.steamAchievement('first_swing'); toast('📤 Sent first_swing to Steam — watch for the overlay popup'); }
+    catch(e){ toast('❌ Steam call failed: '+e.message); }
+    renderDevSteam();
+  });
   $('devClose').addEventListener('click',()=>$('devPanel').classList.add('hidden'));
 
   $('devAddXp').addEventListener('click',()=>{
